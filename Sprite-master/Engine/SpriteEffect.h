@@ -46,7 +46,9 @@ namespace SpriteEffect
 	public:
 		void operator()( Color cSrc,int xDest,int yDest,Graphics& gfx ) const
 		{
-			gfx.PutPixel( xDest,yDest,cSrc );
+			if (cSrc != 16711935) {
+				gfx.PutPixel(xDest, yDest, cSrc);
+			}
 		}
 	};
 	class Ghost

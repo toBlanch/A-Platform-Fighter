@@ -44,6 +44,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	std::vector<Vei2> positions;
-	Surface s = { "Images\\link90x90.bmp" };
+	Surface background = { "Images\\Background.bmp" };
+	Surface circle = { "Images\\CircleIdle.bmp" };
 	/********************************/
 };
