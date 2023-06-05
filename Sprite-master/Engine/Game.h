@@ -24,6 +24,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Surface.h"
+#include "Character.h"
 
 class Game
 {
@@ -46,5 +47,8 @@ private:
 	std::vector<Vei2> positions;
 	Surface background = { "Images\\Background.bmp" };
 	Surface circle = { "Images\\CircleIdle.bmp" };
+	Surface a = { "Images\\a.bmp" };
+	Character Player1;
+	Character Player2;
 	/********************************/
 };
