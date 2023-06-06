@@ -44,7 +44,10 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	std::vector<Vei2> positions;
+	int stageX0 = 500;
+	int stageY0 = 700;
+	int stageX1 = 1420;
+	int stageY1 = 880;
 	Surface background = { "Images\\Background.bmp" };
 	Surface circle = { "Images\\CircleIdle.bmp" };
 	Surface a = { "Images\\a.bmp" };

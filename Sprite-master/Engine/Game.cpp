@@ -40,9 +40,9 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	Player1.UpdateCharacter(wnd.kbd.KeyIsPressed(VK_LEFT), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(0x4C));
-	Player2.UpdateCharacter(wnd.kbd.KeyIsPressed(0x41), wnd.kbd.KeyIsPressed(0x44), wnd.kbd.KeyIsPressed(0x53), wnd.kbd.KeyIsPressed(0x47));
-	if (wnd.kbd.KeyIsPressed(0x52)) {
+	Player1.UpdateCharacter(wnd.kbd.KeyIsPressed(VK_LEFT), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(0x4C), stageX0, stageY0, stageX1, stageY1);
+	Player2.UpdateCharacter(wnd.kbd.KeyIsPressed(0x41), wnd.kbd.KeyIsPressed(0x44), wnd.kbd.KeyIsPressed(0x53), wnd.kbd.KeyIsPressed(0x47), stageX0, stageY0, stageX1, stageY1);
+	if (wnd.kbd.KeyIsPressed(0x52)) {//Reset function
 		Player1.y = 500;
 		Player2.y = 500;
 	}
@@ -50,7 +50,7 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	gfx.DrawRect(500, 800, 1420, 980, (255, 255, 255));
+	gfx.DrawRect(stageX0, stageY0, stageX1, stageY1, (255, 255, 255));
 	gfx.DrawSprite(Player1.x, Player1.y, circle, SpriteEffect::Copy{});
 	gfx.DrawSprite(Player2.x, Player2.y, a, SpriteEffect::Copy{});
 }
