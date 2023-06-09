@@ -40,17 +40,45 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	Player1.UpdateCharacter(wnd.kbd.KeyIsPressed(VK_LEFT), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(0x4C), stageX0, stageY0, stageX1, stageY1);
-	Player2.UpdateCharacter(wnd.kbd.KeyIsPressed(0x41), wnd.kbd.KeyIsPressed(0x44), wnd.kbd.KeyIsPressed(0x53), wnd.kbd.KeyIsPressed(0x47), stageX0, stageY0, stageX1, stageY1);
-	if (wnd.kbd.KeyIsPressed(0x52)) {//Reset function
+	if (Player1.IsAlive(gfx.ScreenWidth, gfx.ScreenHeight, leniancy) && Player2.IsAlive(gfx.ScreenWidth, gfx.ScreenHeight, leniancy)) {//If both players are alive
+		Player1.UpdateCharacter(wnd.kbd.KeyIsPressed(VK_LEFT), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(0x4C), wnd.kbd.KeyIsPressed(0x4B), wnd.kbd.KeyIsPressed(0x4F), wnd.kbd.KeyIsPressed(VK_OEM_1), stageX0, stageY0, stageX1, stageY1);
+		Player2.UpdateCharacter(wnd.kbd.KeyIsPressed(0x41), wnd.kbd.KeyIsPressed(0x44), wnd.kbd.KeyIsPressed(0x53), wnd.kbd.KeyIsPressed(0x47), wnd.kbd.KeyIsPressed(0x46), wnd.kbd.KeyIsPressed(0x54), wnd.kbd.KeyIsPressed(0x48), stageX0, stageY0, stageX1, stageY1);
+		if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) {
+			Player2.IsHit(Player1.MoveThatHitStun(), Player1.MoveThatHitDamage(), Player1.MoveThatHitFixedX(), Player1.MoveThatHitFixedY(), Player1.MoveThatHitScalarX(), Player1.MoveThatHitScalarY());
+		}
+		if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) {
+			Player1.IsHit(Player2.MoveThatHitStun(), Player2.MoveThatHitDamage(), Player2.MoveThatHitFixedX(), Player2.MoveThatHitFixedY(), Player2.MoveThatHitScalarX(), Player2.MoveThatHitScalarY());
+		}//
+	}
+	else{
+		Player1.x = 500;
 		Player1.y = 500;
+		Player2.x = 800;
 		Player2.y = 500;
+		Player1.lives = 3;
+		Player2.lives = 3;
 	}
 }
 
 void Game::ComposeFrame()
 {
-	gfx.DrawRect(stageX0, stageY0, stageX1, stageY1, (255, 255, 255));
-	gfx.DrawSprite(Player1.x, Player1.y, circle, SpriteEffect::Copy{});
-	gfx.DrawSprite(Player2.x, Player2.y, a, SpriteEffect::Copy{});
+	gfx.DrawRect(stageX0, stageY0, stageX1, stageY1, 255,0,0); //Stage
+	if (Player1.moveDuration > 0) {
+		gfx.DrawSprite(Player1.x, Player1.y, circleMove, SpriteEffect::Copy{});
+	}
+	else {
+		gfx.DrawSprite(Player1.x, Player1.y, circleIdle, SpriteEffect::Copy{});
+	}
+	if (Player2.moveDuration > 0) {
+		gfx.DrawSprite(Player2.x, Player2.y, aMove, SpriteEffect::Copy{});
+	}
+	else {
+		gfx.DrawSprite(Player2.x, Player2.y, aIdle, SpriteEffect::Copy{});
+	}
+	if (Player1.MoveDraw(1)) {
+		gfx.DrawRect(Player1.MoveX0(1), Player1.MoveY0(1), Player1.MoveX1(1), Player1.MoveY1(1), 255,255,255);
+	}
+	if (Player2.MoveDraw(1)) {
+		gfx.DrawRect(Player2.MoveX0(1), Player2.MoveY0(1), Player2.MoveX1(1), Player2.MoveY1(1), 255,255,255);
+	}
 }

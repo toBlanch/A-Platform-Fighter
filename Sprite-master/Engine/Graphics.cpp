@@ -348,7 +348,7 @@ std::wstring Graphics::Exception::GetExceptionType() const
 	return L"Chili Graphics Exception";
 }
 
-void Graphics::DrawRect(int x0, int y0, int x1, int y1, Color c)
+void Graphics::DrawRect(int x0, int y0, int x1, int y1, int r, int g, int b)
 {
 	if (x0 > x1)
 	{
@@ -363,7 +363,9 @@ void Graphics::DrawRect(int x0, int y0, int x1, int y1, Color c)
 	{
 		for (int x = x0; x < x1; ++x)
 		{
-			PutPixel(x, y, c);
+			if (x < ScreenWidth && x >= 0 && y < ScreenHeight && y >= 0) {
+				PutPixel(x, y, r,g,b);
+			}
 		}
 	}
 }

@@ -25,6 +25,7 @@
 #include "Graphics.h"
 #include "Surface.h"
 #include "Character.h"
+#include "Move.h"
 
 class Game
 {
@@ -48,9 +49,11 @@ private:
 	int stageY0 = 700;
 	int stageX1 = 1420;
 	int stageY1 = 880;
-	Surface background = { "Images\\Background.bmp" };
-	Surface circle = { "Images\\CircleIdle.bmp" };
-	Surface a = { "Images\\a.bmp" };
+	int leniancy = 0;
+	Surface circleIdle = { "Images\\CircleIdle.bmp" };
+	Surface circleMove = { "Images\\CircleMove.bmp" };
+	Surface aIdle = { "Images\\aIdle.bmp" };
+	Surface aMove = { "Images\\aMove.bmp" };
 	Character Player1;
 	Character Player2;
 	/********************************/
