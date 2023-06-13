@@ -50,12 +50,12 @@ Surface::Surface( const std::string& filename )
 
 	for( int y = yStart; y != yEnd; y += dy )
 	{
-		for( int x = 0; x < width; x++ )
+		for (int x = 0; x < width; x++)
 		{
 			PutPixel(x, y, Color(file.get(), file.get(), file.get()));
-			if( is32b )
+			if (is32b)
 			{
-				file.seekg( 1,std::ios::cur );
+				file.seekg(1, std::ios::cur);
 			}
 		}
 		if( !is32b )

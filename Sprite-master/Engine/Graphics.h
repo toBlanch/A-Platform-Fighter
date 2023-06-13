@@ -63,17 +63,17 @@ public:
 	void PutPixel( int x,int y,Color c );
 	void DrawRect(int x0, int y0, int x1, int y1, int r, int g, int b);
 	template<typename E>
-	void DrawSprite( int x,int y,const Surface& s,E effect )
+	void DrawSprite( int x,int y,const Surface& s,E effect, bool flip )
 	{
-		DrawSprite( x,y,s.GetRect(),s,effect );
+		DrawSprite( x,y,s.GetRect(),s,effect, flip);
 	}
 	template<typename E>
-	void DrawSprite( int x,int y,const RectI& srcRect,const Surface& s,E effect )
+	void DrawSprite(int x, int y, const RectI& srcRect, const Surface& s, E effect, bool flip )
 	{
-		DrawSprite( x,y,srcRect,GetScreenRect(),s,effect );
+		DrawSprite( x,y,srcRect,GetScreenRect(),s,effect, flip);
 	}
 	template<typename E>
-	void DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Surface& s,E effect )
+	void DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Surface& s,E effect, bool flip )
 	{
 		assert( srcRect.left >= 0 );
 		assert( srcRect.right <= s.GetWidth() );
@@ -99,14 +99,27 @@ public:
 		}
 		for( int sy = srcRect.top; sy < srcRect.bottom; sy++ )
 		{
-			for( int sx = srcRect.left; sx < srcRect.right; sx++ )
-			{
-				effect(
-					s.GetPixel( sx,sy ),
-					x + sx - srcRect.left,
-					y + sy - srcRect.top,
-					*this
-				);
+			if (flip) {
+				for (int sx = srcRect.left; sx < srcRect.right; sx++)
+				{
+					effect(
+						s.GetPixel(sx, sy),
+						x + sx + 2 * ((srcRect.right / 2) - (sx)),
+						y + sy - srcRect.top,
+						*this
+					);
+				}
+			}
+			else {
+				for (int sx = srcRect.left; sx < srcRect.right; sx++)
+				{
+					effect(
+						s.GetPixel(sx, sy),
+						x + sx - srcRect.left,
+						y + sy - srcRect.top,
+						*this
+					);
+				}
 			}
 		}
 	}
@@ -135,10 +148,4 @@ public:
 #include "SpriteEffect.h"
 
 #ifndef GOD_GRAPHICS
-extern template
-void Graphics::DrawSprite<SpriteEffect::Copy>( int x,int y,RectI srcRect,const RectI& clip,const Surface& s,SpriteEffect::Copy effect );
-extern template
-void Graphics::DrawSprite<SpriteEffect::Chroma>( int x,int y,RectI srcRect,const RectI& clip,const Surface& s,SpriteEffect::Chroma effect );
-extern template
-void Graphics::DrawSprite<SpriteEffect::Substitution>( int x,int y,RectI srcRect,const RectI& clip,const Surface& s,SpriteEffect::Substitution effect );
 #endif

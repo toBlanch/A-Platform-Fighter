@@ -36,12 +36,14 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool jump, boo
 			if (vx < -speed) { //If you're over terminal velocity
 				vx = -speed; //Go to terminal velocity
 			}
+			facingRight = false;
 		}
 		if (right) { //If you're holding right
 			vx += acceleration; //Increase right velocity
 			if (vx > speed) { //If you're over terminal velocity
 				vx = speed; //Go to terminal velocity
 			}
+			facingRight = true;
 		}
 		if (!left && !right) { //If not moving left or right
 			if (vx > 0) { //If moving right
@@ -78,7 +80,7 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool jump, boo
 			doubleJump -= 1; //Remove one double jump
 			vy = -aerialJumpHeight; //Start jumping
 		}
-
+		
 		if (down) { //If down key is held
 			fastFalling = true; //Start fast falling
 		}
@@ -108,26 +110,27 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool jump, boo
 			}
 		}
 		else { //If off stage
-			if (y + height >= stageY0 && y <= stageY1 && x + width > stageX0 && x + width <= stageX0 + speed) { //If clipping floato stage from the left
+			if (y + height >= stageY0 && y <= stageY1 && x + width > stageX0 && x + width <= stageX0 + speed) { //If clipping into stage from the left
 				x = stageX0 - width; //Stop clipping
 			}
-			else if (y + height >= stageY0 && y <= stageY1 && x >= stageX1 - speed && x < stageX1) { //If clipping floato stage from right
+			else if (y + height >= stageY0 && y <= stageY1 && x >= stageX1 - speed && x < stageX1) { //If clipping into stage from right
 				x = stageX1; //Stop clipping
 			}
-			else if (x + width > stageX0 + speed && x + speed < stageX1 - speed && y > stageY1 - fallSpeed * 2 && y < stageY1) { //If clipping floato stage from bottom
+			else if(x + width > stageX0 && x < stageX1 && y >= stageY0 - 2 * fallSpeed && y <= stageY1) {
 				y = stageY1; //Stop clipping
 			}
 		}
 		if (special) {
-			x = 500;
+			Move1.Activate(x, y, 2, facingRight);
+			moveDuration = Move1.startUpDuration + Move1.activeDuration + Move1.endLagDuration;
 		}
 		if (light) {
-			Move1.Activate(x, y, true);
-			moveDuration = Move1.StartUp(1) + Move1.Duration(1) + Move1.EndLag(1);
+			Move1.Activate(x, y, 1, facingRight);
+			moveDuration = Move1.startUpDuration + Move1.activeDuration + Move1.endLagDuration;
 		}
 		if (heavy) {
-			Move1.Activate(x, y, false);
-			moveDuration = Move1.StartUp(1) + Move1.Duration(1) + Move1.EndLag(1);
+			Move1.Activate(x, y, 3, facingRight);
+			moveDuration = Move1.startUpDuration + Move1.activeDuration + Move1.endLagDuration;
 		}
 		Move1.CheckStatus(x, y);
 	}
@@ -142,7 +145,7 @@ bool Character::IsAlive(int stageWidth, int stageHeight, int leniancy)
 {
 	if (x + width<0 - leniancy ||
 		x>stageWidth + leniancy ||
-		(y+height < 0 - leniancy && isInStun) ||
+		(y+height < 0 - leniancy && stun>0) ||
 		y > stageHeight + leniancy
 		) {
 		lives--;
@@ -184,7 +187,7 @@ bool Character::IsMoveColliding(int Player2x, int Player2y, int Player2width, in
 int Character::MoveX0(int move)
 {
 	if (move == 1) {
-		return Move1.x;
+		return Move1.x+Move1.additionalX;
 	}
 	return 0;
 }
@@ -192,7 +195,7 @@ int Character::MoveX0(int move)
 int Character::MoveY0(int move)
 {
 	if (move == 1) {
-		return Move1.y;
+		return Move1.y+Move1.additionalY;
 	}
 	return 0;
 }
@@ -200,7 +203,7 @@ int Character::MoveY0(int move)
 int Character::MoveX1(int move)
 {
 	if (move == 1) {
-		return Move1.x+Move1.width;
+		return Move1.x+Move1.width+Move1.additionalX;
 	}
 	return 0;
 }
@@ -208,7 +211,7 @@ int Character::MoveX1(int move)
 int Character::MoveY1(int move)
 {
 	if (move == 1) {
-		return Move1.y+Move1.height;
+		return Move1.y+Move1.height+Move1.additionalY;
 	}
 	return 0;
 }
@@ -267,4 +270,6 @@ void Character::IsHit(int stunReferral, int damage, int fixedX, int fixedY, int 
 	playerPercentage = playerPercentage + damage;
 	vx = fixedX + scalarX * playerPercentage / 100;
 	vy = fixedY + scalarY * playerPercentage / 100;
+	moveDuration = 0;
+	Move1.PlayerIsHit();
 }

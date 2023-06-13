@@ -26,6 +26,7 @@ public:
 	int moveDuration = 0;
 	int playerPercentage = 0;
 	int stun = 0;
+	bool facingRight = true;
 private:
 	float vx = 0;
 	float vy = 0;
@@ -44,7 +45,6 @@ private:
 	bool onStage = false;
 	bool jumpKeyHeld = false;
 	bool fastFalling = false;
-	bool isInStun = false;
 	int moveThatHit=0;
 	Move Move1;
 	Move Move2;

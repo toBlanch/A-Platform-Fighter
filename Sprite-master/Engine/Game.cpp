@@ -48,7 +48,7 @@ void Game::UpdateModel()
 		}
 		if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) {
 			Player1.IsHit(Player2.MoveThatHitStun(), Player2.MoveThatHitDamage(), Player2.MoveThatHitFixedX(), Player2.MoveThatHitFixedY(), Player2.MoveThatHitScalarX(), Player2.MoveThatHitScalarY());
-		}//
+		}
 	}
 	else{
 		Player1.x = 500;
@@ -64,16 +64,16 @@ void Game::ComposeFrame()
 {
 	gfx.DrawRect(stageX0, stageY0, stageX1, stageY1, 255,0,0); //Stage
 	if (Player1.moveDuration > 0) {
-		gfx.DrawSprite(Player1.x, Player1.y, circleMove, SpriteEffect::Copy{});
+		gfx.DrawSprite(Player1.x, Player1.y, circleMove, SpriteEffect::Copy{}, !Player1.facingRight);
 	}
 	else {
-		gfx.DrawSprite(Player1.x, Player1.y, circleIdle, SpriteEffect::Copy{});
+		gfx.DrawSprite(Player1.x, Player1.y, circleIdle, SpriteEffect::Copy{}, !Player1.facingRight);
 	}
 	if (Player2.moveDuration > 0) {
-		gfx.DrawSprite(Player2.x, Player2.y, aMove, SpriteEffect::Copy{});
+		gfx.DrawSprite(Player2.x, Player2.y, aMove, SpriteEffect::Copy{}, !Player2.facingRight);
 	}
 	else {
-		gfx.DrawSprite(Player2.x, Player2.y, aIdle, SpriteEffect::Copy{});
+		gfx.DrawSprite(Player2.x, Player2.y, aIdle, SpriteEffect::Copy{}, !Player2.facingRight);
 	}
 	if (Player1.MoveDraw(1)) {
 		gfx.DrawRect(Player1.MoveX0(1), Player1.MoveY0(1), Player1.MoveX1(1), Player1.MoveY1(1), 255,255,255);

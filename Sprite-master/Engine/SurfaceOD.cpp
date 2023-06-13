@@ -12,10 +12,6 @@ void Surface::PutPixel( int x,int y,Color c )
 
 Color Surface::GetPixel( int x,int y ) const
 {
-	assert( x >= 0 );
-	assert( x < width );
-	assert( y >= 0 );
-	assert( y < height );
 	return pixels.data()[y * width + x];
 }
 

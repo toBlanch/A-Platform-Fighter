@@ -51,27 +51,4 @@ namespace SpriteEffect
 			}
 		}
 	};
-	class Ghost
-	{
-	public:
-		Ghost( Color c )
-			:
-			chroma( c )
-		{}
-		void operator()( Color src,int xDest,int yDest,Graphics& gfx ) const
-		{
-			if( src != chroma )
-			{
-				const Color dest = gfx.GetPixel( xDest,yDest );
-				const Color blend = {
-					unsigned char( (src.GetR() + dest.GetR()) / 2 ),
-					unsigned char( (src.GetG() + dest.GetG()) / 2 ),
-					unsigned char( (src.GetB() + dest.GetB()) / 2 )
-				};
-				gfx.PutPixel( xDest,yDest,blend );
-			}
-		}
-	private:
-		Color chroma;
-	};
 }
