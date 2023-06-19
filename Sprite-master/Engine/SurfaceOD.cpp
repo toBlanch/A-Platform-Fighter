@@ -3,10 +3,6 @@
 
 void Surface::PutPixel( int x,int y,Color c )
 {
-	assert( x >= 0 );
-	assert( x < width );
-	assert( y >= 0 );
-	assert( y < height );
 	pixels.data()[y * width + x] = c;
 }
 

@@ -18,69 +18,28 @@ void Move::CheckStatus(int xReferral, int yReferral)
 	}
 }
 
-void Move::Activate(int xReferral, int yReferral, int moveID, bool isFacingRight)
+void Move::Activate(bool isFacingRight, int xReferral, int yReferral, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool dissapearOnHitReferral)
 {
 	hasHit = false;
-	if (moveID == 1) { //light
-		x = xReferral+playerWidth/2;
-		y = yReferral;
-		additionalX = 50;
-		additionalY = 0;
-		vx = 0;
-		vy = 0;
-		isAttachedToPlayer = true;
-		startUpDuration = 10;
-		activeDuration = 30;
-		endLagDuration = 10;
-		stunDuration = 40;
-		width = 50;
-		height = 10;
-		fixedX = 3;
-		fixedY = -3;
-		scalarX = 5;
-		scalarY = -5;
-		damage = 10;
-	}
-	else if(moveID == 2) { //special
-		x = xReferral + playerWidth / 2;
-		y = yReferral;
-		additionalX = 100;
-		additionalY = 0;
-		vx = 10;
-		vy = 0.5;
-		isAttachedToPlayer = false;
-		startUpDuration = 10;
-		activeDuration = 80;
-		endLagDuration = 10;
-		stunDuration = 20;
-		width = 50;
-		height = 10;
-		fixedX = 3;
-		fixedY = -3;
-		scalarX = 15;
-		scalarY = -1;
-		damage = 5;
-	}
-	else { //heavy
-		x = xReferral + playerWidth / 2;
-		y = yReferral;
-		additionalX = 50;
-		additionalY = 50;
-		vx = 0;
-		vy = 0;
-		isAttachedToPlayer = true;
-		startUpDuration = 30;
-		activeDuration = 20;
-		endLagDuration = 60;
-		stunDuration = 40;
-		width = 120;
-		height = 50;
-		fixedX = 5;
-		fixedY = -5;
-		scalarX = 20;
-		scalarY = -5;
-		damage = 20;
-	}
+	x = xReferral + playerWidth / 2;
+	y = yReferral;
+	additionalX = additionalXReferral;
+	additionalY = additionalYReferral;
+	width = widthReferral;
+	height = heightReferral;
+	stunDuration = stunDurationReferral;
+	scalarX = scalarXReferral;
+	scalarY = scalarYReferral;
+	fixedX = fixedXReferral;
+	fixedY = fixedYReferral;
+	vx = vxReferral;
+	vy = vyReferral;
+	damage = damageReferral;
+	startUpDuration = startUpDurationReferral;
+	activeDuration = activeDurationReferral;
+	endLagDuration = endLagDurationReferral;
+	isAttachedToPlayer = isAttachedToPlayerReferral;
+	dissapearOnHit = dissapearOnHitReferral;
 	if (!isFacingRight) {
 		additionalX = additionalX*-1-width;
 		fixedX *= -1;
@@ -107,6 +66,9 @@ bool Move::IsMoveColliding(int Player2x, int Player2y, int Player2width, int Pla
 			for (int j = x+additionalX; j < x + width+additionalX; j++) {
 				if (i > Player2y && i<Player2y + Player2height && j>Player2x && j < Player2x + Player2width) {
 					hasHit = true;
+					if (dissapearOnHit) {
+						activeDuration = 0;
+					}
 					return true;
 				}
 			}
@@ -121,4 +83,12 @@ void Move::PlayerIsHit()
 		startUpDuration = 0;
 		activeDuration = 0;
 	}
+}
+
+int Move::IsActiveDuration()
+{
+	if (isAttachedToPlayer) {
+		return activeDuration;
+	}
+	return 0;
 }

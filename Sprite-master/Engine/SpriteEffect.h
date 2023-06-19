@@ -46,7 +46,7 @@ namespace SpriteEffect
 	public:
 		void operator()( Color cSrc,int xDest,int yDest,Graphics& gfx ) const
 		{
-			if (cSrc != 16711935) {
+			if (cSrc != 16711935 && xDest >= 0 && xDest < gfx.ScreenWidth && yDest >= 0 && yDest <= gfx.ScreenHeight) {
 				gfx.PutPixel(xDest, yDest, cSrc);
 			}
 		}

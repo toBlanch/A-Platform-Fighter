@@ -271,9 +271,6 @@
   <ItemGroup>
     <Image Include="Chili.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="Benches.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
