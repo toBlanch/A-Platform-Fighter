@@ -1,8 +1,8 @@
 #include "Character.h"
 #include "Game.h"
 
-void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, int stageX0, int stageY0, int stageX1, int stageY1) {
-	if (stun == 0) {
+void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1) {
+	if (stun == 0) { //If not in stun
 		//If on stage
 		if (
 			x + width >= stageX0 && x <= stageX1 && //If X coordinate is over the stage
@@ -20,16 +20,43 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			onStage = false; //Confirm you're not on stage
 		}
 
-		if (moveDuration > 0) { //If not using a move
+		if (moveDuration > 0) { //If using a move
 			left = false;
 			right = false;
+			up = false;
+			jump = false;
+			light = false;
+			heavy = false;
+			special = false;
+			dodge = false; //Disable all player inputs apart from down
+			moveDuration--;
+		}
+		else if (freeFallDuration > 0) {
+			if (!onStage) {
+				freeFallDuration = 30;
+			}
 			down = false;
 			jump = false;
 			light = false;
 			heavy = false;
 			special = false;
-			moveDuration--;
+			dodge = false;
+			freeFallDuration--;
+			speed = speed / 2;
+			acceleration = acceleration / 4;
 		}
+
+		if (invincibility > 0) { //If you have invincibility
+			invincibility--; //Reduce the timer
+			if (light || heavy || special) { //If you have invincibility and are using a move
+				invincibility = 0; //Remove your invincivility
+			}
+		}
+		else if (invincibilityCooldown>0){ //If the player is unable to dodge
+			invincibilityCooldown--; //Reduce the time until the player can dodge again
+		}
+
+
 		//Left and Right
 		if (left) { //If you're holding left
 			vx -= acceleration; //Increase left velocity
@@ -80,23 +107,24 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			doubleJump -= 1; //Remove one double jump
 			vy = -aerialJumpHeight; //Start jumping
 		}
-		
-		if (down && !onStage) { //If down key is held
-			fastFalling = true; //Start fast falling
-		}
-		if (fastFalling) {
-			if (vy < fallSpeed * 2) { //If not at terminal velocity
-				vy += fallAcceleration * 2; //Increase falling speed
-				if (vy > fallSpeed * 2) { //If over terminal velocity
-					vy = fallSpeed * 2; //Set to terminal velocity
+		if (!(invincibilityCooldown > 0 && invincibility > 0)) {
+			if (down && !onStage) { //If down key is held
+				fastFalling = true; //Start fast falling
+			}
+			if (fastFalling) {
+				if (vy < fallSpeed * 2) { //If not at terminal velocity
+					vy += fallAcceleration * 2; //Increase falling speed
+					if (vy > fallSpeed * 2) { //If over terminal velocity
+						vy = fallSpeed * 2; //Set to terminal velocity
+					}
 				}
 			}
-		}
-		else {
-			if (vy < fallSpeed) {//If not at terminal velocity
-				vy += fallAcceleration; //Increase falling speed
-				if (vy > fallSpeed) { //If over terminal velocity
-					vy = fallSpeed; //Set to terminal velocity
+			else {
+				if (vy < fallSpeed) {//If not at terminal velocity
+					vy += fallAcceleration; //Increase falling speed
+					if (vy > fallSpeed) { //If over terminal velocity
+						vy = fallSpeed; //Set to terminal velocity
+					}
 				}
 			}
 		}
@@ -111,308 +139,131 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 		}
 		else { //If off stage
 			if (y + height >= stageY0 && y <= stageY1 && x + width > stageX0 && x + width <= stageX0 + speed) { //If clipping into stage from the left
-				x = stageX0 - width; //Stop clipping
+				x = float(stageX0 - width); //Stop clipping
 			}
 			else if (y + height >= stageY0 && y <= stageY1 && x >= stageX1 - speed && x < stageX1) { //If clipping into stage from right
-				x = stageX1; //Stop clipping
+				x = (float)stageX1; //Stop clipping
 			}
 			else if(x + width > stageX0 && x < stageX1 && y >= stageY0 - 2 * fallSpeed && y <= stageY1) {
-				y = stageY1; //Stop clipping
+				y = (float)stageY1; //Stop clipping
 			}
 		}
-		if (light && onStage) {
-			if (Move1.activeDuration == 0) {
-				if (up) {
-					Move1.Activate(facingRight, x, y, upLightAdditionalX, upLightAdditionalY, upLightWidth, upLightHeight, upLightStunDuration, upLightScalarX, upLightScalarY, upLightFixedX, upLightFixedY, upLightVx, upLightVy, upLightDamage, upLightStartUpDuration, upLightActiveDuration, upLightEndLagDuration, upLightIsAttachedToPlayer, upLightDissapearOnHit);
-					moveDuration = upLightStartUpDuration + Move1.IsActiveDuration() + upLightEndLagDuration;
-				}
-				else if (down) {
-					Move1.Activate(facingRight, x, y, downLightAdditionalX, downLightAdditionalY, downLightWidth, downLightHeight, downLightStunDuration, downLightScalarX, downLightScalarY, downLightFixedX, downLightFixedY, downLightVx, downLightVy, downLightDamage, downLightStartUpDuration, downLightActiveDuration, downLightEndLagDuration, downLightIsAttachedToPlayer, downLightDissapearOnHit);
-					moveDuration = downLightStartUpDuration + Move1.IsActiveDuration() + downLightEndLagDuration;
-				}
-				else{
-					Move1.Activate(facingRight, x, y, forwardLightAdditionalX, forwardLightAdditionalY, forwardLightWidth, forwardLightHeight, forwardLightStunDuration, forwardLightScalarX, forwardLightScalarY, forwardLightFixedX, forwardLightFixedY, forwardLightVx, forwardLightVy, forwardLightDamage, forwardLightStartUpDuration, forwardLightActiveDuration, forwardLightEndLagDuration, forwardLightIsAttachedToPlayer, forwardLightDissapearOnHit);
-					moveDuration = forwardLightStartUpDuration + Move1.IsActiveDuration() + forwardLightEndLagDuration;
-				}
-			}
-			else if (Move2.activeDuration == 0) {
-				if (up) {
-					Move2.Activate(facingRight, x, y, upLightAdditionalX, upLightAdditionalY, upLightWidth, upLightHeight, upLightStunDuration, upLightScalarX, upLightScalarY, upLightFixedX, upLightFixedY, upLightVx, upLightVy, upLightDamage, upLightStartUpDuration, upLightActiveDuration, upLightEndLagDuration, upLightIsAttachedToPlayer, upLightDissapearOnHit);
-					moveDuration = upLightStartUpDuration + Move2.IsActiveDuration() + upLightEndLagDuration;
-				}
-				else if (down) {
-					Move2.Activate(facingRight, x, y, downLightAdditionalX, downLightAdditionalY, downLightWidth, downLightHeight, downLightStunDuration, downLightScalarX, downLightScalarY, downLightFixedX, downLightFixedY, downLightVx, downLightVy, downLightDamage, downLightStartUpDuration, downLightActiveDuration, downLightEndLagDuration, downLightIsAttachedToPlayer, downLightDissapearOnHit);
-					moveDuration = downLightStartUpDuration + Move2.IsActiveDuration() + downLightEndLagDuration;
-				}
-				else {
-					Move2.Activate(facingRight, x, y, forwardLightAdditionalX, forwardLightAdditionalY, forwardLightWidth, forwardLightHeight, forwardLightStunDuration, forwardLightScalarX, forwardLightScalarY, forwardLightFixedX, forwardLightFixedY, forwardLightVx, forwardLightVy, forwardLightDamage, forwardLightStartUpDuration, forwardLightActiveDuration, forwardLightEndLagDuration, forwardLightIsAttachedToPlayer, forwardLightDissapearOnHit);
-					moveDuration = forwardLightStartUpDuration + Move2.IsActiveDuration() + forwardLightEndLagDuration;
-				}
-			}
-			else if (Move3.activeDuration == 0) {
-				if (up) {
-					Move3.Activate(facingRight, x, y, upLightAdditionalX, upLightAdditionalY, upLightWidth, upLightHeight, upLightStunDuration, upLightScalarX, upLightScalarY, upLightFixedX, upLightFixedY, upLightVx, upLightVy, upLightDamage, upLightStartUpDuration, upLightActiveDuration, upLightEndLagDuration, upLightIsAttachedToPlayer, upLightDissapearOnHit);
-					moveDuration = upLightStartUpDuration + Move3.IsActiveDuration() + upLightEndLagDuration;
-				}
-				else if (down) {
-					Move3.Activate(facingRight, x, y, downLightAdditionalX, downLightAdditionalY, downLightWidth, downLightHeight, downLightStunDuration, downLightScalarX, downLightScalarY, downLightFixedX, downLightFixedY, downLightVx, downLightVy, downLightDamage, downLightStartUpDuration, downLightActiveDuration, downLightEndLagDuration, downLightIsAttachedToPlayer, downLightDissapearOnHit);
-					moveDuration = downLightStartUpDuration + Move3.IsActiveDuration() + downLightEndLagDuration;
-				}
-				else{
-					Move3.Activate(facingRight, x, y, forwardLightAdditionalX, forwardLightAdditionalY, forwardLightWidth, forwardLightHeight, forwardLightStunDuration, forwardLightScalarX, forwardLightScalarY, forwardLightFixedX, forwardLightFixedY, forwardLightVx, forwardLightVy, forwardLightDamage, forwardLightStartUpDuration, forwardLightActiveDuration, forwardLightEndLagDuration, forwardLightIsAttachedToPlayer, forwardLightDissapearOnHit);
-					moveDuration = forwardLightStartUpDuration + Move3.IsActiveDuration() + forwardLightEndLagDuration;
-				}
-			}
-			else if (Move4.activeDuration == 0) {
-				if (up) {
-					Move4.Activate(facingRight, x, y, upLightAdditionalX, upLightAdditionalY, upLightWidth, upLightHeight, upLightStunDuration, upLightScalarX, upLightScalarY, upLightFixedX, upLightFixedY, upLightVx, upLightVy, upLightDamage, upLightStartUpDuration, upLightActiveDuration, upLightEndLagDuration, upLightIsAttachedToPlayer, upLightDissapearOnHit);
-					moveDuration = upLightStartUpDuration + Move4.IsActiveDuration() + upLightEndLagDuration;
-				}
-				else if (down) {
-					Move4.Activate(facingRight, x, y, downLightAdditionalX, downLightAdditionalY, downLightWidth, downLightHeight, downLightStunDuration, downLightScalarX, downLightScalarY, downLightFixedX, downLightFixedY, downLightVx, downLightVy, downLightDamage, downLightStartUpDuration, downLightActiveDuration, downLightEndLagDuration, downLightIsAttachedToPlayer, downLightDissapearOnHit);
-					moveDuration = downLightStartUpDuration + Move4.IsActiveDuration() + downLightEndLagDuration;
-				}
-				else {
-					Move4.Activate(facingRight, x, y, forwardLightAdditionalX, forwardLightAdditionalY, forwardLightWidth, forwardLightHeight, forwardLightStunDuration, forwardLightScalarX, forwardLightScalarY, forwardLightFixedX, forwardLightFixedY, forwardLightVx, forwardLightVy, forwardLightDamage, forwardLightStartUpDuration, forwardLightActiveDuration, forwardLightEndLagDuration, forwardLightIsAttachedToPlayer, forwardLightDissapearOnHit);
-					moveDuration = forwardLightStartUpDuration + Move4.IsActiveDuration() + forwardLightEndLagDuration;
-				}
-			}
-			else if (Move5.activeDuration == 0) {
-				if (up) {
-					Move5.Activate(facingRight, x, y, upLightAdditionalX, upLightAdditionalY, upLightWidth, upLightHeight, upLightStunDuration, upLightScalarX, upLightScalarY, upLightFixedX, upLightFixedY, upLightVx, upLightVy, upLightDamage, upLightStartUpDuration, upLightActiveDuration, upLightEndLagDuration, upLightIsAttachedToPlayer, upLightDissapearOnHit);
-					moveDuration = upLightStartUpDuration + Move5.IsActiveDuration() + upLightEndLagDuration;
-				}
-				else if (down) {
-					Move5.Activate(facingRight, x, y, downLightAdditionalX, downLightAdditionalY, downLightWidth, downLightHeight, downLightStunDuration, downLightScalarX, downLightScalarY, downLightFixedX, downLightFixedY, downLightVx, downLightVy, downLightDamage, downLightStartUpDuration, downLightActiveDuration, downLightEndLagDuration, downLightIsAttachedToPlayer, downLightDissapearOnHit);
-					moveDuration = downLightStartUpDuration + Move5.IsActiveDuration() + downLightEndLagDuration;
-				}
-				else{
-					Move5.Activate(facingRight, x, y, forwardLightAdditionalX, forwardLightAdditionalY, forwardLightWidth, forwardLightHeight, forwardLightStunDuration, forwardLightScalarX, forwardLightScalarY, forwardLightFixedX, forwardLightFixedY, forwardLightVx, forwardLightVy, forwardLightDamage, forwardLightStartUpDuration, forwardLightActiveDuration, forwardLightEndLagDuration, forwardLightIsAttachedToPlayer, forwardLightDissapearOnHit);
-					moveDuration = forwardLightStartUpDuration + Move5.IsActiveDuration() + forwardLightEndLagDuration;
+		if (light && onStage) { //If using a light attack
+			for (int i = 0; i < 5; i++) { //For each move
+				if (moveArray[i].activeDuration == 0) {
+					if (up) { //If doing a move upwards
+						moveArray[i].Activate(width, facingRight, upLightAdditionalX, upLightAdditionalY, upLightWidth, upLightHeight, upLightStunDuration, upLightScalarX, upLightScalarY, upLightFixedX, upLightFixedY, upLightVx, upLightVy, upLightAccelerationx, upLightAccelerationy, upLightDamage, upLightStartUpDuration, upLightActiveDuration, upLightEndLagDuration, upLightIsAttachedToPlayer, upLightIsPlayerAttachedToIt, upLightDisappearOnHit, upLightR, upLightG, upLightB);  //Initialise the move
+						moveDuration = upLightStartUpDuration + moveArray[i].IsActiveDuration() + upLightEndLagDuration; //Set the player lag
+					}
+					else if (down) { //If doing a move upwards
+						moveArray[i].Activate(width, facingRight, downLightAdditionalX, downLightAdditionalY, downLightWidth, downLightHeight, downLightStunDuration, downLightScalarX, downLightScalarY, downLightFixedX, downLightFixedY, downLightVx, downLightVy, downLightAccelerationx, downLightAccelerationy, downLightDamage, downLightStartUpDuration, downLightActiveDuration, downLightEndLagDuration, downLightIsAttachedToPlayer, downLightIsPlayerAttachedToIt, downLightDisappearOnHit, downLightR, downLightG, downLightB);  //Initialise the move
+						moveDuration = downLightStartUpDuration + moveArray[i].IsActiveDuration() + downLightEndLagDuration; //Set the player lagdownHeavy
+					}
+					else { //If doing a move forwards
+						moveArray[i].Activate(width, facingRight, forwardLightAdditionalX, forwardLightAdditionalY, forwardLightWidth, forwardLightHeight, forwardLightStunDuration, forwardLightScalarX, forwardLightScalarY, forwardLightFixedX, forwardLightFixedY, forwardLightVx, forwardLightVy, forwardLightAccelerationx, forwardLightAccelerationy, forwardLightDamage, forwardLightStartUpDuration, forwardLightActiveDuration, forwardLightEndLagDuration, forwardLightIsAttachedToPlayer, forwardLightIsPlayerAttachedToIt, forwardLightDisappearOnHit, forwardLightR, forwardLightG, forwardLightB);  //Initialise the move
+						moveDuration = forwardLightStartUpDuration + moveArray[i].IsActiveDuration() + forwardLightEndLagDuration; //Set the player lag
+					}
+					i = 5;
 				}
 			}
 		}
-		else if (heavy && onStage) {
-			if (Move1.activeDuration == 0) {
-				if (up) {
-					Move1.Activate(facingRight, x, y, upHeavyAdditionalX, upHeavyAdditionalY, upHeavyWidth, upHeavyHeight, upHeavyStunDuration, upHeavyScalarX, upHeavyScalarY, upHeavyFixedX, upHeavyFixedY, upHeavyVx, upHeavyVy, upHeavyDamage, upHeavyStartUpDuration, upHeavyActiveDuration, upHeavyEndLagDuration, upHeavyIsAttachedToPlayer, upHeavyDissapearOnHit);
-					moveDuration = upHeavyStartUpDuration + Move1.IsActiveDuration() + upHeavyEndLagDuration;
-				}
-				else if (down) {
-					Move1.Activate(facingRight, x, y, downHeavyAdditionalX, downHeavyAdditionalY, downHeavyWidth, downHeavyHeight, downHeavyStunDuration, downHeavyScalarX, downHeavyScalarY, downHeavyFixedX, downHeavyFixedY, downHeavyVx, downHeavyVy, downHeavyDamage, downHeavyStartUpDuration, downHeavyActiveDuration, downHeavyEndLagDuration, downHeavyIsAttachedToPlayer, downHeavyDissapearOnHit);
-					moveDuration = downHeavyStartUpDuration + Move1.IsActiveDuration() + downHeavyEndLagDuration;
-				}
-				else {
-					Move1.Activate(facingRight, x, y, forwardHeavyAdditionalX, forwardHeavyAdditionalY, forwardHeavyWidth, forwardHeavyHeight, forwardHeavyStunDuration, forwardHeavyScalarX, forwardHeavyScalarY, forwardHeavyFixedX, forwardHeavyFixedY, forwardHeavyVx, forwardHeavyVy, forwardHeavyDamage, forwardHeavyStartUpDuration, forwardHeavyActiveDuration, forwardHeavyEndLagDuration, forwardHeavyIsAttachedToPlayer, forwardHeavyDissapearOnHit);
-					moveDuration = forwardHeavyStartUpDuration + Move1.IsActiveDuration() + forwardHeavyEndLagDuration;
-				}
-			}
-			else if (Move2.activeDuration == 0) {
-				if (up) {
-					Move2.Activate(facingRight, x, y, upHeavyAdditionalX, upHeavyAdditionalY, upHeavyWidth, upHeavyHeight, upHeavyStunDuration, upHeavyScalarX, upHeavyScalarY, upHeavyFixedX, upHeavyFixedY, upHeavyVx, upHeavyVy, upHeavyDamage, upHeavyStartUpDuration, upHeavyActiveDuration, upHeavyEndLagDuration, upHeavyIsAttachedToPlayer, upHeavyDissapearOnHit);
-					moveDuration = upHeavyStartUpDuration + Move2.IsActiveDuration() + upHeavyEndLagDuration;
-				}
-				else if (down) {
-					Move2.Activate(facingRight, x, y, downHeavyAdditionalX, downHeavyAdditionalY, downHeavyWidth, downHeavyHeight, downHeavyStunDuration, downHeavyScalarX, downHeavyScalarY, downHeavyFixedX, downHeavyFixedY, downHeavyVx, downHeavyVy, downHeavyDamage, downHeavyStartUpDuration, downHeavyActiveDuration, downHeavyEndLagDuration, downHeavyIsAttachedToPlayer, downHeavyDissapearOnHit);
-					moveDuration = downHeavyStartUpDuration + Move2.IsActiveDuration() + downHeavyEndLagDuration;
-				}
-				else {
-					Move2.Activate(facingRight, x, y, forwardHeavyAdditionalX, forwardHeavyAdditionalY, forwardHeavyWidth, forwardHeavyHeight, forwardHeavyStunDuration, forwardHeavyScalarX, forwardHeavyScalarY, forwardHeavyFixedX, forwardHeavyFixedY, forwardHeavyVx, forwardHeavyVy, forwardHeavyDamage, forwardHeavyStartUpDuration, forwardHeavyActiveDuration, forwardHeavyEndLagDuration, forwardHeavyIsAttachedToPlayer, forwardHeavyDissapearOnHit);
-					moveDuration = forwardHeavyStartUpDuration + Move2.IsActiveDuration() + forwardHeavyEndLagDuration;
-				}
-			}
-			else if (Move3.activeDuration == 0) {
-				if (up) {
-					Move3.Activate(facingRight, x, y, upHeavyAdditionalX, upHeavyAdditionalY, upHeavyWidth, upHeavyHeight, upHeavyStunDuration, upHeavyScalarX, upHeavyScalarY, upHeavyFixedX, upHeavyFixedY, upHeavyVx, upHeavyVy, upHeavyDamage, upHeavyStartUpDuration, upHeavyActiveDuration, upHeavyEndLagDuration, upHeavyIsAttachedToPlayer, upHeavyDissapearOnHit);
-					moveDuration = upHeavyStartUpDuration + Move3.IsActiveDuration() + upHeavyEndLagDuration;
-				}
-				else if (down) {
-					Move3.Activate(facingRight, x, y, downHeavyAdditionalX, downHeavyAdditionalY, downHeavyWidth, downHeavyHeight, downHeavyStunDuration, downHeavyScalarX, downHeavyScalarY, downHeavyFixedX, downHeavyFixedY, downHeavyVx, downHeavyVy, downHeavyDamage, downHeavyStartUpDuration, downHeavyActiveDuration, downHeavyEndLagDuration, downHeavyIsAttachedToPlayer, downHeavyDissapearOnHit);
-					moveDuration = downHeavyStartUpDuration + Move3.IsActiveDuration() + downHeavyEndLagDuration;
-				}
-				else {
-					Move3.Activate(facingRight, x, y, forwardHeavyAdditionalX, forwardHeavyAdditionalY, forwardHeavyWidth, forwardHeavyHeight, forwardHeavyStunDuration, forwardHeavyScalarX, forwardHeavyScalarY, forwardHeavyFixedX, forwardHeavyFixedY, forwardHeavyVx, forwardHeavyVy, forwardHeavyDamage, forwardHeavyStartUpDuration, forwardHeavyActiveDuration, forwardHeavyEndLagDuration, forwardHeavyIsAttachedToPlayer, forwardHeavyDissapearOnHit);
-					moveDuration = forwardHeavyStartUpDuration + Move3.IsActiveDuration() + forwardHeavyEndLagDuration;
-				}
-			}
-			else if (Move4.activeDuration == 0) {
-				if (up) {
-					Move4.Activate(facingRight, x, y, upHeavyAdditionalX, upHeavyAdditionalY, upHeavyWidth, upHeavyHeight, upHeavyStunDuration, upHeavyScalarX, upHeavyScalarY, upHeavyFixedX, upHeavyFixedY, upHeavyVx, upHeavyVy, upHeavyDamage, upHeavyStartUpDuration, upHeavyActiveDuration, upHeavyEndLagDuration, upHeavyIsAttachedToPlayer, upHeavyDissapearOnHit);
-					moveDuration = upHeavyStartUpDuration + Move4.IsActiveDuration() + upHeavyEndLagDuration;
-				}
-				else if (down) {
-					Move4.Activate(facingRight, x, y, downHeavyAdditionalX, downHeavyAdditionalY, downHeavyWidth, downHeavyHeight, downHeavyStunDuration, downHeavyScalarX, downHeavyScalarY, downHeavyFixedX, downHeavyFixedY, downHeavyVx, downHeavyVy, downHeavyDamage, downHeavyStartUpDuration, downHeavyActiveDuration, downHeavyEndLagDuration, downHeavyIsAttachedToPlayer, downHeavyDissapearOnHit);
-					moveDuration = downHeavyStartUpDuration + Move4.IsActiveDuration() + downHeavyEndLagDuration;
-				}
-				else {
-					Move4.Activate(facingRight, x, y, forwardHeavyAdditionalX, forwardHeavyAdditionalY, forwardHeavyWidth, forwardHeavyHeight, forwardHeavyStunDuration, forwardHeavyScalarX, forwardHeavyScalarY, forwardHeavyFixedX, forwardHeavyFixedY, forwardHeavyVx, forwardHeavyVy, forwardHeavyDamage, forwardHeavyStartUpDuration, forwardHeavyActiveDuration, forwardHeavyEndLagDuration, forwardHeavyIsAttachedToPlayer, forwardHeavyDissapearOnHit);
-					moveDuration = forwardHeavyStartUpDuration + Move4.IsActiveDuration() + forwardHeavyEndLagDuration;
-				}
-			}
-			else if (Move5.activeDuration == 0) {
-				if (up) {
-					Move5.Activate(facingRight, x, y, upHeavyAdditionalX, upHeavyAdditionalY, upHeavyWidth, upHeavyHeight, upHeavyStunDuration, upHeavyScalarX, upHeavyScalarY, upHeavyFixedX, upHeavyFixedY, upHeavyVx, upHeavyVy, upHeavyDamage, upHeavyStartUpDuration, upHeavyActiveDuration, upHeavyEndLagDuration, upHeavyIsAttachedToPlayer, upHeavyDissapearOnHit);
-					moveDuration = upHeavyStartUpDuration + Move5.IsActiveDuration() + upHeavyEndLagDuration;
-				}
-				else if (down) {
-					Move5.Activate(facingRight, x, y, downHeavyAdditionalX, downHeavyAdditionalY, downHeavyWidth, downHeavyHeight, downHeavyStunDuration, downHeavyScalarX, downHeavyScalarY, downHeavyFixedX, downHeavyFixedY, downHeavyVx, downHeavyVy, downHeavyDamage, downHeavyStartUpDuration, downHeavyActiveDuration, downHeavyEndLagDuration, downHeavyIsAttachedToPlayer, downHeavyDissapearOnHit);
-					moveDuration = downHeavyStartUpDuration + Move5.IsActiveDuration() + downHeavyEndLagDuration;
-				}
-				else {
-					Move5.Activate(facingRight, x, y, forwardHeavyAdditionalX, forwardHeavyAdditionalY, forwardHeavyWidth, forwardHeavyHeight, forwardHeavyStunDuration, forwardHeavyScalarX, forwardHeavyScalarY, forwardHeavyFixedX, forwardHeavyFixedY, forwardHeavyVx, forwardHeavyVy, forwardHeavyDamage, forwardHeavyStartUpDuration, forwardHeavyActiveDuration, forwardHeavyEndLagDuration, forwardHeavyIsAttachedToPlayer, forwardHeavyDissapearOnHit);
-					moveDuration = forwardHeavyStartUpDuration + Move5.IsActiveDuration() + forwardHeavyEndLagDuration;
+		else if (heavy && onStage) { //If using a heavy attack
+			for (int i = 0; i < 5; i++) {
+				if (moveArray[i].activeDuration == 0) {
+					if (up) { //If doing a move upwards
+						moveArray[i].Activate(width, facingRight, upHeavyAdditionalX, upHeavyAdditionalY, upHeavyWidth, upHeavyHeight, upHeavyStunDuration, upHeavyScalarX, upHeavyScalarY, upHeavyFixedX, upHeavyFixedY, upHeavyVx, upHeavyVy, upHeavyAccelerationx, upHeavyAccelerationy, upHeavyDamage, upHeavyStartUpDuration, upHeavyActiveDuration, upHeavyEndLagDuration, upHeavyIsAttachedToPlayer, upHeavyIsPlayerAttachedToIt, upHeavyDisappearOnHit, upHeavyR, upHeavyG, upHeavyB);  //Initialise the move
+						moveDuration = upHeavyStartUpDuration + moveArray[i].IsActiveDuration() + upHeavyEndLagDuration; //Set the player lag
+					}
+					else if (down) { //If doing a move upwards
+						moveArray[i].Activate(width, facingRight, downHeavyAdditionalX, downHeavyAdditionalY, downHeavyWidth, downHeavyHeight, downHeavyStunDuration, downHeavyScalarX, downHeavyScalarY, downHeavyFixedX, downHeavyFixedY, downHeavyVx, downHeavyVy, downHeavyAccelerationx, downHeavyAccelerationy, downHeavyDamage, downHeavyStartUpDuration, downHeavyActiveDuration, downHeavyEndLagDuration, downHeavyIsAttachedToPlayer, downHeavyIsPlayerAttachedToIt, downHeavyDisappearOnHit, downHeavyR, downHeavyG, downHeavyB);  //Initialise the move
+						moveDuration = downHeavyStartUpDuration + moveArray[i].IsActiveDuration() + downHeavyEndLagDuration; //Set the player lag
+					}
+					else { //If doing a move forwards
+						moveArray[i].Activate(width, facingRight, forwardHeavyAdditionalX, forwardHeavyAdditionalY, forwardHeavyWidth, forwardHeavyHeight, forwardHeavyStunDuration, forwardHeavyScalarX, forwardHeavyScalarY, forwardHeavyFixedX, forwardHeavyFixedY, forwardHeavyVx, forwardHeavyVy, forwardHeavyAccelerationx, forwardHeavyAccelerationy, forwardHeavyDamage, forwardHeavyStartUpDuration, forwardHeavyActiveDuration, forwardHeavyEndLagDuration, forwardHeavyIsAttachedToPlayer, forwardHeavyIsPlayerAttachedToIt, forwardHeavyDisappearOnHit, forwardHeavyR, forwardHeavyG, forwardHeavyB);  //Initialise the move
+						moveDuration = forwardHeavyStartUpDuration + moveArray[i].IsActiveDuration() + forwardHeavyEndLagDuration; //Set the player lag
+					}
+					i = 5;
 				}
 			}
 		}
-		else if ((light || heavy) && !onStage) {
-			if (Move1.activeDuration == 0) {
-				if (up) {
-					Move1.Activate(facingRight, x, y, upAerialAdditionalX, upAerialAdditionalY, upAerialWidth, upAerialHeight, upAerialStunDuration, upAerialScalarX, upAerialScalarY, upAerialFixedX, upAerialFixedY, upAerialVx, upAerialVy, upAerialDamage, upAerialStartUpDuration, upAerialActiveDuration, upAerialEndLagDuration, upAerialIsAttachedToPlayer, upAerialDissapearOnHit);
-					moveDuration = upAerialStartUpDuration + Move1.IsActiveDuration() + upAerialEndLagDuration;
-				}
-				else if (down) {
-					Move1.Activate(facingRight, x, y, downAerialAdditionalX, downAerialAdditionalY, downAerialWidth, downAerialHeight, downAerialStunDuration, downAerialScalarX, downAerialScalarY, downAerialFixedX, downAerialFixedY, downAerialVx, downAerialVy, downAerialDamage, downAerialStartUpDuration, downAerialActiveDuration, downAerialEndLagDuration, downAerialIsAttachedToPlayer, downAerialDissapearOnHit);
-					moveDuration = downAerialStartUpDuration + Move1.IsActiveDuration() + downAerialEndLagDuration;
-				}
-				else {
-					Move1.Activate(facingRight, x, y, forwardAerialAdditionalX, forwardAerialAdditionalY, forwardAerialWidth, forwardAerialHeight, forwardAerialStunDuration, forwardAerialScalarX, forwardAerialScalarY, forwardAerialFixedX, forwardAerialFixedY, forwardAerialVx, forwardAerialVy, forwardAerialDamage, forwardAerialStartUpDuration, forwardAerialActiveDuration, forwardAerialEndLagDuration, forwardAerialIsAttachedToPlayer, forwardAerialDissapearOnHit);
-					moveDuration = forwardAerialStartUpDuration + Move1.IsActiveDuration() + forwardAerialEndLagDuration;
-				}
-			}
-			else if (Move2.activeDuration == 0) {
-				if (up) {
-					Move2.Activate(facingRight, x, y, upAerialAdditionalX, upAerialAdditionalY, upAerialWidth, upAerialHeight, upAerialStunDuration, upAerialScalarX, upAerialScalarY, upAerialFixedX, upAerialFixedY, upAerialVx, upAerialVy, upAerialDamage, upAerialStartUpDuration, upAerialActiveDuration, upAerialEndLagDuration, upAerialIsAttachedToPlayer, upAerialDissapearOnHit);
-					moveDuration = upAerialStartUpDuration + Move2.IsActiveDuration() + upAerialEndLagDuration;
-				}
-				else if (down) {
-					Move2.Activate(facingRight, x, y, downAerialAdditionalX, downAerialAdditionalY, downAerialWidth, downAerialHeight, downAerialStunDuration, downAerialScalarX, downAerialScalarY, downAerialFixedX, downAerialFixedY, downAerialVx, downAerialVy, downAerialDamage, downAerialStartUpDuration, downAerialActiveDuration, downAerialEndLagDuration, downAerialIsAttachedToPlayer, downAerialDissapearOnHit);
-					moveDuration = downAerialStartUpDuration + Move2.IsActiveDuration() + downAerialEndLagDuration;
-				}
-				else {
-					Move2.Activate(facingRight, x, y, forwardAerialAdditionalX, forwardAerialAdditionalY, forwardAerialWidth, forwardAerialHeight, forwardAerialStunDuration, forwardAerialScalarX, forwardAerialScalarY, forwardAerialFixedX, forwardAerialFixedY, forwardAerialVx, forwardAerialVy, forwardAerialDamage, forwardAerialStartUpDuration, forwardAerialActiveDuration, forwardAerialEndLagDuration, forwardAerialIsAttachedToPlayer, forwardAerialDissapearOnHit);
-					moveDuration = forwardAerialStartUpDuration + Move2.IsActiveDuration() + forwardAerialEndLagDuration;
-				}
-			}
-			else if (Move3.activeDuration == 0) {
-				if (up) {
-					Move3.Activate(facingRight, x, y, upAerialAdditionalX, upAerialAdditionalY, upAerialWidth, upAerialHeight, upAerialStunDuration, upAerialScalarX, upAerialScalarY, upAerialFixedX, upAerialFixedY, upAerialVx, upAerialVy, upAerialDamage, upAerialStartUpDuration, upAerialActiveDuration, upAerialEndLagDuration, upAerialIsAttachedToPlayer, upAerialDissapearOnHit);
-					moveDuration = upAerialStartUpDuration + Move3.IsActiveDuration() + upAerialEndLagDuration;
-				}
-				else if (down) {
-					Move3.Activate(facingRight, x, y, downAerialAdditionalX, downAerialAdditionalY, downAerialWidth, downAerialHeight, downAerialStunDuration, downAerialScalarX, downAerialScalarY, downAerialFixedX, downAerialFixedY, downAerialVx, downAerialVy, downAerialDamage, downAerialStartUpDuration, downAerialActiveDuration, downAerialEndLagDuration, downAerialIsAttachedToPlayer, downAerialDissapearOnHit);
-					moveDuration = downAerialStartUpDuration + Move3.IsActiveDuration() + downAerialEndLagDuration;
-				}
-				else {
-					Move3.Activate(facingRight, x, y, forwardAerialAdditionalX, forwardAerialAdditionalY, forwardAerialWidth, forwardAerialHeight, forwardAerialStunDuration, forwardAerialScalarX, forwardAerialScalarY, forwardAerialFixedX, forwardAerialFixedY, forwardAerialVx, forwardAerialVy, forwardAerialDamage, forwardAerialStartUpDuration, forwardAerialActiveDuration, forwardAerialEndLagDuration, forwardAerialIsAttachedToPlayer, forwardAerialDissapearOnHit);
-					moveDuration = forwardAerialStartUpDuration + Move3.IsActiveDuration() + forwardAerialEndLagDuration;
-				}
-			}
-			else if (Move4.activeDuration == 0) {
-				if (up) {
-					Move4.Activate(facingRight, x, y, upAerialAdditionalX, upAerialAdditionalY, upAerialWidth, upAerialHeight, upAerialStunDuration, upAerialScalarX, upAerialScalarY, upAerialFixedX, upAerialFixedY, upAerialVx, upAerialVy, upAerialDamage, upAerialStartUpDuration, upAerialActiveDuration, upAerialEndLagDuration, upAerialIsAttachedToPlayer, upAerialDissapearOnHit);
-					moveDuration = upAerialStartUpDuration + Move4.IsActiveDuration() + upAerialEndLagDuration;
-				}
-				else if (down) {
-					Move4.Activate(facingRight, x, y, downAerialAdditionalX, downAerialAdditionalY, downAerialWidth, downAerialHeight, downAerialStunDuration, downAerialScalarX, downAerialScalarY, downAerialFixedX, downAerialFixedY, downAerialVx, downAerialVy, downAerialDamage, downAerialStartUpDuration, downAerialActiveDuration, downAerialEndLagDuration, downAerialIsAttachedToPlayer, downAerialDissapearOnHit);
-					moveDuration = downAerialStartUpDuration + Move4.IsActiveDuration() + downAerialEndLagDuration;
-				}
-				else {
-					Move4.Activate(facingRight, x, y, forwardAerialAdditionalX, forwardAerialAdditionalY, forwardAerialWidth, forwardAerialHeight, forwardAerialStunDuration, forwardAerialScalarX, forwardAerialScalarY, forwardAerialFixedX, forwardAerialFixedY, forwardAerialVx, forwardAerialVy, forwardAerialDamage, forwardAerialStartUpDuration, forwardAerialActiveDuration, forwardAerialEndLagDuration, forwardAerialIsAttachedToPlayer, forwardAerialDissapearOnHit);
-					moveDuration = forwardAerialStartUpDuration + Move4.IsActiveDuration() + forwardAerialEndLagDuration;
-				}
-			}
-			else if (Move5.activeDuration == 0) {
-				if (up) {
-					Move5.Activate(facingRight, x, y, upAerialAdditionalX, upAerialAdditionalY, upAerialWidth, upAerialHeight, upAerialStunDuration, upAerialScalarX, upAerialScalarY, upAerialFixedX, upAerialFixedY, upAerialVx, upAerialVy, upAerialDamage, upAerialStartUpDuration, upAerialActiveDuration, upAerialEndLagDuration, upAerialIsAttachedToPlayer, upAerialDissapearOnHit);
-					moveDuration = upAerialStartUpDuration + Move5.IsActiveDuration() + upAerialEndLagDuration;
-				}
-				else if (down) {
-					Move5.Activate(facingRight, x, y, downAerialAdditionalX, downAerialAdditionalY, downAerialWidth, downAerialHeight, downAerialStunDuration, downAerialScalarX, downAerialScalarY, downAerialFixedX, downAerialFixedY, downAerialVx, downAerialVy, downAerialDamage, downAerialStartUpDuration, downAerialActiveDuration, downAerialEndLagDuration, downAerialIsAttachedToPlayer, downAerialDissapearOnHit);
-					moveDuration = downAerialStartUpDuration + Move5.IsActiveDuration() + downAerialEndLagDuration;
-				}
-				else {
-					Move5.Activate(facingRight, x, y, forwardAerialAdditionalX, forwardAerialAdditionalY, forwardAerialWidth, forwardAerialHeight, forwardAerialStunDuration, forwardAerialScalarX, forwardAerialScalarY, forwardAerialFixedX, forwardAerialFixedY, forwardAerialVx, forwardAerialVy, forwardAerialDamage, forwardAerialStartUpDuration, forwardAerialActiveDuration, forwardAerialEndLagDuration, forwardAerialIsAttachedToPlayer, forwardAerialDissapearOnHit);
-					moveDuration = forwardAerialStartUpDuration + Move5.IsActiveDuration() + forwardAerialEndLagDuration;
+		else if (light || heavy) { //If using an aerial attack
+			for (int i = 0; i < 5; i++) {
+				if (moveArray[i].activeDuration == 0) {
+					if (up) { //If doing a move upwards
+						moveArray[i].Activate(width, facingRight, upAerialAdditionalX, upAerialAdditionalY, upAerialWidth, upAerialHeight, upAerialStunDuration, upAerialScalarX, upAerialScalarY, upAerialFixedX, upAerialFixedY, upAerialVx, upAerialVy, upAerialAccelerationx, upAerialAccelerationy, upAerialDamage, upAerialStartUpDuration, upAerialActiveDuration, upAerialEndLagDuration, upAerialIsAttachedToPlayer, upAerialIsPlayerAttachedToIt, upAerialDisappearOnHit, upAerialR, upAerialG, upAerialB);  //Initialise the move
+						moveDuration = upAerialStartUpDuration + moveArray[i].IsActiveDuration() + upAerialEndLagDuration; //Set the player lag
+					}
+					else if (down) { //If doing a move upwards
+						moveArray[i].Activate(width, facingRight, downAerialAdditionalX, downAerialAdditionalY, downAerialWidth, downAerialHeight, downAerialStunDuration, downAerialScalarX, downAerialScalarY, downAerialFixedX, downAerialFixedY, downAerialVx, downAerialVy, downAerialAccelerationx, downAerialAccelerationy, downAerialDamage, downAerialStartUpDuration, downAerialActiveDuration, downAerialEndLagDuration, downAerialIsAttachedToPlayer, downAerialIsPlayerAttachedToIt, downAerialDisappearOnHit, downAerialR, downAerialG, downAerialB);  //Initialise the move
+						moveDuration = downAerialStartUpDuration + moveArray[i].IsActiveDuration() + downAerialEndLagDuration; //Set the player lag
+					}
+					else if ((facingRight && left)||(!facingRight && right)){ //If doing a move backwards
+						moveArray[i].Activate(width, facingRight, backAerialAdditionalX, backAerialAdditionalY, backAerialWidth, backAerialHeight, backAerialStunDuration, backAerialScalarX, backAerialScalarY, backAerialFixedX, backAerialFixedY, backAerialVx, backAerialVy, backAerialAccelerationx, backAerialAccelerationy, backAerialDamage, backAerialStartUpDuration, backAerialActiveDuration, backAerialEndLagDuration, backAerialIsAttachedToPlayer, backAerialIsPlayerAttachedToIt, backAerialDisappearOnHit, backAerialR, backAerialG, backAerialB);  //Initialise the move
+						moveDuration = forwardAerialStartUpDuration + moveArray[i].IsActiveDuration() + forwardAerialEndLagDuration; //Set the player lag
+					}
+					else { //If doing a move forwards
+						moveArray[i].Activate(width, facingRight, forwardAerialAdditionalX, forwardAerialAdditionalY, forwardAerialWidth, forwardAerialHeight, forwardAerialStunDuration, forwardAerialScalarX, forwardAerialScalarY, forwardAerialFixedX, forwardAerialFixedY, forwardAerialVx, forwardAerialVy, forwardAerialAccelerationx, forwardAerialAccelerationy, forwardAerialDamage, forwardAerialStartUpDuration, forwardAerialActiveDuration, forwardAerialEndLagDuration, forwardAerialIsAttachedToPlayer, forwardAerialIsPlayerAttachedToIt, forwardAerialDisappearOnHit, forwardAerialR, forwardAerialG, forwardAerialB);  //Initialise the move
+						moveDuration = forwardAerialStartUpDuration + moveArray[i].IsActiveDuration() + forwardAerialEndLagDuration; //Set the player lag
+					}
+					i = 5;
 				}
 			}
 		}
-		else if (special) {
-			if (Move1.activeDuration == 0) {
-				if (up) {
-					Move1.Activate(facingRight, x, y, upSpecialAdditionalX, upSpecialAdditionalY, upSpecialWidth, upSpecialHeight, upSpecialStunDuration, upSpecialScalarX, upSpecialScalarY, upSpecialFixedX, upSpecialFixedY, upSpecialVx, upSpecialVy, upSpecialDamage, upSpecialStartUpDuration, upSpecialActiveDuration, upSpecialEndLagDuration, upSpecialIsAttachedToPlayer, upSpecialDissapearOnHit);
-					moveDuration = upSpecialStartUpDuration + Move1.IsActiveDuration() + upSpecialEndLagDuration;
-				}
-				else if (down) {
-					Move1.Activate(facingRight, x, y, downSpecialAdditionalX, downSpecialAdditionalY, downSpecialWidth, downSpecialHeight, downSpecialStunDuration, downSpecialScalarX, downSpecialScalarY, downSpecialFixedX, downSpecialFixedY, downSpecialVx, downSpecialVy, downSpecialDamage, downSpecialStartUpDuration, downSpecialActiveDuration, downSpecialEndLagDuration, downSpecialIsAttachedToPlayer, downSpecialDissapearOnHit);
-					moveDuration = downSpecialStartUpDuration + Move1.IsActiveDuration() + downSpecialEndLagDuration;
-				}
-				else {
-					Move1.Activate(facingRight, x, y, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration, forwardSpecialScalarX, forwardSpecialScalarY, forwardSpecialFixedX, forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialDissapearOnHit);
-					moveDuration = forwardSpecialStartUpDuration + Move1.IsActiveDuration() + forwardSpecialEndLagDuration;
-				}
-			}
-			else if (Move2.activeDuration == 0) {
-				if (up) {
-					Move2.Activate(facingRight, x, y, upSpecialAdditionalX, upSpecialAdditionalY, upSpecialWidth, upSpecialHeight, upSpecialStunDuration, upSpecialScalarX, upSpecialScalarY, upSpecialFixedX, upSpecialFixedY, upSpecialVx, upSpecialVy, upSpecialDamage, upSpecialStartUpDuration, upSpecialActiveDuration, upSpecialEndLagDuration, upSpecialIsAttachedToPlayer, upSpecialDissapearOnHit);
-					moveDuration = upSpecialStartUpDuration + Move2.IsActiveDuration() + upSpecialEndLagDuration;
-				}
-				else if (down) {
-					Move2.Activate(facingRight, x, y, downSpecialAdditionalX, downSpecialAdditionalY, downSpecialWidth, downSpecialHeight, downSpecialStunDuration, downSpecialScalarX, downSpecialScalarY, downSpecialFixedX, downSpecialFixedY, downSpecialVx, downSpecialVy, downSpecialDamage, downSpecialStartUpDuration, downSpecialActiveDuration, downSpecialEndLagDuration, downSpecialIsAttachedToPlayer, downSpecialDissapearOnHit);
-					moveDuration = downSpecialStartUpDuration + Move2.IsActiveDuration() + downSpecialEndLagDuration;
-				}
-				else {
-					Move2.Activate(facingRight, x, y, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration, forwardSpecialScalarX, forwardSpecialScalarY, forwardSpecialFixedX, forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialDissapearOnHit);
-					moveDuration = forwardSpecialStartUpDuration + Move2.IsActiveDuration() + forwardSpecialEndLagDuration;
-				}
-			}
-			else if (Move3.activeDuration == 0) {
-				if (up) {
-					Move3.Activate(facingRight, x, y, upSpecialAdditionalX, upSpecialAdditionalY, upSpecialWidth, upSpecialHeight, upSpecialStunDuration, upSpecialScalarX, upSpecialScalarY, upSpecialFixedX, upSpecialFixedY, upSpecialVx, upSpecialVy, upSpecialDamage, upSpecialStartUpDuration, upSpecialActiveDuration, upSpecialEndLagDuration, upSpecialIsAttachedToPlayer, upSpecialDissapearOnHit);
-					moveDuration = upSpecialStartUpDuration + Move3.IsActiveDuration() + upSpecialEndLagDuration;
-				}
-				else if (down) {
-					Move3.Activate(facingRight, x, y, downSpecialAdditionalX, downSpecialAdditionalY, downSpecialWidth, downSpecialHeight, downSpecialStunDuration, downSpecialScalarX, downSpecialScalarY, downSpecialFixedX, downSpecialFixedY, downSpecialVx, downSpecialVy, downSpecialDamage, downSpecialStartUpDuration, downSpecialActiveDuration, downSpecialEndLagDuration, downSpecialIsAttachedToPlayer, downSpecialDissapearOnHit);
-					moveDuration = downSpecialStartUpDuration + Move3.IsActiveDuration() + downSpecialEndLagDuration;
-				}
-				else {
-					Move3.Activate(facingRight, x, y, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration, forwardSpecialScalarX, forwardSpecialScalarY, forwardSpecialFixedX, forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialDissapearOnHit);
-					moveDuration = forwardSpecialStartUpDuration + Move3.IsActiveDuration() + forwardSpecialEndLagDuration;
-				}
-			}
-			else if (Move4.activeDuration == 0) {
-				if (up) {
-					Move4.Activate(facingRight, x, y, upSpecialAdditionalX, upSpecialAdditionalY, upSpecialWidth, upSpecialHeight, upSpecialStunDuration, upSpecialScalarX, upSpecialScalarY, upSpecialFixedX, upSpecialFixedY, upSpecialVx, upSpecialVy, upSpecialDamage, upSpecialStartUpDuration, upSpecialActiveDuration, upSpecialEndLagDuration, upSpecialIsAttachedToPlayer, upSpecialDissapearOnHit);
-					moveDuration = upSpecialStartUpDuration + Move4.IsActiveDuration() + upSpecialEndLagDuration;
-				}
-				else if (down) {
-					Move4.Activate(facingRight, x, y, downSpecialAdditionalX, downSpecialAdditionalY, downSpecialWidth, downSpecialHeight, downSpecialStunDuration, downSpecialScalarX, downSpecialScalarY, downSpecialFixedX, downSpecialFixedY, downSpecialVx, downSpecialVy, downSpecialDamage, downSpecialStartUpDuration, downSpecialActiveDuration, downSpecialEndLagDuration, downSpecialIsAttachedToPlayer, downSpecialDissapearOnHit);
-					moveDuration = downSpecialStartUpDuration + Move4.IsActiveDuration() + downSpecialEndLagDuration;
-				}
-				else {
-					Move4.Activate(facingRight, x, y, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration, forwardSpecialScalarX, forwardSpecialScalarY, forwardSpecialFixedX, forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialDissapearOnHit);
-					moveDuration = forwardSpecialStartUpDuration + Move4.IsActiveDuration() + forwardSpecialEndLagDuration;
-				}
-			}
-			else if (Move5.activeDuration == 0) {
-				if (up) {
-					Move5.Activate(facingRight, x, y, upSpecialAdditionalX, upSpecialAdditionalY, upSpecialWidth, upSpecialHeight, upSpecialStunDuration, upSpecialScalarX, upSpecialScalarY, upSpecialFixedX, upSpecialFixedY, upSpecialVx, upSpecialVy, upSpecialDamage, upSpecialStartUpDuration, upSpecialActiveDuration, upSpecialEndLagDuration, upSpecialIsAttachedToPlayer, upSpecialDissapearOnHit);
-					moveDuration = upSpecialStartUpDuration + Move5.IsActiveDuration() + upSpecialEndLagDuration;
-				}
-				else if (down) {
-					Move5.Activate(facingRight, x, y, downSpecialAdditionalX, downSpecialAdditionalY, downSpecialWidth, downSpecialHeight, downSpecialStunDuration, downSpecialScalarX, downSpecialScalarY, downSpecialFixedX, downSpecialFixedY, downSpecialVx, downSpecialVy, downSpecialDamage, downSpecialStartUpDuration, downSpecialActiveDuration, downSpecialEndLagDuration, downSpecialIsAttachedToPlayer, downSpecialDissapearOnHit);
-					moveDuration = downSpecialStartUpDuration + Move5.IsActiveDuration() + downSpecialEndLagDuration;
-				}
-				else {
-					Move5.Activate(facingRight, x, y, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration, forwardSpecialScalarX, forwardSpecialScalarY, forwardSpecialFixedX, forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialDissapearOnHit);
-					moveDuration = forwardSpecialStartUpDuration + Move5.IsActiveDuration() + forwardSpecialEndLagDuration;
+		else if (special) { //If using a special attack
+			for (int i = 0; i < 5; i++) {
+				if (moveArray[i].activeDuration == 0) {
+					if (up) { //If doing a move upwards
+						moveArray[i].Activate(width, facingRight, upSpecialAdditionalX, upSpecialAdditionalY, upSpecialWidth, upSpecialHeight, upSpecialStunDuration, upSpecialScalarX, upSpecialScalarY, upSpecialFixedX, upSpecialFixedY, upSpecialVx, upSpecialVy, upSpecialAccelerationx, upSpecialAccelerationy, upSpecialDamage, upSpecialStartUpDuration, upSpecialActiveDuration, upSpecialEndLagDuration, upSpecialIsAttachedToPlayer, upSpecialIsPlayerAttachedToIt, upSpecialDisappearOnHit, upSpecialR, upSpecialG, upSpecialB);  //Initialise the move
+						moveDuration = upSpecialStartUpDuration + moveArray[i].IsActiveDuration() + upSpecialEndLagDuration; //Set the player lag
+					}
+					else if (down) { //If doing a move upwards
+						moveArray[i].Activate(width, facingRight, downSpecialAdditionalX, upSpecialAdditionalY, downSpecialWidth, downSpecialHeight, downSpecialStunDuration, downSpecialScalarX, downSpecialScalarY, downSpecialFixedX, downSpecialFixedY, downSpecialVx, downSpecialVy, downSpecialAccelerationx, downSpecialAccelerationy, downSpecialDamage, downSpecialStartUpDuration, downSpecialActiveDuration, downSpecialEndLagDuration, downSpecialIsAttachedToPlayer, downSpecialIsPlayerAttachedToIt, downSpecialDisappearOnHit, downSpecialR, downSpecialG, downSpecialB);  //Initialise the move
+						moveDuration = downSpecialStartUpDuration + moveArray[i].IsActiveDuration() + downSpecialEndLagDuration; //Set the player lag
+					}
+					else { //If doing a move forwards
+						moveArray[i].Activate(width, facingRight, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration, forwardSpecialScalarX, forwardSpecialScalarY, forwardSpecialFixedX, forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialAccelerationx, forwardSpecialAccelerationy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialIsPlayerAttachedToIt, forwardSpecialDisappearOnHit, forwardSpecialR, forwardSpecialG, forwardSpecialB);  //Initialise the move
+						moveDuration = forwardSpecialStartUpDuration + moveArray[i].IsActiveDuration() + forwardSpecialEndLagDuration; //Set the player lag
+					}
+					i = 5;
 				}
 			}
 		}
-		Move1.CheckStatus(x, y);
-		Move2.CheckStatus(x, y);
-		Move3.CheckStatus(x, y);
-		Move4.CheckStatus(x, y);
-		Move5.CheckStatus(x, y);
+		else if (dodge && invincibilityCooldown == 0) { //If dodging
+			if (left) { //If holding left
+				vx = -speed; //Make the character move left
+			}
+			else if (right) { //
+				vx = speed;
+			}
+			else {
+				vx = 0;
+			}
+			if (!onStage) {
+				if (up) {
+					vy = -fallSpeed;
+				}
+				else if (down) {
+					vy = fallSpeed;
+				}
+				else {
+					vy = 0;
+				}
+			}
+			invincibility = 20;
+			moveDuration = 30 * weight;
+			invincibilityCooldown = 120 * weight;
+		}
+		for (int i = 0; i < 5; i++) { //For every move
+			moveArray[i].CheckStatus(x,y); //Run the necesarry functions every frame
+			if (moveArray[i].isPlayerAttachedToIt && moveArray[i].startUpDuration == 0 && moveArray[i].activeDuration > 0) { //If an active move attaches the player to it
+				x = moveArray[i].x; //Update the x coordinate
+				y = moveArray[i].y; //Update the y coordinate
+				if (!facingRight) {
+					x += moveArray[i].width + moveArray[i].additionalX;
+				}
+				freeFallDuration = 30;
+			}
+		}
 	}
 	else {
 		stun--;
@@ -432,17 +283,17 @@ bool Character::IsAlive(int stageWidth, int stageHeight, int leniancy)
 		vx = 0;
 		vy = 0;
 		playerPercentage = 0;
-		Move1.EndMove();
-		Move2.EndMove();
-		Move3.EndMove();
-		Move4.EndMove();
-		Move5.EndMove();
+		for (int i = 0; i < 5; i++) {
+			moveArray[i].EndMove();
+		}
 		if (lives > 0) {
 			y = 500-height;
 			x = stageWidth / 2;
+			invincibility = 300;
 			return true;
 		}
 		else {
+			invincibility = 0;
 			return false;
 		}
 	}
@@ -451,514 +302,427 @@ bool Character::IsAlive(int stageWidth, int stageHeight, int leniancy)
 
 bool Character::MoveDraw(int move)
 {
-	if (move == 1) {
-		return Move1.Draw();
-	}
-	if (move == 2) {
-		return Move2.Draw();
-	}
-	if (move == 3) {
-		return Move3.Draw();
-	}
-	if (move == 4) {
-		return Move4.Draw();
-	}
-	if (move == 5) {
-		return Move5.Draw();
-	}
-	return false;
+	return moveArray[move].Draw();
 }
 
-bool Character::IsMoveColliding(int Player2x, int Player2y, int Player2width, int Player2height)
+bool Character::IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height)
 {
-	if (Move1.IsMoveColliding(Player2x, Player2y, Player2width, Player2height)) {
-		moveThatHit = 1;
-		return true;
-	}
-	if (Move2.IsMoveColliding(Player2x, Player2y, Player2width, Player2height)) {
-		moveThatHit = 2;
-		return true;
-	}
-	if (Move3.IsMoveColliding(Player2x, Player2y, Player2width, Player2height)) {
-		moveThatHit = 3;
-		return true;
-	}
-	if (Move4.IsMoveColliding(Player2x, Player2y, Player2width, Player2height)) {
-		moveThatHit = 4;
-		return true;
-	}
-	if (Move5.IsMoveColliding(Player2x, Player2y, Player2width, Player2height)) {
-		moveThatHit = 5;
-		return true;
+	for (int i = 0; i < 5; i++) {
+		if (moveArray[i].IsMoveColliding(Player2x, Player2y, Player2width, Player2height)) {
+			moveThatHit = i;
+			return true;
+		}
 	}
 	return false;
 }
 
 int Character::MoveX0(int move)
 {
-	if (move == 1) {
-		return Move1.x + Move1.additionalX;
-	}
-	if (move == 2) {
-		return Move2.x + Move2.additionalX;
-	}
-	if (move == 3) {
-		return Move3.x + Move3.additionalX;
-	}
-	if (move == 4) {
-		return Move4.x + Move4.additionalX;
-	}
-	if (move == 5) {
-		return Move5.x + Move5.additionalX;
-	}
-	return 0;
+	return moveArray[move].x + moveArray[move].additionalX;
 }
 
 int Character::MoveY0(int move)
 {
-	if (move == 1) {
-		return Move1.y + Move1.additionalY;
-	}
-	if (move == 2) {
-		return Move2.y + Move2.additionalY;
-	}
-	if (move == 3) {
-		return Move3.y + Move3.additionalY;
-	}
-	if (move == 4) {
-		return Move4.y + Move4.additionalY;
-	}
-	if (move == 5) {
-		return Move5.y + Move5.additionalY;
-	}
-	return 0;
+	return moveArray[move].y + moveArray[move].additionalY;
+	
 }
 
 int Character::MoveX1(int move)
 {
-	if (move == 1) {
-		return Move1.x + Move1.additionalX + Move1.width;
-	}
-	if (move == 2) {
-		return Move2.x + Move2.additionalX + Move2.width;
-	}
-	if (move == 3) {
-		return Move3.x + Move3.additionalX + Move3.width;
-	}
-	if (move == 4) {
-		return Move4.x + Move4.additionalX + Move4.width;
-	}
-	if (move == 5) {
-		return Move5.x + Move5.additionalX + Move5.width;
-	}
-	return 0;
+	return moveArray[move].x + moveArray[move].additionalX + moveArray[0].width;
 }
 
 int Character::MoveY1(int move)
 {
-	if (move == 1) {
-		return Move1.y + Move1.height + Move1.additionalY;
-	}
-	if (move == 2) {
-		return Move2.y + Move2.height + Move2.additionalY;
-	}
-	if (move == 3) {
-		return Move3.y + Move3.height + Move3.additionalY;
-	}
-	if (move == 4) {
-		return Move4.y + Move4.height + Move4.additionalY;
-	}
-	if (move == 5) {
-		return Move5.y + Move5.height + Move5.additionalY;
-	}
-	return 0;
+	return moveArray[move].y + moveArray[move].height + moveArray[move].additionalY;
+}
+
+int Character::MoveR(int move)
+{
+	return moveArray[move].r;
+}
+
+int Character::MoveG(int move)
+{
+	return moveArray[move].g;
+}
+
+int Character::MoveB(int move)
+{
+	return moveArray[move].b;
 }
 
 int Character::MoveThatHitStun()
 {
-	if (moveThatHit == 1) {
-		return Move1.stunDuration;
-	}
-	if (moveThatHit == 2) {
-		return Move2.stunDuration;
-	}
-	if (moveThatHit == 3) {
-		return Move3.stunDuration;
-	}
-	if (moveThatHit == 4) {
-		return Move4.stunDuration;
-	}
-	if (moveThatHit == 5) {
-		return Move5.stunDuration;
-	}
-	return 0;
+	return 50;
+	//return moveArray[moveThatHit].stunDuration;
 }
 
-int Character::MoveThatHitDamage()
+float Character::MoveThatHitDamage()
 {
-	if (moveThatHit == 1) {
-		return Move1.damage;
-	}
-	if (moveThatHit == 2) {
-		return Move2.damage;
-	}
-	if (moveThatHit == 3) {
-		return Move3.damage;
-	}
-	if (moveThatHit == 4) {
-		return Move4.damage;
-	}
-	if (moveThatHit == 5) {
-		return Move5.damage;
-	}
-	return 0;
+	return moveArray[moveThatHit].damage;
 }
 
-int Character::MoveThatHitScalarX()
+float Character::MoveThatHitScalarX()
 {
-	if (moveThatHit == 1) {
-		return Move1.scalarX;
-	}
-	if (moveThatHit == 2) {
-		return Move2.scalarX;
-	}
-	if (moveThatHit == 3) {
-		return Move3.scalarX;
-	}
-	if (moveThatHit == 4) {
-		return Move4.scalarX;
-	}
-	if (moveThatHit == 5) {
-		return Move5.scalarX;
-	}
-	return 0;
+	return moveArray[moveThatHit].scalarX;
 }
 
-int Character::MoveThatHitScalarY()
+float Character::MoveThatHitScalarY()
 {
-	if (moveThatHit == 1) {
-		return Move1.scalarY;
-	}
-	if (moveThatHit == 2) {
-		return Move2.scalarY;
-	}
-	if (moveThatHit == 3) {
-		return Move3.scalarY;
-	}
-	if (moveThatHit == 4) {
-		return Move4.scalarY;
-	}
-	if (moveThatHit == 5) {
-		return Move5.scalarY;
-	}
-	return 0;
+	return moveArray[moveThatHit].scalarY;
 }
 
-int Character::MoveThatHitFixedX()
+float Character::MoveThatHitFixedX()
 {
-	if (moveThatHit == 1) {
-		return Move1.fixedX;
-	}
-	if (moveThatHit == 2) {
-		return Move2.fixedX;
-	}
-	if (moveThatHit == 3) {
-		return Move3.fixedX;
-	}
-	if (moveThatHit == 4) {
-		return Move4.fixedX;
-	}
-	if (moveThatHit == 5) {
-		return Move5.fixedX;
-	}
-	return 0;
+	return moveArray[moveThatHit].fixedX;
 }
 
-int Character::MoveThatHitFixedY()
+float Character::MoveThatHitFixedY()
 {
-	if (moveThatHit == 1) {
-		return Move1.fixedY;
-	}
-	if (moveThatHit == 2) {
-		return Move2.fixedY;
-	}
-	if (moveThatHit == 3) {
-		return Move3.fixedY;
-	}
-	if (moveThatHit == 4) {
-		return Move4.fixedY;
-	}
-	if (moveThatHit == 5) {
-		return Move5.fixedY;
-	}
-	return 0;
+	return moveArray[moveThatHit].fixedY;
 }
 
+void Character::Initialise(std::vector<float>& parameters){
+	y = 700 - height;
+	lives = 3;
+	width = (int)parameters[0];
+	height = (int)parameters[1];
+	walkSpeed = parameters[2];
+	aerialSpeed = parameters[3];
+	aerialAcceleration = parameters[4];
+	walkAcceleration = parameters[5];
+	groundJumpHeight = (int)parameters[6];
+	aerialJumpHeight = (int)parameters[7];
+	fallAcceleration = parameters[8];
+	fallSpeed = parameters[9];
+	weight = parameters[10];
+	maxDoubleJump = parameters[11];
 
-void Character::Initialise(int xReferral, int yReferral, int livesReferral, int widthReferral, int heightReferral, float walkSpeedReferral, float aerialSpeedReferral, float aerialAccelerationReferral, float walkAccelerationReferral, float groundJumpHeightReferral, float aerialJumpHeightReferral, float fallAccelerationReferral, float fallSpeedReferral, float weightReferral, int maxDoubleJumpReferral, int forwardLightAdditionalXReferral, int forwardLightAdditionalYReferral, int forwardLightWidthReferral, int forwardLightHeightReferral, float forwardLightStunDurationReferral, float forwardLightScalarXReferral, float forwardLightScalarYReferral, float forwardLightFixedXReferral, float forwardLightFixedYReferral, float forwardLightVxReferral, float forwardLightVyReferral, float forwardLightDamageReferral, float forwardLightStartUpDurationReferral, float forwardLightActiveDurationReferral, float forwardLightEndLagDurationReferral, bool forwardLightIsAttachedToPlayerReferral, bool forwardLightDissapearOnHitReferral, int upLightAdditionalXReferral, int upLightAdditionalYReferral, int upLightWidthReferral, int upLightHeightReferral, float upLightStunDurationReferral, float upLightScalarXReferral, float upLightScalarYReferral, float upLightFixedXReferral, float upLightFixedYReferral, float upLightVxReferral, float upLightVyReferral, float upLightDamageReferral, float upLightStartUpDurationReferral, float upLightActiveDurationReferral, float upLightEndLagDurationReferral, bool upLightIsAttachedToPlayerReferral, bool upLightDissapearOnHitReferral, int downLightAdditionalXReferral, int downLightAdditionalYReferral, int downLightWidthReferral, int downLightHeightReferral, float downLightStunDurationReferral, float downLightScalarXReferral, float downLightScalarYReferral, float downLightFixedXReferral, float downLightFixedYReferral, float downLightVxReferral, float downLightVyReferral, float downLightDamageReferral, float downLightStartUpDurationReferral, float downLightActiveDurationReferral, float downLightEndLagDurationReferral, bool downLightIsAttachedToPlayerReferral, bool downLightDissapearOnHitReferral, int forwardHeavyAdditionalXReferral, int forwardHeavyAdditionalYReferral, int forwardHeavyWidthReferral, int forwardHeavyHeightReferral, float forwardHeavyStunDurationReferral, float forwardHeavyScalarXReferral, float forwardHeavyScalarYReferral, float forwardHeavyFixedXReferral, float forwardHeavyFixedYReferral, float forwardHeavyVxReferral, float forwardHeavyVyReferral, float forwardHeavyDamageReferral, float forwardHeavyStartUpDurationReferral, float forwardHeavyActiveDurationReferral, float forwardHeavyEndLagDurationReferral, bool forwardHeavyIsAttachedToPlayerReferral, bool forwardHeavyDissapearOnHitReferral, int upHeavyAdditionalXReferral, int upHeavyAdditionalYReferral, int upHeavyWidthReferral, int upHeavyHeightReferral, float upHeavyStunDurationReferral, float upHeavyScalarXReferral, float upHeavyScalarYReferral, float upHeavyFixedXReferral, float upHeavyFixedYReferral, float upHeavyVxReferral, float upHeavyVyReferral, float upHeavyDamageReferral, float upHeavyStartUpDurationReferral, float upHeavyActiveDurationReferral, float upHeavyEndLagDurationReferral, bool upHeavyIsAttachedToPlayerReferral, bool upHeavyDissapearOnHitReferral, int downHeavyAdditionalXReferral, int downHeavyAdditionalYReferral, int downHeavyWidthReferral, int downHeavyHeightReferral, float downHeavyStunDurationReferral, float downHeavyScalarXReferral, float downHeavyScalarYReferral, float downHeavyFixedXReferral, float downHeavyFixedYReferral, float downHeavyVxReferral, float downHeavyVyReferral, float downHeavyDamageReferral, float downHeavyStartUpDurationReferral, float downHeavyActiveDurationReferral, float downHeavyEndLagDurationReferral, bool downHeavyIsAttachedToPlayerReferral, bool downHeavyDissapearOnHitReferral, int forwardAerialAdditionalXReferral, int forwardAerialAdditionalYReferral, int forwardAerialWidthReferral, int forwardAerialHeightReferral, float forwardAerialStunDurationReferral, float forwardAerialScalarXReferral, float forwardAerialScalarYReferral, float forwardAerialFixedXReferral, float forwardAerialFixedYReferral, float forwardAerialVxReferral, float forwardAerialVyReferral, float forwardAerialDamageReferral, float forwardAerialStartUpDurationReferral, float forwardAerialActiveDurationReferral, float forwardAerialEndLagDurationReferral, bool forwardAerialIsAttachedToPlayerReferral, bool forwardAerialDissapearOnHitReferral, int backAerialAdditionalXReferral, int backAerialAdditionalYReferral, int backAerialWidthReferral, int backAerialHeightReferral, float backAerialStunDurationReferral, float backAerialScalarXReferral, float backAerialScalarYReferral, float backAerialFixedXReferral, float backAerialFixedYReferral, float backAerialVxReferral, float backAerialVyReferral, float backAerialDamageReferral, float backAerialStartUpDurationReferral, float backAerialActiveDurationReferral, float backAerialEndLagDurationReferral, bool backAerialIsAttachedToPlayerReferral, bool backAerialDissapearOnHitReferral, int upAerialAdditionalXReferral, int upAerialAdditionalYReferral, int upAerialWidthReferral, int upAerialHeightReferral, float upAerialStunDurationReferral, float upAerialScalarXReferral, float upAerialScalarYReferral, float upAerialFixedXReferral, float upAerialFixedYReferral, float upAerialVxReferral, float upAerialVyReferral, float upAerialDamageReferral, float upAerialStartUpDurationReferral, float upAerialActiveDurationReferral, float upAerialEndLagDurationReferral, bool upAerialIsAttachedToPlayerReferral, bool upAerialDissapearOnHitReferral, int downAerialAdditionalXReferral, int downAerialAdditionalYReferral, int downAerialWidthReferral, int downAerialHeightReferral, float downAerialStunDurationReferral, float downAerialScalarXReferral, float downAerialScalarYReferral, float downAerialFixedXReferral, float downAerialFixedYReferral, float downAerialVxReferral, float downAerialVyReferral, float downAerialDamageReferral, float downAerialStartUpDurationReferral, float downAerialActiveDurationReferral, float downAerialEndLagDurationReferral, bool downAerialIsAttachedToPlayerReferral, bool downAerialDissapearOnHitReferral, int forwardSpecialAdditionalXReferral, int forwardSpecialAdditionalYReferral, int forwardSpecialWidthReferral, int forwardSpecialHeightReferral, float forwardSpecialStunDurationReferral, float forwardSpecialScalarXReferral, float forwardSpecialScalarYReferral, float forwardSpecialFixedXReferral, float forwardSpecialFixedYReferral, float forwardSpecialVxReferral, float forwardSpecialVyReferral, float forwardSpecialDamageReferral, float forwardSpecialStartUpDurationReferral, float forwardSpecialActiveDurationReferral, float forwardSpecialEndLagDurationReferral, bool forwardSpecialIsAttachedToPlayerReferral, bool forwardSpecialDissapearOnHitReferral, int upSpecialAdditionalXReferral, int upSpecialAdditionalYReferral, int upSpecialWidthReferral, int upSpecialHeightReferral, float upSpecialStunDurationReferral, float upSpecialScalarXReferral, float upSpecialScalarYReferral, float upSpecialFixedXReferral, float upSpecialFixedYReferral, float upSpecialVxReferral, float upSpecialVyReferral, float upSpecialDamageReferral, float upSpecialStartUpDurationReferral, float upSpecialActiveDurationReferral, float upSpecialEndLagDurationReferral, bool upSpecialIsAttachedToPlayerReferral, bool upSpecialDissapearOnHitReferral, int downSpecialAdditionalXReferral, int downSpecialAdditionalYReferral, int downSpecialWidthReferral, int downSpecialHeightReferral, float downSpecialStunDurationReferral, float downSpecialScalarXReferral, float downSpecialScalarYReferral, float downSpecialFixedXReferral, float downSpecialFixedYReferral, float downSpecialVxReferral, float downSpecialVyReferral, float downSpecialDamageReferral, float downSpecialStartUpDurationReferral, float downSpecialActiveDurationReferral, float downSpecialEndLagDurationReferral, bool downSpecialIsAttachedToPlayerReferral, bool downSpecialDissapearOnHitReferral) {
-	x = xReferral;
-	y = yReferral;
-	vx = 0;
-	vy = 0;
-	lives = livesReferral;
-	width = widthReferral;
-	height = heightReferral;
-	walkSpeed = walkSpeedReferral;
-	aerialSpeed = aerialSpeedReferral;
-	aerialAcceleration = aerialAccelerationReferral;
-	walkAcceleration = walkAccelerationReferral;
-	groundJumpHeight = groundJumpHeightReferral;
-	aerialJumpHeight = aerialJumpHeightReferral;
-	fallAcceleration = fallAccelerationReferral;
-	fallSpeed = fallSpeedReferral;
-	maxDoubleJump = maxDoubleJumpReferral;
-	doubleJump = maxDoubleJump;
+	forwardLightAdditionalX = (int)parameters[12];
+	forwardLightAdditionalY = (int)parameters[13];
+	forwardLightWidth = (int)parameters[14];
+	forwardLightHeight = (int)parameters[15];
+	forwardLightStunDuration = (int)parameters[16];
+	forwardLightScalarX = parameters[17];
+	forwardLightScalarY = parameters[18];
+	forwardLightFixedX = parameters[19];
+	forwardLightFixedY = parameters[20];
+	forwardLightVx = parameters[21];
+	forwardLightVy = parameters[22];
+	forwardLightAccelerationx = parameters[23];
+	forwardLightAccelerationy = parameters[24];
+	forwardLightDamage = parameters[25];
+	forwardLightStartUpDuration = (int)parameters[26];
+	forwardLightActiveDuration = (int)parameters[27];
+	forwardLightEndLagDuration = (int)parameters[28];
+	forwardLightIsAttachedToPlayer = parameters[29];
+	forwardLightIsPlayerAttachedToIt = parameters[30];
+	forwardLightDisappearOnHit = parameters[31];
 
-	forwardLightAdditionalX = forwardLightAdditionalXReferral;
-	forwardLightAdditionalY = forwardLightAdditionalYReferral;
-	forwardLightWidth = forwardLightWidthReferral;
-	forwardLightHeight = forwardLightHeightReferral;
-	forwardLightStunDuration = forwardLightStunDurationReferral;
-	forwardLightScalarX = forwardLightScalarXReferral;
-	forwardLightScalarY = forwardLightScalarYReferral;
-	forwardLightFixedX = forwardLightFixedXReferral;
-	forwardLightFixedY = forwardLightFixedYReferral;
-	forwardLightVx = forwardLightVxReferral;
-	forwardLightVy = forwardLightVyReferral;
-	forwardLightDamage = forwardLightDamageReferral;
-	forwardLightStartUpDuration = forwardLightStartUpDurationReferral;
-	forwardLightActiveDuration = forwardLightActiveDurationReferral;
-	forwardLightEndLagDuration = forwardLightEndLagDurationReferral;
-	forwardLightIsAttachedToPlayer = forwardLightIsAttachedToPlayerReferral;
-	forwardLightDissapearOnHit = forwardLightDissapearOnHitReferral;
+	upLightAdditionalX = (int)parameters[32];
+	upLightAdditionalY = (int)parameters[33];
+	upLightWidth = (int)parameters[34];
+	upLightHeight = (int)parameters[35];
+	upLightStunDuration = (int)parameters[36];
+	upLightScalarX = parameters[37];
+	upLightScalarY = parameters[38];
+	upLightFixedX = parameters[39];
+	upLightFixedY = parameters[40];
+	upLightVx = parameters[41];
+	upLightVy = parameters[42];
+	upLightAccelerationx = parameters[43];
+	upLightAccelerationy = parameters[44];
+	upLightDamage = parameters[45];
+	upLightStartUpDuration = (int)parameters[46];
+	upLightActiveDuration = (int)parameters[47];
+	upLightEndLagDuration = (int)parameters[48];
+	upLightIsAttachedToPlayer = parameters[49];
+	upLightIsPlayerAttachedToIt = parameters[50];
+	upLightDisappearOnHit = parameters[51];
 
-	upLightAdditionalX = upLightAdditionalXReferral;
-	upLightAdditionalY = upLightAdditionalYReferral;
-	upLightWidth = upLightWidthReferral;
-	upLightHeight = upLightHeightReferral;
-	upLightStunDuration = upLightStunDurationReferral;
-	upLightScalarX = upLightScalarXReferral;
-	upLightScalarY = upLightScalarYReferral;
-	upLightFixedX = upLightFixedXReferral;
-	upLightFixedY = upLightFixedYReferral;
-	upLightVx = upLightVxReferral;
-	upLightVy = upLightVyReferral;
-	upLightDamage = upLightDamageReferral;
-	upLightStartUpDuration = upLightStartUpDurationReferral;
-	upLightActiveDuration = upLightActiveDurationReferral;
-	upLightEndLagDuration = upLightEndLagDurationReferral;
-	upLightIsAttachedToPlayer = upLightIsAttachedToPlayerReferral;
-	upLightDissapearOnHit = upLightDissapearOnHitReferral;
+	downLightAdditionalX = (int)parameters[52];
+	downLightAdditionalY = (int)parameters[53];
+	downLightWidth = (int)parameters[54];
+	downLightHeight = (int)parameters[55];
+	downLightStunDuration = (int)parameters[56];
+	downLightScalarX = parameters[57];
+	downLightScalarY = parameters[58];
+	downLightFixedX = parameters[59];
+	downLightFixedY = parameters[60];
+	downLightVx = parameters[61];
+	downLightVy = parameters[62];
+	downLightAccelerationx = parameters[63];
+	downLightAccelerationy = parameters[64];
+	downLightDamage = parameters[65];
+	downLightStartUpDuration = (int)parameters[66];
+	downLightActiveDuration = (int)parameters[67];
+	downLightEndLagDuration = (int)parameters[68];
+	downLightIsAttachedToPlayer = parameters[69];
+	downLightIsPlayerAttachedToIt = parameters[70];
+	downLightDisappearOnHit = parameters[71];
 
-	downLightAdditionalX = downLightAdditionalXReferral;
-	downLightAdditionalY = downLightAdditionalYReferral;
-	downLightWidth = downLightWidthReferral;
-	downLightHeight = downLightHeightReferral;
-	downLightStunDuration = downLightStunDurationReferral;
-	downLightScalarX = downLightScalarXReferral;
-	downLightScalarY = downLightScalarYReferral;
-	downLightFixedX = downLightFixedXReferral;
-	downLightFixedY = downLightFixedYReferral;
-	downLightVx = downLightVxReferral;
-	downLightVy = downLightVyReferral;
-	downLightDamage = downLightDamageReferral;
-	downLightStartUpDuration = downLightStartUpDurationReferral;
-	downLightActiveDuration = downLightActiveDurationReferral;
-	downLightEndLagDuration = downLightEndLagDurationReferral;
-	downLightIsAttachedToPlayer = downLightIsAttachedToPlayerReferral;
-	downLightDissapearOnHit = downLightDissapearOnHitReferral;
+	forwardHeavyAdditionalX = (int)parameters[72];
+	forwardHeavyAdditionalY = (int)parameters[73];
+	forwardHeavyWidth = (int)parameters[74];
+	forwardHeavyHeight = (int)parameters[75];
+	forwardHeavyStunDuration = (int)parameters[76];
+	forwardHeavyScalarX = parameters[77];
+	forwardHeavyScalarY = parameters[78];
+	forwardHeavyFixedX = parameters[79];
+	forwardHeavyFixedY = parameters[80];
+	forwardHeavyVx = parameters[81];
+	forwardHeavyVy = parameters[82];
+	forwardHeavyAccelerationx = parameters[83];
+	forwardHeavyAccelerationy = parameters[84];
+	forwardHeavyDamage = parameters[85];
+	forwardHeavyStartUpDuration = (int)parameters[86];
+	forwardHeavyActiveDuration = (int)parameters[87];
+	forwardHeavyEndLagDuration = (int)parameters[88];
+	forwardHeavyIsAttachedToPlayer = parameters[89];
+	forwardHeavyIsPlayerAttachedToIt = parameters[90];
+	forwardHeavyDisappearOnHit = parameters[91];
 
-	forwardHeavyAdditionalX = forwardHeavyAdditionalXReferral;
-	forwardHeavyAdditionalY = forwardHeavyAdditionalYReferral;
-	forwardHeavyWidth = forwardHeavyWidthReferral;
-	forwardHeavyHeight = forwardHeavyHeightReferral;
-	forwardHeavyStunDuration = forwardHeavyStunDurationReferral;
-	forwardHeavyScalarX = forwardHeavyScalarXReferral;
-	forwardHeavyScalarY = forwardHeavyScalarYReferral;
-	forwardHeavyFixedX = forwardHeavyFixedXReferral;
-	forwardHeavyFixedY = forwardHeavyFixedYReferral;
-	forwardHeavyVx = forwardHeavyVxReferral;
-	forwardHeavyVy = forwardHeavyVyReferral;
-	forwardHeavyDamage = forwardHeavyDamageReferral;
-	forwardHeavyStartUpDuration = forwardHeavyStartUpDurationReferral;
-	forwardHeavyActiveDuration = forwardHeavyActiveDurationReferral;
-	forwardHeavyEndLagDuration = forwardHeavyEndLagDurationReferral;
-	forwardHeavyIsAttachedToPlayer = forwardHeavyIsAttachedToPlayerReferral;
-	forwardHeavyDissapearOnHit = forwardHeavyDissapearOnHitReferral;
+	upHeavyAdditionalX = (int)parameters[92];
+	upHeavyAdditionalY = (int)parameters[93];
+	upHeavyWidth = (int)parameters[94];
+	upHeavyHeight = (int)parameters[95];
+	upHeavyStunDuration = (int)parameters[96];
+	upHeavyScalarX = parameters[97];
+	upHeavyScalarY = parameters[98];
+	upHeavyFixedX = parameters[99];
+	upHeavyFixedY = parameters[100];
+	upHeavyVx = parameters[101];
+	upHeavyVy = parameters[102];
+	upHeavyAccelerationx = parameters[103];
+	upHeavyAccelerationy = parameters[104];
+	upHeavyDamage = parameters[105];
+	upHeavyStartUpDuration = (int)parameters[106];
+	upHeavyActiveDuration = (int)parameters[107];
+	upHeavyEndLagDuration = (int)parameters[108];
+	upHeavyIsAttachedToPlayer = parameters[109];
+	upHeavyIsPlayerAttachedToIt = parameters[110];
+	upHeavyDisappearOnHit = parameters[111];
 
-	upHeavyAdditionalX = upHeavyAdditionalXReferral;
-	upHeavyAdditionalY = upHeavyAdditionalYReferral;
-	upHeavyWidth = upHeavyWidthReferral;
-	upHeavyHeight = upHeavyHeightReferral;
-	upHeavyStunDuration = upHeavyStunDurationReferral;
-	upHeavyScalarX = upHeavyScalarXReferral;
-	upHeavyScalarY = upHeavyScalarYReferral;
-	upHeavyFixedX = upHeavyFixedXReferral;
-	upHeavyFixedY = upHeavyFixedYReferral;
-	upHeavyVx = upHeavyVxReferral;
-	upHeavyVy = upHeavyVyReferral;
-	upHeavyDamage = upHeavyDamageReferral;
-	upHeavyStartUpDuration = upHeavyStartUpDurationReferral;
-	upHeavyActiveDuration = upHeavyActiveDurationReferral;
-	upHeavyEndLagDuration = upHeavyEndLagDurationReferral;
-	upHeavyIsAttachedToPlayer = upHeavyIsAttachedToPlayerReferral;
-	upHeavyDissapearOnHit = upHeavyDissapearOnHitReferral;
+	downHeavyAdditionalX = (int)parameters[112];
+	downHeavyAdditionalY = (int)parameters[113];
+	downHeavyWidth = (int)parameters[114];
+	downHeavyHeight = (int)parameters[115];
+	downHeavyStunDuration = (int)parameters[116];
+	downHeavyScalarX = parameters[117];
+	downHeavyScalarY = parameters[118];
+	downHeavyFixedX = parameters[119];
+	downHeavyFixedY = parameters[120];
+	downHeavyVx = parameters[121];
+	downHeavyVy = parameters[122];
+	downHeavyAccelerationx = parameters[123];
+	downHeavyAccelerationy = parameters[124];
+	downHeavyDamage = parameters[125];
+	downHeavyStartUpDuration = (int)parameters[126];
+	downHeavyActiveDuration = (int)parameters[127];
+	downHeavyEndLagDuration = (int)parameters[128];
+	downHeavyIsAttachedToPlayer = parameters[129];
+	downHeavyIsPlayerAttachedToIt = parameters[130];
+	downHeavyDisappearOnHit = parameters[131];
 
-	downHeavyAdditionalX = downHeavyAdditionalXReferral;
-	downHeavyAdditionalY = downHeavyAdditionalYReferral;
-	downHeavyWidth = downHeavyWidthReferral;
-	downHeavyHeight = downHeavyHeightReferral;
-	downHeavyStunDuration = downHeavyStunDurationReferral;
-	downHeavyScalarX = downHeavyScalarXReferral;
-	downHeavyScalarY = downHeavyScalarYReferral;
-	downHeavyFixedX = downHeavyFixedXReferral;
-	downHeavyFixedY = downHeavyFixedYReferral;
-	downHeavyVx = downHeavyVxReferral;
-	downHeavyVy = downHeavyVyReferral;
-	downHeavyDamage = downHeavyDamageReferral;
-	downHeavyStartUpDuration = downHeavyStartUpDurationReferral;
-	downHeavyActiveDuration = downHeavyActiveDurationReferral;
-	downHeavyEndLagDuration = downHeavyEndLagDurationReferral;
-	downHeavyIsAttachedToPlayer = downHeavyIsAttachedToPlayerReferral;
-	downHeavyDissapearOnHit = downHeavyDissapearOnHitReferral;
+	forwardAerialAdditionalX = (int)parameters[132];
+	forwardAerialAdditionalY = (int)parameters[133];
+	forwardAerialWidth = (int)parameters[134];
+	forwardAerialHeight = (int)parameters[135];
+	forwardAerialStunDuration = (int)parameters[136];
+	forwardAerialScalarX = parameters[137];
+	forwardAerialScalarY = parameters[138];
+	forwardAerialFixedX = parameters[139];
+	forwardAerialFixedY = parameters[140];
+	forwardAerialVx = parameters[141];
+	forwardAerialVy = parameters[142];
+	forwardAerialAccelerationx = parameters[143];
+	forwardAerialAccelerationy = parameters[144];
+	forwardAerialDamage = parameters[145];
+	forwardAerialStartUpDuration = (int)parameters[146];
+	forwardAerialActiveDuration = (int)parameters[147];
+	forwardAerialEndLagDuration = (int)parameters[148];
+	forwardAerialIsAttachedToPlayer = parameters[149];
+	forwardAerialIsPlayerAttachedToIt = parameters[150];
+	forwardAerialDisappearOnHit = parameters[151];
 
-	forwardAerialAdditionalX = forwardAerialAdditionalXReferral;
-	forwardAerialAdditionalY = forwardAerialAdditionalYReferral;
-	forwardAerialWidth = forwardAerialWidthReferral;
-	forwardAerialHeight = forwardAerialHeightReferral;
-	forwardAerialStunDuration = forwardAerialStunDurationReferral;
-	forwardAerialScalarX = forwardAerialScalarXReferral;
-	forwardAerialScalarY = forwardAerialScalarYReferral;
-	forwardAerialFixedX = forwardAerialFixedXReferral;
-	forwardAerialFixedY = forwardAerialFixedYReferral;
-	forwardAerialVx = forwardAerialVxReferral;
-	forwardAerialVy = forwardAerialVyReferral;
-	forwardAerialDamage = forwardAerialDamageReferral;
-	forwardAerialStartUpDuration = forwardAerialStartUpDurationReferral;
-	forwardAerialActiveDuration = forwardAerialActiveDurationReferral;
-	forwardAerialEndLagDuration = forwardAerialEndLagDurationReferral;
-	forwardAerialIsAttachedToPlayer = forwardAerialIsAttachedToPlayerReferral;
-	forwardAerialDissapearOnHit = forwardAerialDissapearOnHitReferral;
+	backAerialAdditionalX = (int)parameters[152];
+	backAerialAdditionalY = (int)parameters[153];
+	backAerialWidth = (int)parameters[154];
+	backAerialHeight = (int)parameters[155];
+	backAerialStunDuration = (int)parameters[156];
+	backAerialScalarX = parameters[157];
+	backAerialScalarY = parameters[158];
+	backAerialFixedX = parameters[159];
+	backAerialFixedY = parameters[160];
+	backAerialVx = parameters[161];
+	backAerialVy = parameters[162];
+	backAerialAccelerationx = parameters[163];
+	backAerialAccelerationy = parameters[164];
+	backAerialDamage = parameters[165];
+	backAerialStartUpDuration = (int)parameters[166];
+	backAerialActiveDuration = (int)parameters[167];
+	backAerialEndLagDuration = (int)parameters[168];
+	backAerialIsAttachedToPlayer = parameters[169];
+	backAerialIsPlayerAttachedToIt = parameters[170];
+	backAerialDisappearOnHit = parameters[171];
 
-	backAerialAdditionalX = backAerialAdditionalXReferral;
-	backAerialAdditionalY = backAerialAdditionalYReferral;
-	backAerialWidth = backAerialWidthReferral;
-	backAerialHeight = backAerialHeightReferral;
-	backAerialStunDuration = backAerialStunDurationReferral;
-	backAerialScalarX = backAerialScalarXReferral;
-	backAerialScalarY = backAerialScalarYReferral;
-	backAerialFixedX = backAerialFixedXReferral;
-	backAerialFixedY = backAerialFixedYReferral;
-	backAerialVx = backAerialVxReferral;
-	backAerialVy = backAerialVyReferral;
-	backAerialDamage = backAerialDamageReferral;
-	backAerialStartUpDuration = backAerialStartUpDurationReferral;
-	backAerialActiveDuration = backAerialActiveDurationReferral;
-	backAerialEndLagDuration = backAerialEndLagDurationReferral;
-	backAerialIsAttachedToPlayer = backAerialIsAttachedToPlayerReferral;
-	backAerialDissapearOnHit = backAerialDissapearOnHitReferral;
+	upAerialAdditionalX = (int)parameters[172];
+	upAerialAdditionalY = (int)parameters[173];
+	upAerialWidth = (int)parameters[174];
+	upAerialHeight = (int)parameters[175];
+	upAerialStunDuration = (int)parameters[176];
+	upAerialScalarX = parameters[177];
+	upAerialScalarY = parameters[178];
+	upAerialFixedX = parameters[179];
+	upAerialFixedY = parameters[180];
+	upAerialVx = parameters[181];
+	upAerialVy = parameters[182];
+	upAerialAccelerationx = parameters[183];
+	upAerialAccelerationy = parameters[184];
+	upAerialDamage = parameters[185];
+	upAerialStartUpDuration = (int)parameters[186];
+	upAerialActiveDuration = (int)parameters[187];
+	upAerialEndLagDuration = (int)parameters[188];
+	upAerialIsAttachedToPlayer = parameters[189];
+	upAerialIsPlayerAttachedToIt = parameters[190];
+	upAerialDisappearOnHit = parameters[191];
 
-	upAerialAdditionalX = upAerialAdditionalXReferral;
-	upAerialAdditionalY = upAerialAdditionalYReferral;
-	upAerialWidth = upAerialWidthReferral;
-	upAerialHeight = upAerialHeightReferral;
-	upAerialStunDuration = upAerialStunDurationReferral;
-	upAerialScalarX = upAerialScalarXReferral;
-	upAerialScalarY = upAerialScalarYReferral;
-	upAerialFixedX = upAerialFixedXReferral;
-	upAerialFixedY = upAerialFixedYReferral;
-	upAerialVx = upAerialVxReferral;
-	upAerialVy = upAerialVyReferral;
-	upAerialDamage = upAerialDamageReferral;
-	upAerialStartUpDuration = upAerialStartUpDurationReferral;
-	upAerialActiveDuration = upAerialActiveDurationReferral;
-	upAerialEndLagDuration = upAerialEndLagDurationReferral;
-	upAerialIsAttachedToPlayer = upAerialIsAttachedToPlayerReferral;
-	upAerialDissapearOnHit = upAerialDissapearOnHitReferral;
+	downAerialAdditionalX = (int)parameters[192];
+	downAerialAdditionalY = (int)parameters[193];
+	downAerialWidth = (int)parameters[194];
+	downAerialHeight = (int)parameters[195];
+	downAerialStunDuration = (int)parameters[196];
+	downAerialScalarX = parameters[197];
+	downAerialScalarY = parameters[198];
+	downAerialFixedX = parameters[199];
+	downAerialFixedY = parameters[200];
+	downAerialVx = parameters[201];
+	downAerialVy = parameters[202];
+	downAerialAccelerationx = parameters[203];
+	downAerialAccelerationy = parameters[204];
+	downAerialDamage = parameters[205];
+	downAerialStartUpDuration = (int)parameters[206];
+	downAerialActiveDuration = (int)parameters[207];
+	downAerialEndLagDuration = (int)parameters[208];
+	downAerialIsAttachedToPlayer = parameters[209];
+	downAerialIsPlayerAttachedToIt = parameters[210];
+	downAerialDisappearOnHit = parameters[211];
 
-	downAerialAdditionalX = downAerialAdditionalXReferral;
-	downAerialAdditionalY = downAerialAdditionalYReferral;
-	downAerialWidth = downAerialWidthReferral;
-	downAerialHeight = downAerialHeightReferral;
-	downAerialStunDuration = downAerialStunDurationReferral;
-	downAerialScalarX = downAerialScalarXReferral;
-	downAerialScalarY = downAerialScalarYReferral;
-	downAerialFixedX = downAerialFixedXReferral;
-	downAerialFixedY = downAerialFixedYReferral;
-	downAerialVx = downAerialVxReferral;
-	downAerialVy = downAerialVyReferral;
-	downAerialDamage = downAerialDamageReferral;
-	downAerialStartUpDuration = downAerialStartUpDurationReferral;
-	downAerialActiveDuration = downAerialActiveDurationReferral;
-	downAerialEndLagDuration = downAerialEndLagDurationReferral;
-	downAerialIsAttachedToPlayer = downAerialIsAttachedToPlayerReferral;
-	downAerialDissapearOnHit = downAerialDissapearOnHitReferral;
+	forwardSpecialAdditionalX = (int)parameters[212];
+	forwardSpecialAdditionalY = (int)parameters[213];
+	forwardSpecialWidth = (int)parameters[214];
+	forwardSpecialHeight = (int)parameters[215];
+	forwardSpecialStunDuration = (int)parameters[216];
+	forwardSpecialScalarX = parameters[217];
+	forwardSpecialScalarY = parameters[218];
+	forwardSpecialFixedX = parameters[219];
+	forwardSpecialFixedY = parameters[220];
+	forwardSpecialVx = parameters[221];
+	forwardSpecialVy = parameters[222];
+	forwardSpecialAccelerationx = parameters[223];
+	forwardSpecialAccelerationy = parameters[224];
+	forwardSpecialDamage = parameters[225];
+	forwardSpecialStartUpDuration = (int)parameters[226];
+	forwardSpecialActiveDuration = (int)parameters[227];
+	forwardSpecialEndLagDuration = (int)parameters[228];
+	forwardSpecialIsAttachedToPlayer = parameters[229];
+	forwardSpecialIsPlayerAttachedToIt = parameters[230];
+	forwardSpecialDisappearOnHit = parameters[231];
 
-	forwardSpecialAdditionalX = forwardSpecialAdditionalXReferral;
-	forwardSpecialAdditionalY = forwardSpecialAdditionalYReferral;
-	forwardSpecialWidth = forwardSpecialWidthReferral;
-	forwardSpecialHeight = forwardSpecialHeightReferral;
-	forwardSpecialStunDuration = forwardSpecialStunDurationReferral;
-	forwardSpecialScalarX = forwardSpecialScalarXReferral;
-	forwardSpecialScalarY = forwardSpecialScalarYReferral;
-	forwardSpecialFixedX = forwardSpecialFixedXReferral;
-	forwardSpecialFixedY = forwardSpecialFixedYReferral;
-	forwardSpecialVx = forwardSpecialVxReferral;
-	forwardSpecialVy = forwardSpecialVyReferral;
-	forwardSpecialDamage = forwardSpecialDamageReferral;
-	forwardSpecialStartUpDuration = forwardSpecialStartUpDurationReferral;
-	forwardSpecialActiveDuration = forwardSpecialActiveDurationReferral;
-	forwardSpecialEndLagDuration = forwardSpecialEndLagDurationReferral;
-	forwardSpecialIsAttachedToPlayer = forwardSpecialIsAttachedToPlayerReferral;
-	forwardSpecialDissapearOnHit = forwardSpecialDissapearOnHitReferral;
+	upSpecialAdditionalX = (int)parameters[232];
+	upSpecialAdditionalY = (int)parameters[233];
+	upSpecialWidth = (int)parameters[234];
+	upSpecialHeight = (int)parameters[235];
+	upSpecialStunDuration = (int)parameters[236];
+	upSpecialScalarX = parameters[237];
+	upSpecialScalarY = parameters[238];
+	upSpecialFixedX = parameters[239];
+	upSpecialFixedY = parameters[240];
+	upSpecialVx = parameters[241];
+	upSpecialVy = parameters[242];
+	upSpecialAccelerationx = parameters[243];
+	upSpecialAccelerationy = parameters[244];
+	upSpecialDamage = parameters[245];
+	upSpecialStartUpDuration = (int)parameters[246];
+	upSpecialActiveDuration = (int)parameters[247];
+	upSpecialEndLagDuration = (int)parameters[248];
+	upSpecialIsAttachedToPlayer = parameters[249];
+	upSpecialIsPlayerAttachedToIt = parameters[250];
+	upSpecialDisappearOnHit = parameters[251];
 
-	upSpecialAdditionalX = upSpecialAdditionalXReferral;
-	upSpecialAdditionalY = upSpecialAdditionalYReferral;
-	upSpecialWidth = upSpecialWidthReferral;
-	upSpecialHeight = upSpecialHeightReferral;
-	upSpecialStunDuration = upSpecialStunDurationReferral;
-	upSpecialScalarX = upSpecialScalarXReferral;
-	upSpecialScalarY = upSpecialScalarYReferral;
-	upSpecialFixedX = upSpecialFixedXReferral;
-	upSpecialFixedY = upSpecialFixedYReferral;
-	upSpecialVx = upSpecialVxReferral;
-	upSpecialVy = upSpecialVyReferral;
-	upSpecialDamage = upSpecialDamageReferral;
-	upSpecialStartUpDuration = upSpecialStartUpDurationReferral;
-	upSpecialActiveDuration = upSpecialActiveDurationReferral;
-	upSpecialEndLagDuration = upSpecialEndLagDurationReferral;
-	upSpecialIsAttachedToPlayer = upSpecialIsAttachedToPlayerReferral;
-	upSpecialDissapearOnHit = upSpecialDissapearOnHitReferral;
-
-	downSpecialAdditionalX = downSpecialAdditionalXReferral;
-	downSpecialAdditionalY = downSpecialAdditionalYReferral;
-	downSpecialWidth = downSpecialWidthReferral;
-	downSpecialHeight = downSpecialHeightReferral;
-	downSpecialStunDuration = downSpecialStunDurationReferral;
-	downSpecialScalarX = downSpecialScalarXReferral;
-	downSpecialScalarY = downSpecialScalarYReferral;
-	downSpecialFixedX = downSpecialFixedXReferral;
-	downSpecialFixedY = downSpecialFixedYReferral;
-	downSpecialVx = downSpecialVxReferral;
-	downSpecialVy = downSpecialVyReferral;
-	downSpecialDamage = downSpecialDamageReferral;
-	downSpecialStartUpDuration = downSpecialStartUpDurationReferral;
-	downSpecialActiveDuration = downSpecialActiveDurationReferral;
-	downSpecialEndLagDuration = downSpecialEndLagDurationReferral;
-	downSpecialIsAttachedToPlayer = downSpecialIsAttachedToPlayerReferral;
-	downSpecialDissapearOnHit = downSpecialDissapearOnHitReferral;
+	downSpecialAdditionalX = (int)parameters[252];
+	downSpecialAdditionalY = (int)parameters[253];
+	downSpecialWidth = (int)parameters[254];
+	downSpecialHeight = (int)parameters[255];
+	downSpecialStunDuration = (int)parameters[256];
+	downSpecialScalarX = parameters[257];
+	downSpecialScalarY = parameters[258];
+	downSpecialFixedX = parameters[259];
+	downSpecialFixedY = parameters[260];
+	downSpecialVx = parameters[261];
+	downSpecialVy = parameters[262];
+	downSpecialAccelerationx = parameters[263];
+	downSpecialAccelerationy = parameters[264];
+	downSpecialDamage = parameters[265];
+	downSpecialStartUpDuration = (int)parameters[266];
+	downSpecialActiveDuration = (int)parameters[267];
+	downSpecialEndLagDuration = (int)parameters[268];
+	downSpecialIsAttachedToPlayer = parameters[269];
+	downSpecialIsPlayerAttachedToIt = parameters[270];
+	downSpecialDisappearOnHit = parameters[271];
+	forwardLightR = parameters[272];
+	forwardLightG = parameters[273];
+	forwardLightB = parameters[274];
+	upLightR = parameters[275];
+	upLightG = parameters[276];
+	upLightB = parameters[277];
+	downLightR = parameters[278];
+	downLightG = parameters[279];
+	downLightB = parameters[280];
+	forwardHeavyR = parameters[281];
+	forwardHeavyG = parameters[282];
+	forwardHeavyB = parameters[283];
+	upHeavyR = parameters[284];
+	upHeavyG = parameters[285];
+	upHeavyB = parameters[286];
+	downHeavyR = parameters[287];
+	downHeavyG = parameters[288];
+	downHeavyB = parameters[289];
+	forwardAerialR = parameters[290];
+	forwardAerialG = parameters[291];
+	forwardAerialB = parameters[292];
+	backAerialR = parameters[293];
+	backAerialG = parameters[294];
+	backAerialB = parameters[295];
+	upAerialR = parameters[296];
+	upAerialG = parameters[297];
+	upAerialB = parameters[298];
+	downAerialR = parameters[299];
+	downAerialG = parameters[300];
+	downAerialB = parameters[301];
+	forwardSpecialR = parameters[302];
+	forwardSpecialG = parameters[303];
+	forwardSpecialB = parameters[304];
+	upSpecialR = parameters[305];
+	upSpecialG = parameters[306];
+	upSpecialB = parameters[307];
+	downSpecialR = parameters[308];
+	downSpecialG = parameters[309];
+	downSpecialB = parameters[310];
 }
 
-void Character::IsHit(int stunReferral, int damage, int fixedX, int fixedY, int scalarX, int scalarY)
-{
-	stun = stunReferral;
-	playerPercentage = playerPercentage + damage;
-	vx = fixedX + scalarX * playerPercentage / 100;
-	vy = fixedY + scalarY * playerPercentage / 100;
-	moveDuration = 0;
-	Move1.PlayerIsHit();
-	Move2.PlayerIsHit();
-	Move3.PlayerIsHit();
-	Move4.PlayerIsHit();
-	Move5.PlayerIsHit();
+void Character::IsHit(int stunReferral, float damageReferral, int fixedXReferral, int fixedYReferral, int scalarXReferral, int scalarYReferral) {
+	if (invincibility == 0) {
+		stun = stunReferral;
+		playerPercentage += damageReferral;
+		vx = (fixedXReferral + scalarXReferral * playerPercentage / 100) / weight;
+		vy = (fixedYReferral + scalarYReferral * playerPercentage / 100) / weight;
+		moveDuration = 0;
+		for (int i = 0; i < 5; i++) {
+			if (!moveArray[i].isAttachedToPlayer) {
+				moveArray[i].PlayerIsHit();
+			}
+		}
+	}
 }

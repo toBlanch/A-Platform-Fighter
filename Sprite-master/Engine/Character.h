@@ -1,34 +1,42 @@
 #pragma once
 #include "Move.h"
+#include <vector>
 
 class Character {
 public:
-	void UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, int stageX0, int stageY0, int stageX1, int stageY1);
+	void UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1);
 	bool IsAlive(int stageWidth, int stageHeight, int leniancy);
 	bool MoveDraw(int move);
-	bool IsMoveColliding(int Player2x, int Player2y, int Player2width, int Player2height);
+	bool IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height);
 	int MoveX0(int move);
 	int MoveY0(int move);
 	int MoveX1(int move);
 	int MoveY1(int move);
+	int MoveR(int move);
+	int MoveG(int move);
+	int MoveB(int move);
 	int MoveThatHitStun();
-	int MoveThatHitDamage();
-	int MoveThatHitScalarX();
-	int MoveThatHitScalarY();
-	int MoveThatHitFixedX();
-	int MoveThatHitFixedY();
-	void Initialise(int xReferral, int yReferral, int livesReferral, int widthReferral, int heightReferral, float walkSpeedReferral, float aerialSpeedReferral, float aerialAccelerationReferral, float walkAccelerationReferral, float groundJumpHeightReferral, float aerialJumpHeightReferral, float fallAccelerationReferral, float fallSpeedReferral, float weightReferral, int maxDoubleJumpReferral, int forwardLightAdditionalXReferral, int forwardLightAdditionalYReferral, int forwardLightWidthReferral, int forwardLightHeightReferral, float forwardLightStunDurationReferral, float forwardLightScalarXReferral, float forwardLightScalarYReferral, float forwardLightFixedXReferral, float forwardLightFixedYReferral, float forwardLightVxReferral, float forwardLightVyReferral, float forwardLightDamageReferral, float forwardLightStartUpDurationReferral, float forwardLightActiveDurationReferral, float forwardLightEndLagDurationReferral, bool forwardLightIsAttachedToPlayerReferral, bool forwardLightDissapearOnHitReferral, int upLightAdditionalXReferral, int upLightAdditionalYReferral, int upLightWidthReferral, int upLightHeightReferral, float upLightStunDurationReferral, float upLightScalarXReferral, float upLightScalarYReferral, float upLightFixedXReferral, float upLightFixedYReferral, float upLightVxReferral, float upLightVyReferral, float upLightDamageReferral, float upLightStartUpDurationReferral, float upLightActiveDurationReferral, float upLightEndLagDurationReferral, bool upLightIsAttachedToPlayerReferral, bool upLightDissapearOnHitReferral, int downLightAdditionalXReferral, int downLightAdditionalYReferral, int downLightWidthReferral, int downLightHeightReferral, float downLightStunDurationReferral, float downLightScalarXReferral, float downLightScalarYReferral, float downLightFixedXReferral, float downLightFixedYReferral, float downLightVxReferral, float downLightVyReferral, float downLightDamageReferral, float downLightStartUpDurationReferral, float downLightActiveDurationReferral, float downLightEndLagDurationReferral, bool downLightIsAttachedToPlayerReferral, bool downLightDissapearOnHitReferral, int forwardHeavyAdditionalXReferral, int forwardHeavyAdditionalYReferral, int forwardHeavyWidthReferral, int forwardHeavyHeightReferral, float forwardHeavyStunDurationReferral, float forwardHeavyScalarXReferral, float forwardHeavyScalarYReferral, float forwardHeavyFixedXReferral, float forwardHeavyFixedYReferral, float forwardHeavyVxReferral, float forwardHeavyVyReferral, float forwardHeavyDamageReferral, float forwardHeavyStartUpDurationReferral, float forwardHeavyActiveDurationReferral, float forwardHeavyEndLagDurationReferral, bool forwardHeavyIsAttachedToPlayerReferral, bool forwardHeavyDissapearOnHitReferral, int upHeavyAdditionalXReferral, int upHeavyAdditionalYReferral, int upHeavyWidthReferral, int upHeavyHeightReferral, float upHeavyStunDurationReferral, float upHeavyScalarXReferral, float upHeavyScalarYReferral, float upHeavyFixedXReferral, float upHeavyFixedYReferral, float upHeavyVxReferral, float upHeavyVyReferral, float upHeavyDamageReferral, float upHeavyStartUpDurationReferral, float upHeavyActiveDurationReferral, float upHeavyEndLagDurationReferral, bool upHeavyIsAttachedToPlayerReferral, bool upHeavyDissapearOnHitReferral, int downHeavyAdditionalXReferral, int downHeavyAdditionalYReferral, int downHeavyWidthReferral, int downHeavyHeightReferral, float downHeavyStunDurationReferral, float downHeavyScalarXReferral, float downHeavyScalarYReferral, float downHeavyFixedXReferral, float downHeavyFixedYReferral, float downHeavyVxReferral, float downHeavyVyReferral, float downHeavyDamageReferral, float downHeavyStartUpDurationReferral, float downHeavyActiveDurationReferral, float downHeavyEndLagDurationReferral, bool downHeavyIsAttachedToPlayerReferral, bool downHeavyDissapearOnHitReferral, int forwardAerialAdditionalXReferral, int forwardAerialAdditionalYReferral, int forwardAerialWidthReferral, int forwardAerialHeightReferral, float forwardAerialStunDurationReferral, float forwardAerialScalarXReferral, float forwardAerialScalarYReferral, float forwardAerialFixedXReferral, float forwardAerialFixedYReferral, float forwardAerialVxReferral, float forwardAerialVyReferral, float forwardAerialDamageReferral, float forwardAerialStartUpDurationReferral, float forwardAerialActiveDurationReferral, float forwardAerialEndLagDurationReferral, bool forwardAerialIsAttachedToPlayerReferral, bool forwardAerialDissapearOnHitReferral, int backAerialAdditionalXReferral, int backAerialAdditionalYReferral, int backAerialWidthReferral, int backAerialHeightReferral, float backAerialStunDurationReferral, float backAerialScalarXReferral, float backAerialScalarYReferral, float backAerialFixedXReferral, float backAerialFixedYReferral, float backAerialVxReferral, float backAerialVyReferral, float backAerialDamageReferral, float backAerialStartUpDurationReferral, float backAerialActiveDurationReferral, float backAerialEndLagDurationReferral, bool backAerialIsAttachedToPlayerReferral, bool backAerialDissapearOnHitReferral, int upAerialAdditionalXReferral, int upAerialAdditionalYReferral, int upAerialWidthReferral, int upAerialHeightReferral, float upAerialStunDurationReferral, float upAerialScalarXReferral, float upAerialScalarYReferral, float upAerialFixedXReferral, float upAerialFixedYReferral, float upAerialVxReferral, float upAerialVyReferral, float upAerialDamageReferral, float upAerialStartUpDurationReferral, float upAerialActiveDurationReferral, float upAerialEndLagDurationReferral, bool upAerialIsAttachedToPlayerReferral, bool upAerialDissapearOnHitReferral, int downAerialAdditionalXReferral, int downAerialAdditionalYReferral, int downAerialWidthReferral, int downAerialHeightReferral, float downAerialStunDurationReferral, float downAerialScalarXReferral, float downAerialScalarYReferral, float downAerialFixedXReferral, float downAerialFixedYReferral, float downAerialVxReferral, float downAerialVyReferral, float downAerialDamageReferral, float downAerialStartUpDurationReferral, float downAerialActiveDurationReferral, float downAerialEndLagDurationReferral, bool downAerialIsAttachedToPlayerReferral, bool downAerialDissapearOnHitReferral, int forwardSpecialAdditionalXReferral, int forwardSpecialAdditionalYReferral, int forwardSpecialWidthReferral, int forwardSpecialHeightReferral, float forwardSpecialStunDurationReferral, float forwardSpecialScalarXReferral, float forwardSpecialScalarYReferral, float forwardSpecialFixedXReferral, float forwardSpecialFixedYReferral, float forwardSpecialVxReferral, float forwardSpecialVyReferral, float forwardSpecialDamageReferral, float forwardSpecialStartUpDurationReferral, float forwardSpecialActiveDurationReferral, float forwardSpecialEndLagDurationReferral, bool forwardSpecialIsAttachedToPlayerReferral, bool forwardSpecialDissapearOnHitReferral, int upSpecialAdditionalXReferral, int upSpecialAdditionalYReferral, int upSpecialWidthReferral, int upSpecialHeightReferral, float upSpecialStunDurationReferral, float upSpecialScalarXReferral, float upSpecialScalarYReferral, float upSpecialFixedXReferral, float upSpecialFixedYReferral, float upSpecialVxReferral, float upSpecialVyReferral, float upSpecialDamageReferral, float upSpecialStartUpDurationReferral, float upSpecialActiveDurationReferral, float upSpecialEndLagDurationReferral, bool upSpecialIsAttachedToPlayerReferral, bool upSpecialDissapearOnHitReferral, int downSpecialAdditionalXReferral, int downSpecialAdditionalYReferral, int downSpecialWidthReferral, int downSpecialHeightReferral, float downSpecialStunDurationReferral, float downSpecialScalarXReferral, float downSpecialScalarYReferral, float downSpecialFixedXReferral, float downSpecialFixedYReferral, float downSpecialVxReferral, float downSpecialVyReferral, float downSpecialDamageReferral, float downSpecialStartUpDurationReferral, float downSpecialActiveDurationReferral, float downSpecialEndLagDurationReferral, bool downSpecialIsAttachedToPlayerReferral, bool downSpecialDissapearOnHit);
-	void IsHit(int stunReferral, int damage, int fixedX, int fixedY, int scalarX, int scalarY);
+	float MoveThatHitDamage();
+	float MoveThatHitScalarX();
+	float MoveThatHitScalarY();
+	float MoveThatHitFixedX();
+	float MoveThatHitFixedY();
+	void Initialise(std::vector<float>& parameters);
+	//void Initialise(int xReferral, int yReferral, int livesReferral, int widthReferral, int heightReferral, float walkSpeedReferral, float aerialSpeedReferral, float aerialAccelerationReferral, float walkAccelerationReferral, float groundJumpHeightReferral, float aerialJumpHeightReferral, float fallAccelerationReferral, float fallSpeedReferral, float weightReferral, int maxDoubleJumpReferral, int forwardLightAdditionalXReferral, int forwardLightAdditionalYReferral, int forwardLightWidthReferral, int forwardLightHeightReferral, float forwardLightStunDurationReferral, float forwardLightScalarXReferral, float forwardLightScalarYReferral, float forwardLightFixedXReferral, float forwardLightFixedYReferral, float forwardLightVxReferral, float forwardLightVyReferral, float forwardLightDamageReferral, float forwardLightStartUpDurationReferral, float forwardLightActiveDurationReferral, float forwardLightEndLagDurationReferral, bool forwardLightIsAttachedToPlayerReferral, bool forwardLightDisappearOnHitReferral, int upLightAdditionalXReferral, int upLightAdditionalYReferral, int upLightWidthReferral, int upLightHeightReferral, float upLightStunDurationReferral, float upLightScalarXReferral, float upLightScalarYReferral, float upLightFixedXReferral, float upLightFixedYReferral, float upLightVxReferral, float upLightVyReferral, float upLightDamageReferral, float upLightStartUpDurationReferral, float upLightActiveDurationReferral, float upLightEndLagDurationReferral, bool upLightIsAttachedToPlayerReferral, bool upLightDisappearOnHitReferral, int downLightAdditionalXReferral, int downLightAdditionalYReferral, int downLightWidthReferral, int downLightHeightReferral, float downLightStunDurationReferral, float downLightScalarXReferral, float downLightScalarYReferral, float downLightFixedXReferral, float downLightFixedYReferral, float downLightVxReferral, float downLightVyReferral, float downLightDamageReferral, float downLightStartUpDurationReferral, float downLightActiveDurationReferral, float downLightEndLagDurationReferral, bool downLightIsAttachedToPlayerReferral, bool downLightDisappearOnHitReferral, int forwardHeavyAdditionalXReferral, int forwardHeavyAdditionalYReferral, int forwardHeavyWidthReferral, int forwardHeavyHeightReferral, float forwardHeavyStunDurationReferral, float forwardHeavyScalarXReferral, float forwardHeavyScalarYReferral, float forwardHeavyFixedXReferral, float forwardHeavyFixedYReferral, float forwardHeavyVxReferral, float forwardHeavyVyReferral, float forwardHeavyDamageReferral, float forwardHeavyStartUpDurationReferral, float forwardHeavyActiveDurationReferral, float forwardHeavyEndLagDurationReferral, bool forwardHeavyIsAttachedToPlayerReferral, bool forwardHeavyDisappearOnHitReferral, int upHeavyAdditionalXReferral, int upHeavyAdditionalYReferral, int upHeavyWidthReferral, int upHeavyHeightReferral, float upHeavyStunDurationReferral, float upHeavyScalarXReferral, float upHeavyScalarYReferral, float upHeavyFixedXReferral, float upHeavyFixedYReferral, float upHeavyVxReferral, float upHeavyVyReferral, float upHeavyDamageReferral, float upHeavyStartUpDurationReferral, float upHeavyActiveDurationReferral, float upHeavyEndLagDurationReferral, bool upHeavyIsAttachedToPlayerReferral, bool upHeavyDisappearOnHitReferral, int downHeavyAdditionalXReferral, int downHeavyAdditionalYReferral, int downHeavyWidthReferral, int downHeavyHeightReferral, float downHeavyStunDurationReferral, float downHeavyScalarXReferral, float downHeavyScalarYReferral, float downHeavyFixedXReferral, float downHeavyFixedYReferral, float downHeavyVxReferral, float downHeavyVyReferral, float downHeavyDamageReferral, float downHeavyStartUpDurationReferral, float downHeavyActiveDurationReferral, float downHeavyEndLagDurationReferral, bool downHeavyIsAttachedToPlayerReferral, bool downHeavyDisappearOnHitReferral, int forwardAerialAdditionalXReferral, int forwardAerialAdditionalYReferral, int forwardAerialWidthReferral, int forwardAerialHeightReferral, float forwardAerialStunDurationReferral, float forwardAerialScalarXReferral, float forwardAerialScalarYReferral, float forwardAerialFixedXReferral, float forwardAerialFixedYReferral, float forwardAerialVxReferral, float forwardAerialVyReferral, float forwardAerialDamageReferral, float forwardAerialStartUpDurationReferral, float forwardAerialActiveDurationReferral, float forwardAerialEndLagDurationReferral, bool forwardAerialIsAttachedToPlayerReferral, bool forwardAerialDisappearOnHitReferral, int backAerialAdditionalXReferral, int backAerialAdditionalYReferral, int backAerialWidthReferral, int backAerialHeightReferral, float backAerialStunDurationReferral, float backAerialScalarXReferral, float backAerialScalarYReferral, float backAerialFixedXReferral, float backAerialFixedYReferral, float backAerialVxReferral, float backAerialVyReferral, float backAerialDamageReferral, float backAerialStartUpDurationReferral, float backAerialActiveDurationReferral, float backAerialEndLagDurationReferral, bool backAerialIsAttachedToPlayerReferral, bool backAerialDisappearOnHitReferral, int upAerialAdditionalXReferral, int upAerialAdditionalYReferral, int upAerialWidthReferral, int upAerialHeightReferral, float upAerialStunDurationReferral, float upAerialScalarXReferral, float upAerialScalarYReferral, float upAerialFixedXReferral, float upAerialFixedYReferral, float upAerialVxReferral, float upAerialVyReferral, float upAerialDamageReferral, float upAerialStartUpDurationReferral, float upAerialActiveDurationReferral, float upAerialEndLagDurationReferral, bool upAerialIsAttachedToPlayerReferral, bool upAerialDisappearOnHitReferral, int downAerialAdditionalXReferral, int downAerialAdditionalYReferral, int downAerialWidthReferral, int downAerialHeightReferral, float downAerialStunDurationReferral, float downAerialScalarXReferral, float downAerialScalarYReferral, float downAerialFixedXReferral, float downAerialFixedYReferral, float downAerialVxReferral, float downAerialVyReferral, float downAerialDamageReferral, float downAerialStartUpDurationReferral, float downAerialActiveDurationReferral, float downAerialEndLagDurationReferral, bool downAerialIsAttachedToPlayerReferral, bool downAerialDisappearOnHitReferral, int forwardSpecialAdditionalXReferral, int forwardSpecialAdditionalYReferral, int forwardSpecialWidthReferral, int forwardSpecialHeightReferral, float forwardSpecialStunDurationReferral, float forwardSpecialScalarXReferral, float forwardSpecialScalarYReferral, float forwardSpecialFixedXReferral, float forwardSpecialFixedYReferral, float forwardSpecialVxReferral, float forwardSpecialVyReferral, float forwardSpecialDamageReferral, float forwardSpecialStartUpDurationReferral, float forwardSpecialActiveDurationReferral, float forwardSpecialEndLagDurationReferral, bool forwardSpecialIsAttachedToPlayerReferral, bool forwardSpecialDisappearOnHitReferral, int upSpecialAdditionalXReferral, int upSpecialAdditionalYReferral, int upSpecialWidthReferral, int upSpecialHeightReferral, float upSpecialStunDurationReferral, float upSpecialScalarXReferral, float upSpecialScalarYReferral, float upSpecialFixedXReferral, float upSpecialFixedYReferral, float upSpecialVxReferral, float upSpecialVyReferral, float upSpecialDamageReferral, float upSpecialStartUpDurationReferral, float upSpecialActiveDurationReferral, float upSpecialEndLagDurationReferral, bool upSpecialIsAttachedToPlayerReferral, bool upSpecialDisappearOnHitReferral, int downSpecialAdditionalXReferral, int downSpecialAdditionalYReferral, int downSpecialWidthReferral, int downSpecialHeightReferral, float downSpecialStunDurationReferral, float downSpecialScalarXReferral, float downSpecialScalarYReferral, float downSpecialFixedXReferral, float downSpecialFixedYReferral, float downSpecialVxReferral, float downSpecialVyReferral, float downSpecialDamageReferral, float downSpecialStartUpDurationReferral, float downSpecialActiveDurationReferral, float downSpecialEndLagDurationReferral, bool downSpecialIsAttachedToPlayerReferral, bool downSpecialDisappearOnHitReferral);
+	void Character::IsHit(int stunReferral, float damageReferral, int fixedXReferral, int fixedYReferral, int scalarXReferral, int scalarYReferral);
 	int lives = 3;
 	float x = 800;
 	float y = 0;
 	int width = 100;
 	int height = 100;
 	int moveDuration = 0;
-	int playerPercentage = 0;
+	float playerPercentage = 0;
 	int stun = 0;
 	bool facingRight = true;
+	int invincibility = 0;
+	int freeFallDuration = 0;
 private:
+	int invincibilityCooldown = 0;
 	float vx = 0;
 	float vy = 0;
 	float speed = 0;
@@ -48,7 +56,7 @@ private:
 	bool onStage = false;
 	bool jumpKeyHeld = false;
 	bool fastFalling = false;
-	Move Move1, Move2, Move3, Move4, Move5;
+	Move moveArray[5];
 
 	int forwardLightAdditionalX = 0;
 	int forwardLightAdditionalY = 0;
@@ -61,12 +69,15 @@ private:
 	float forwardLightFixedY = 0;
 	float forwardLightVx = 0;
 	float forwardLightVy = 0;
+	float forwardLightAccelerationx = 0;
+	float forwardLightAccelerationy = 0;
 	float forwardLightDamage = 0;
-	float forwardLightStartUpDuration = 0;
-	float forwardLightActiveDuration = 0;
-	float forwardLightEndLagDuration = 0;
+	int forwardLightStartUpDuration = 0;
+	int forwardLightActiveDuration = 0;
+	int forwardLightEndLagDuration = 0;
 	bool forwardLightIsAttachedToPlayer = false;
-	bool forwardLightDissapearOnHit = false;
+	bool forwardLightIsPlayerAttachedToIt = false;
+	bool forwardLightDisappearOnHit = false;
 
 	int upLightAdditionalX = 0;
 	int upLightAdditionalY = 0;
@@ -79,12 +90,15 @@ private:
 	float upLightFixedY = 0;
 	float upLightVx = 0;
 	float upLightVy = 0;
+	float upLightAccelerationx = 0;
+	float upLightAccelerationy = 0;
 	float upLightDamage = 0;
-	float upLightStartUpDuration = 0;
-	float upLightActiveDuration = 0;
-	float upLightEndLagDuration = 0;
+	int upLightStartUpDuration = 0;
+	int upLightActiveDuration = 0;
+	int upLightEndLagDuration = 0;
 	bool upLightIsAttachedToPlayer = false;
-	bool upLightDissapearOnHit = false;
+	bool upLightIsPlayerAttachedToIt = false;
+	bool upLightDisappearOnHit = false;
 
 	int downLightAdditionalX = 0;
 	int downLightAdditionalY = 0;
@@ -97,12 +111,15 @@ private:
 	float downLightFixedY = 0;
 	float downLightVx = 0;
 	float downLightVy = 0;
+	float downLightAccelerationx = 0;
+	float downLightAccelerationy = 0;
 	float downLightDamage = 0;
-	float downLightStartUpDuration = 0;
-	float downLightActiveDuration = 0;
-	float downLightEndLagDuration = 0;
+	int downLightStartUpDuration = 0;
+	int downLightActiveDuration = 0;
+	int downLightEndLagDuration = 0;
 	bool downLightIsAttachedToPlayer = false;
-	bool downLightDissapearOnHit = false;
+	bool downLightIsPlayerAttachedToIt = false;
+	bool downLightDisappearOnHit = false;
 
 	int forwardHeavyAdditionalX = 0;
 	int forwardHeavyAdditionalY = 0;
@@ -115,12 +132,15 @@ private:
 	float forwardHeavyFixedY = 0;
 	float forwardHeavyVx = 0;
 	float forwardHeavyVy = 0;
+	float forwardHeavyAccelerationx = 0;
+	float forwardHeavyAccelerationy = 0;
 	float forwardHeavyDamage = 0;
-	float forwardHeavyStartUpDuration = 0;
-	float forwardHeavyActiveDuration = 0;
-	float forwardHeavyEndLagDuration = 0;
+	int forwardHeavyStartUpDuration = 0;
+	int forwardHeavyActiveDuration = 0;
+	int forwardHeavyEndLagDuration = 0;
 	bool forwardHeavyIsAttachedToPlayer = false;
-	bool forwardHeavyDissapearOnHit = false;
+	bool forwardHeavyIsPlayerAttachedToIt = false;
+	bool forwardHeavyDisappearOnHit = false;
 
 	int upHeavyAdditionalX = 0;
 	int upHeavyAdditionalY = 0;
@@ -133,12 +153,15 @@ private:
 	float upHeavyFixedY = 0;
 	float upHeavyVx = 0;
 	float upHeavyVy = 0;
+	float upHeavyAccelerationx = 0;
+	float upHeavyAccelerationy = 0;
 	float upHeavyDamage = 0;
-	float upHeavyStartUpDuration = 0;
-	float upHeavyActiveDuration = 0;
-	float upHeavyEndLagDuration = 0;
+	int upHeavyStartUpDuration = 0;
+	int upHeavyActiveDuration = 0;
+	int upHeavyEndLagDuration = 0;
 	bool upHeavyIsAttachedToPlayer = false;
-	bool upHeavyDissapearOnHit = false;
+	bool upHeavyIsPlayerAttachedToIt = false;
+	bool upHeavyDisappearOnHit = false;
 
 	int downHeavyAdditionalX = 0;
 	int downHeavyAdditionalY = 0;
@@ -151,12 +174,15 @@ private:
 	float downHeavyFixedY = 0;
 	float downHeavyVx = 0;
 	float downHeavyVy = 0;
+	float downHeavyAccelerationx = 0;
+	float downHeavyAccelerationy = 0;
 	float downHeavyDamage = 0;
-	float downHeavyStartUpDuration = 0;
-	float downHeavyActiveDuration = 0;
-	float downHeavyEndLagDuration = 0;
+	int downHeavyStartUpDuration = 0;
+	int downHeavyActiveDuration = 0;
+	int downHeavyEndLagDuration = 0;
 	bool downHeavyIsAttachedToPlayer = false;
-	bool downHeavyDissapearOnHit = false;
+	bool downHeavyIsPlayerAttachedToIt = false;
+	bool downHeavyDisappearOnHit = false;
 
 	int forwardAerialAdditionalX = 0;
 	int forwardAerialAdditionalY = 0;
@@ -169,12 +195,15 @@ private:
 	float forwardAerialFixedY = 0;
 	float forwardAerialVx = 0;
 	float forwardAerialVy = 0;
+	float forwardAerialAccelerationx = 0;
+	float forwardAerialAccelerationy = 0;
 	float forwardAerialDamage = 0;
-	float forwardAerialStartUpDuration = 0;
-	float forwardAerialActiveDuration = 0;
-	float forwardAerialEndLagDuration = 0;
+	int forwardAerialStartUpDuration = 0;
+	int forwardAerialActiveDuration = 0;
+	int forwardAerialEndLagDuration = 0;
 	bool forwardAerialIsAttachedToPlayer = false;
-	bool forwardAerialDissapearOnHit = false;
+	bool forwardAerialIsPlayerAttachedToIt = false;
+	bool forwardAerialDisappearOnHit = false;
 
 	int backAerialAdditionalX = 0;
 	int backAerialAdditionalY = 0;
@@ -187,12 +216,15 @@ private:
 	float backAerialFixedY = 0;
 	float backAerialVx = 0;
 	float backAerialVy = 0;
+	float backAerialAccelerationx = 0;
+	float backAerialAccelerationy = 0;
 	float backAerialDamage = 0;
-	float backAerialStartUpDuration = 0;
-	float backAerialActiveDuration = 0;
-	float backAerialEndLagDuration = 0;
+	int backAerialStartUpDuration = 0;
+	int backAerialActiveDuration = 0;
+	int backAerialEndLagDuration = 0;
 	bool backAerialIsAttachedToPlayer = false;
-	bool backAerialDissapearOnHit = false;
+	bool backAerialIsPlayerAttachedToIt = false;
+	bool backAerialDisappearOnHit = false;
 
 	int upAerialAdditionalX = 0;
 	int upAerialAdditionalY = 0;
@@ -205,12 +237,15 @@ private:
 	float upAerialFixedY = 0;
 	float upAerialVx = 0;
 	float upAerialVy = 0;
+	float upAerialAccelerationx = 0;
+	float upAerialAccelerationy = 0;
 	float upAerialDamage = 0;
-	float upAerialStartUpDuration = 0;
-	float upAerialActiveDuration = 0;
-	float upAerialEndLagDuration = 0;
+	int upAerialStartUpDuration = 0;
+	int upAerialActiveDuration = 0;
+	int upAerialEndLagDuration = 0;
 	bool upAerialIsAttachedToPlayer = false;
-	bool upAerialDissapearOnHit = false;
+	bool upAerialIsPlayerAttachedToIt = false;
+	bool upAerialDisappearOnHit = false;
 
 	int downAerialAdditionalX = 0;
 	int downAerialAdditionalY = 0;
@@ -223,12 +258,15 @@ private:
 	float downAerialFixedY = 0;
 	float downAerialVx = 0;
 	float downAerialVy = 0;
+	float downAerialAccelerationx = 0;
+	float downAerialAccelerationy = 0;
 	float downAerialDamage = 0;
-	float downAerialStartUpDuration = 0;
-	float downAerialActiveDuration = 0;
-	float downAerialEndLagDuration = 0;
+	int downAerialStartUpDuration = 0;
+	int downAerialActiveDuration = 0;
+	int downAerialEndLagDuration = 0;
 	bool downAerialIsAttachedToPlayer = false;
-	bool downAerialDissapearOnHit = false;
+	bool downAerialIsPlayerAttachedToIt = false;
+	bool downAerialDisappearOnHit = false;
 
 	int forwardSpecialAdditionalX = 0;
 	int forwardSpecialAdditionalY = 0;
@@ -241,12 +279,15 @@ private:
 	float forwardSpecialFixedY = 0;
 	float forwardSpecialVx = 0;
 	float forwardSpecialVy = 0;
+	float forwardSpecialAccelerationx = 0;
+	float forwardSpecialAccelerationy = 0;
 	float forwardSpecialDamage = 0;
-	float forwardSpecialStartUpDuration = 0;
-	float forwardSpecialActiveDuration = 0;
-	float forwardSpecialEndLagDuration = 0;
+	int forwardSpecialStartUpDuration = 0;
+	int forwardSpecialActiveDuration = 0;
+	int forwardSpecialEndLagDuration = 0;
 	bool forwardSpecialIsAttachedToPlayer = false;
-	bool forwardSpecialDissapearOnHit = false;
+	bool forwardSpecialIsPlayerAttachedToIt = false;
+	bool forwardSpecialDisappearOnHit = false;
 
 	int upSpecialAdditionalX = 0;
 	int upSpecialAdditionalY = 0;
@@ -259,12 +300,15 @@ private:
 	float upSpecialFixedY = 0;
 	float upSpecialVx = 0;
 	float upSpecialVy = 0;
+	float upSpecialAccelerationx = 0;
+	float upSpecialAccelerationy = 0;
 	float upSpecialDamage = 0;
-	float upSpecialStartUpDuration = 0;
-	float upSpecialActiveDuration = 0;
-	float upSpecialEndLagDuration = 0;
+	int upSpecialStartUpDuration = 0;
+	int upSpecialActiveDuration = 0;
+	int upSpecialEndLagDuration = 0;
 	bool upSpecialIsAttachedToPlayer = false;
-	bool upSpecialDissapearOnHit = false;
+	bool upSpecialIsPlayerAttachedToIt = false;
+	bool upSpecialDisappearOnHit = false;
 
 	int downSpecialAdditionalX = 0;
 	int downSpecialAdditionalY = 0;
@@ -277,10 +321,53 @@ private:
 	float downSpecialFixedY = 0;
 	float downSpecialVx = 0;
 	float downSpecialVy = 0;
+	float downSpecialAccelerationx = 0;
+	float downSpecialAccelerationy = 0;
 	float downSpecialDamage = 0;
-	float downSpecialStartUpDuration = 0;
-	float downSpecialActiveDuration = 0;
-	float downSpecialEndLagDuration = 0;
+	int downSpecialStartUpDuration = 0;
+	int downSpecialActiveDuration = 0;
+	int downSpecialEndLagDuration = 0;
 	bool downSpecialIsAttachedToPlayer = false;
-	bool downSpecialDissapearOnHit = false;
+	bool downSpecialIsPlayerAttachedToIt = false;
+	bool downSpecialDisappearOnHit = false;
+
+	int forwardLightR = 0;
+	int forwardLightG = 0;
+	int forwardLightB = 0;
+	int upLightR = 0;
+	int upLightG = 0;
+	int upLightB = 0;
+	int downLightR = 0;
+	int downLightG = 0;
+	int downLightB = 0;
+	int forwardHeavyR = 0;
+	int forwardHeavyG = 0;
+	int forwardHeavyB = 0;
+	int upHeavyR = 0;
+	int upHeavyG = 0;
+	int upHeavyB = 0;
+	int downHeavyR = 0;
+	int downHeavyG = 0;
+	int downHeavyB = 0;
+	int forwardAerialR = 0;
+	int forwardAerialG = 0;
+	int forwardAerialB = 0;
+	int backAerialR = 0;
+	int backAerialG = 0;
+	int backAerialB = 0;
+	int upAerialR = 0;
+	int upAerialG = 0;
+	int upAerialB = 0;
+	int downAerialR = 0;
+	int downAerialG = 0;
+	int downAerialB = 0;
+	int forwardSpecialR = 0;
+	int forwardSpecialG = 0;
+	int forwardSpecialB = 0;
+	int upSpecialR = 0;
+	int upSpecialG = 0;
+	int upSpecialB = 0;
+	int downSpecialR = 0;
+	int downSpecialG = 0;
+	int downSpecialB = 0;
 };

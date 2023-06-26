@@ -2,20 +2,40 @@
 
 class Move {
 public:
-	void CheckStatus(int xReferral, int yReferral);
-	void Activate(bool isFacingRight, int xReferral, int yReferral, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool dissapearOnHitReferral);
+	void CheckStatus(float xReferral, float yReferral);
+	void Activate(int playerWidthReferral, bool isFacingRight, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float accelerationxReferral, float accelerationyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool isPlayerAttachedToItReferral, bool disappearOnHitReferral, int rReferral, int gReferral, int bReferral);
 	bool Draw();
 	void EndMove();
-	bool IsMoveColliding(int Player2x, int Player2y, int Player2width, int Player2height);
+	bool IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height);
 	void PlayerIsHit();
 	int IsActiveDuration();
-	bool hasHit = false;
-	int x, y, additionalX, additionalY, width, height, stunDuration, scalarX, scalarY, fixedX, fixedY, vx, vy, damage, startUpDuration, endLagDuration = 0;
+	int x = 0;
+	int y = 0;
+	int additionalX = 0;
+	int additionalY = 0;
+	int width = 0;
+	int height = 0;
+	int startUpDuration = 0;
+	int endLagDuration = 0;
+	int playerWidth = 0;
+	float stunDuration = 0;
+	float scalarX = 0;
+	float scalarY = 0;
+	float fixedX = 0;
+	float fixedY = 0;
+	float vx = 0;
+	float vy = 0;
+	float accelerationx = 0;
+	float accelerationy = 0;
+	float damage = 0;
 	 
 	int activeDuration = 0;
-	int playerWidth = 100;
+	bool hasHit = false;
+	bool isAttachedToPlayer = true;
+	bool isPlayerAttachedToIt = false;
+	bool disappearOnHit = false;
 
-private:
-	bool isAttachedToPlayer=true;
-	bool dissapearOnHit = false;
+	int r = 0;
+	int g = 0;
+	int b = 0;
 };
