@@ -2,8 +2,8 @@
 
 class Move {
 public:
-	void CheckStatus(float xReferral, float yReferral);
-	void Activate(int playerWidthReferral, bool isFacingRight, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float accelerationxReferral, float accelerationyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool isPlayerAttachedToItReferral, bool disappearOnHitReferral, int rReferral, int gReferral, int bReferral);
+	void CheckStatus(float xReferral, float yReferral, int stageX0, int stageY0, int stageX1, int stageY1);
+	void Activate(int playerWidthReferral, int playerHeightReferral, bool isFacingRight, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float accelerationxReferral, float accelerationyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool isPlayerAttachedToItReferral, bool disappearOnHitReferral, int rReferral, int gReferral, int bReferral);
 	bool Draw();
 	void EndMove();
 	bool IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height);
@@ -18,6 +18,7 @@ public:
 	int startUpDuration = 0;
 	int endLagDuration = 0;
 	int playerWidth = 0;
+	int playerHeight = 0;
 	float stunDuration = 0;
 	float scalarX = 0;
 	float scalarY = 0;

@@ -1,6 +1,6 @@
 #include "Move.h"
 
-void Move::CheckStatus(float xReferral, float yReferral)
+void Move::CheckStatus(float xReferral, float yReferral, int stageX0, int stageY0, int stageX1, int stageY1)
 {
 	if (startUpDuration > 0) { //If not active yet
 		startUpDuration--; //Decrease the time until it starts
@@ -9,20 +9,63 @@ void Move::CheckStatus(float xReferral, float yReferral)
 		activeDuration--; //Decrease the time until the move ends
 		vx += accelerationx;
 		vy += accelerationy;
-		x += vx; //Increase the X coordinate
-		y += vy; //Increase the Y coordinate
+
+		x += vx;
+		y += vy;
+
+		if (isPlayerAttachedToIt) {
+			x = xReferral + vx;
+			y = yReferral + vy;
+		}
+		else if (!isAttachedToPlayer) {
+			bool xOnStage = x + additionalX + width > stageX0 && x + additionalX < stageX1;
+			bool yOnStage = y + additionalY + height >= stageY0 && y + additionalY <= stageY1;
+
+			if (yOnStage && x + additionalX + width > stageX0 && x + additionalX + width <= stageX0 + vx) { //If clipping into stage from the left
+				x = float(stageX0) - width - additionalX; //Stop clipping
+			}
+			else if (yOnStage && x + additionalX >= stageX1 + vx && x + additionalX < stageX1) { //If clipping into stage from right
+				x = (float)stageX1 - additionalX; //Stop clipping
+			}
+
+			if (xOnStage && y + additionalY + height >= stageY0 && y + additionalY + height <= stageY0 + vy) {
+				y = (float)stageY0 - height - additionalY; //Stop clipping
+			}
+			else if (xOnStage && y + additionalY >= stageY1 - vy && y + additionalY <= stageY1) {
+				y = (float)stageY1 - additionalY; //Stop clipping
+			}
+		}
 	}
+
 	if (isAttachedToPlayer || startUpDuration > 0) { //If the move is activating or if attached to the player
-		x = xReferral + playerWidth / 2; //Set the x coordinate to half way through the player
+		x = xReferral; //Set the X coordinate to the player's
 		y = yReferral; //Set the Y coordinate to the player's
+
+		bool xOnStage = x + additionalX + width > stageX0 && x + additionalX < stageX1;
+		bool yOnStage = y + additionalY + height >= stageY0 && y + additionalY <= stageY1;
+
+		if (yOnStage && x + additionalX + width > stageX0 && x + additionalX + width <= stageX0 + additionalX) { //If clipping into stage from the left
+			x = float(stageX0) - width - additionalX; //Stop clipping
+		}
+		else if (yOnStage && x + additionalX >= stageX1 + additionalX && x + additionalX < stageX1) { //If clipping into stage from right
+			x = (float)stageX1 - additionalX; //Stop clipping
+		}
+
+		if (xOnStage && y + additionalY + height >= stageY0 && y + additionalY + height <= stageY0 + additionalY) {
+			y = (float)stageY0 - height - additionalY; //Stop clipping
+		}
+		else if (xOnStage && y + additionalY >= stageY1 - additionalY && y + additionalY <= stageY1) {
+			y = (float)stageY1 - additionalY; //Stop clipping
+		}
 	}
 }
 
-void Move::Activate(int playerWidthReferral, bool isFacingRight, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float accelerationxReferral, float accelerationyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool isPlayerAttachedToItReferral, bool disappearOnHitReferral, int rReferral, int gReferral, int bReferral)
+void Move::Activate(int playerWidthReferral, int playerHeightReferral, bool isFacingRight, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float accelerationxReferral, float accelerationyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool isPlayerAttachedToItReferral, bool disappearOnHitReferral, int rReferral, int gReferral, int bReferral)
 {
 	//Refer variables 
 	hasHit = false;
 	playerWidth = playerWidthReferral;
+	playerHeight = playerHeightReferral;
 	additionalX = additionalXReferral;
 	additionalY = additionalYReferral;
 	width = widthReferral;
@@ -45,7 +88,7 @@ void Move::Activate(int playerWidthReferral, bool isFacingRight, int additionalX
 	disappearOnHit = disappearOnHitReferral;
 
 	if (!isFacingRight) { //If facing left
-		additionalX = additionalX*-1-width; //Flip the additional value left
+		additionalX = additionalX*-1+playerWidth-width; //Flip the additional value left
 		fixedX *= -1; //Flip the fixed horizontal knockback
 		scalarX *= -1; //Fix the scalar horizontal knockback
 		vx *= -1; //Flip thehorizontal movement
@@ -74,10 +117,10 @@ bool Move::IsMoveColliding(float Player2x, float Player2y, int Player2width, int
 		for (int i = y + additionalY; i < y + height + additionalY; i++) { //For every Y coordinate
 			for (int j = x + additionalX; j < x + width + additionalX; j++) { //For every X coordinate
 				if (i > Player2y && i<Player2y + Player2height && j>Player2x && j < Player2x + Player2width) { //If in the player's coordinates
-					if (disappearOnHit) { //If the move should disappear after hitting an opponent
-						activeDuration = 0; //Disable the move
-					}
 					hasHit = true; //Make the function not run again
+					if (disappearOnHit) {
+						activeDuration = 1;
+					}
 					return true; //The move has hit
 				}
 			}
@@ -88,7 +131,7 @@ bool Move::IsMoveColliding(float Player2x, float Player2y, int Player2width, int
 
 void Move::PlayerIsHit()
 {
-	if (isAttachedToPlayer) { //If the move is dependant on the player
+	if (isAttachedToPlayer || isPlayerAttachedToIt) { //If the move is dependant on the player
 		startUpDuration = 0; //Disable it
 		activeDuration = 0; //Disable it
 	}

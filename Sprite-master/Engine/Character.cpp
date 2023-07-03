@@ -7,6 +7,7 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 		if (
 			x + width >= stageX0 && x <= stageX1 && //If X coordinate is over the stage
 			y + height >= stageY0 && y + height <= stageY0 + fallSpeed * 2 //If Y coordinate is level with the stage
+			&& vy >= 0
 			) {
 			doubleJump = maxDoubleJump; //Refresh double jumps
 			fastFalling = false; //Stop fast falling
@@ -54,6 +55,12 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 		}
 		else if (invincibilityCooldown>0){ //If the player is unable to dodge
 			invincibilityCooldown--; //Reduce the time until the player can dodge again
+			if (onStage) {
+				groundTouchedAfterDodging = true;
+			}
+			else  if (invincibilityCooldown == 1 && !groundTouchedAfterDodging) {
+				invincibilityCooldown = 2;
+			}
 		}
 
 
@@ -63,30 +70,34 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			if (vx < -speed) { //If you're over terminal velocity
 				vx = -speed; //Go to terminal velocity
 			}
-			facingRight = false;
+			if (onStage) {
+				facingRight = false;
+			}
 		}
 		if (right) { //If you're holding right
 			vx += acceleration; //Increase right velocity
 			if (vx > speed) { //If you're over terminal velocity
 				vx = speed; //Go to terminal velocity
 			}
-			facingRight = true;
+			if (onStage) {
+				facingRight = true;
+			}
 		}
 		if (!left && !right) { //If not moving left or right
 			if (vx > 0) { //If moving right
-				if (vx < acceleration / 5) { //If decreasing speed would make you move left
+				if (vx < acceleration / 2) { //If decreasing speed would make you move left
 					vx = 0; //Set it to 0
 				}
 				else {
-					vx -= acceleration / 5; //Decrease speed
+					vx -= acceleration / 2; //Decrease speed
 				}
 			}
 			if (vx < 0) { //If moving left
-				if (vx > -acceleration / 5) { //If decreasing speed would make you move right
+				if (vx > -acceleration / 2) { //If decreasing speed would make you move right
 					vx = 0; //Set it to 0
 				}
 				else {
-					vx += acceleration / 5; //Decrease speed
+					vx += acceleration / 2; //Decrease speed
 				}
 			}
 		}
@@ -108,7 +119,7 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			vy = -aerialJumpHeight; //Start jumping
 		}
 		if (!(invincibilityCooldown > 0 && invincibility > 0)) {
-			if (down && !onStage) { //If down key is held
+			if (down && !onStage && !downHeld) { //If down key is held
 				fastFalling = true; //Start fast falling
 			}
 			if (fastFalling) {
@@ -129,38 +140,53 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			}
 		}
 
+		for (int i = 0; i < 5; i++) { //For every move
+			moveArray[i].CheckStatus(x, y, stageX0, stageY0, stageX1, stageY1); //Run the necesarry functions every frame
+			if (moveArray[i].isPlayerAttachedToIt && moveArray[i].startUpDuration == 0 && moveArray[i].activeDuration > 0) { //If an active move attaches the player to it
+				vx = moveArray[i].vx;
+				vy = moveArray[i].vy;
+				if (moveArray[i].vy < 0) {
+					freeFallDuration = 30;
+				}
+			}
+		}
+
 		x += vx; //Increase X by speed
 		y += vy; //Increase Y by speed
 
-		if (onStage) {
+		if (x + width >= stageX0 && x <= stageX1 && //If X coordinate is over the stage
+			y + height >= stageY0 && y + height <= stageY0 + vy //If Y coordinate is level with the stage
+			) {
 			if (vy > 0) { //If falling
 				y = stageY0 - height; //Reset y to on stage
 			}
 		}
 		else { //If off stage
+			onStage = false;
 			if (y + height >= stageY0 && y <= stageY1 && x + width > stageX0 && x + width <= stageX0 + speed) { //If clipping into stage from the left
 				x = float(stageX0 - width); //Stop clipping
 			}
 			else if (y + height >= stageY0 && y <= stageY1 && x >= stageX1 - speed && x < stageX1) { //If clipping into stage from right
 				x = (float)stageX1; //Stop clipping
 			}
-			else if(x + width > stageX0 && x < stageX1 && y >= stageY0 - 2 * fallSpeed && y <= stageY1) {
+			if (x + width > stageX0 && x < stageX1 && y >= stageY0 - 2 * fallSpeed && y <= stageY1) {
 				y = (float)stageY1; //Stop clipping
 			}
 		}
+
 		if (light && onStage) { //If using a light attack
 			for (int i = 0; i < 5; i++) { //For each move
 				if (moveArray[i].activeDuration == 0) {
 					if (up) { //If doing a move upwards
-						moveArray[i].Activate(width, facingRight, upLightAdditionalX, upLightAdditionalY, upLightWidth, upLightHeight, upLightStunDuration, upLightScalarX, upLightScalarY, upLightFixedX, upLightFixedY, upLightVx, upLightVy, upLightAccelerationx, upLightAccelerationy, upLightDamage, upLightStartUpDuration, upLightActiveDuration, upLightEndLagDuration, upLightIsAttachedToPlayer, upLightIsPlayerAttachedToIt, upLightDisappearOnHit, upLightR, upLightG, upLightB);  //Initialise the move
+						moveArray[i].Activate(width, height, facingRight, upLightAdditionalX, upLightAdditionalY, upLightWidth, upLightHeight, upLightStunDuration, upLightScalarX, upLightScalarY, upLightFixedX, upLightFixedY, upLightVx, upLightVy, upLightAccelerationx, upLightAccelerationy, upLightDamage, upLightStartUpDuration, upLightActiveDuration, upLightEndLagDuration, upLightIsAttachedToPlayer, upLightIsPlayerAttachedToIt, upLightDisappearOnHit, upLightR, upLightG, upLightB);  //Initialise the move
 						moveDuration = upLightStartUpDuration + moveArray[i].IsActiveDuration() + upLightEndLagDuration; //Set the player lag
 					}
 					else if (down) { //If doing a move upwards
-						moveArray[i].Activate(width, facingRight, downLightAdditionalX, downLightAdditionalY, downLightWidth, downLightHeight, downLightStunDuration, downLightScalarX, downLightScalarY, downLightFixedX, downLightFixedY, downLightVx, downLightVy, downLightAccelerationx, downLightAccelerationy, downLightDamage, downLightStartUpDuration, downLightActiveDuration, downLightEndLagDuration, downLightIsAttachedToPlayer, downLightIsPlayerAttachedToIt, downLightDisappearOnHit, downLightR, downLightG, downLightB);  //Initialise the move
+						moveArray[i].Activate(width, height, facingRight, downLightAdditionalX, downLightAdditionalY, downLightWidth, downLightHeight, downLightStunDuration, downLightScalarX, downLightScalarY, downLightFixedX, downLightFixedY, downLightVx, downLightVy, downLightAccelerationx, downLightAccelerationy, downLightDamage, downLightStartUpDuration, downLightActiveDuration, downLightEndLagDuration, downLightIsAttachedToPlayer, downLightIsPlayerAttachedToIt, downLightDisappearOnHit, downLightR, downLightG, downLightB);  //Initialise the move
 						moveDuration = downLightStartUpDuration + moveArray[i].IsActiveDuration() + downLightEndLagDuration; //Set the player lagdownHeavy
 					}
 					else { //If doing a move forwards
-						moveArray[i].Activate(width, facingRight, forwardLightAdditionalX, forwardLightAdditionalY, forwardLightWidth, forwardLightHeight, forwardLightStunDuration, forwardLightScalarX, forwardLightScalarY, forwardLightFixedX, forwardLightFixedY, forwardLightVx, forwardLightVy, forwardLightAccelerationx, forwardLightAccelerationy, forwardLightDamage, forwardLightStartUpDuration, forwardLightActiveDuration, forwardLightEndLagDuration, forwardLightIsAttachedToPlayer, forwardLightIsPlayerAttachedToIt, forwardLightDisappearOnHit, forwardLightR, forwardLightG, forwardLightB);  //Initialise the move
+						moveArray[i].Activate(width, height, facingRight, forwardLightAdditionalX, forwardLightAdditionalY, forwardLightWidth, forwardLightHeight, forwardLightStunDuration, forwardLightScalarX, forwardLightScalarY, forwardLightFixedX, forwardLightFixedY, forwardLightVx, forwardLightVy, forwardLightAccelerationx, forwardLightAccelerationy, forwardLightDamage, forwardLightStartUpDuration, forwardLightActiveDuration, forwardLightEndLagDuration, forwardLightIsAttachedToPlayer, forwardLightIsPlayerAttachedToIt, forwardLightDisappearOnHit, forwardLightR, forwardLightG, forwardLightB);  //Initialise the move
 						moveDuration = forwardLightStartUpDuration + moveArray[i].IsActiveDuration() + forwardLightEndLagDuration; //Set the player lag
 					}
 					i = 5;
@@ -171,15 +197,15 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			for (int i = 0; i < 5; i++) {
 				if (moveArray[i].activeDuration == 0) {
 					if (up) { //If doing a move upwards
-						moveArray[i].Activate(width, facingRight, upHeavyAdditionalX, upHeavyAdditionalY, upHeavyWidth, upHeavyHeight, upHeavyStunDuration, upHeavyScalarX, upHeavyScalarY, upHeavyFixedX, upHeavyFixedY, upHeavyVx, upHeavyVy, upHeavyAccelerationx, upHeavyAccelerationy, upHeavyDamage, upHeavyStartUpDuration, upHeavyActiveDuration, upHeavyEndLagDuration, upHeavyIsAttachedToPlayer, upHeavyIsPlayerAttachedToIt, upHeavyDisappearOnHit, upHeavyR, upHeavyG, upHeavyB);  //Initialise the move
+						moveArray[i].Activate(width, height, facingRight, upHeavyAdditionalX, upHeavyAdditionalY, upHeavyWidth, upHeavyHeight, upHeavyStunDuration, upHeavyScalarX, upHeavyScalarY, upHeavyFixedX, upHeavyFixedY, upHeavyVx, upHeavyVy, upHeavyAccelerationx, upHeavyAccelerationy, upHeavyDamage, upHeavyStartUpDuration, upHeavyActiveDuration, upHeavyEndLagDuration, upHeavyIsAttachedToPlayer, upHeavyIsPlayerAttachedToIt, upHeavyDisappearOnHit, upHeavyR, upHeavyG, upHeavyB);  //Initialise the move
 						moveDuration = upHeavyStartUpDuration + moveArray[i].IsActiveDuration() + upHeavyEndLagDuration; //Set the player lag
 					}
 					else if (down) { //If doing a move upwards
-						moveArray[i].Activate(width, facingRight, downHeavyAdditionalX, downHeavyAdditionalY, downHeavyWidth, downHeavyHeight, downHeavyStunDuration, downHeavyScalarX, downHeavyScalarY, downHeavyFixedX, downHeavyFixedY, downHeavyVx, downHeavyVy, downHeavyAccelerationx, downHeavyAccelerationy, downHeavyDamage, downHeavyStartUpDuration, downHeavyActiveDuration, downHeavyEndLagDuration, downHeavyIsAttachedToPlayer, downHeavyIsPlayerAttachedToIt, downHeavyDisappearOnHit, downHeavyR, downHeavyG, downHeavyB);  //Initialise the move
+						moveArray[i].Activate(width, height, facingRight, downHeavyAdditionalX, downHeavyAdditionalY, downHeavyWidth, downHeavyHeight, downHeavyStunDuration, downHeavyScalarX, downHeavyScalarY, downHeavyFixedX, downHeavyFixedY, downHeavyVx, downHeavyVy, downHeavyAccelerationx, downHeavyAccelerationy, downHeavyDamage, downHeavyStartUpDuration, downHeavyActiveDuration, downHeavyEndLagDuration, downHeavyIsAttachedToPlayer, downHeavyIsPlayerAttachedToIt, downHeavyDisappearOnHit, downHeavyR, downHeavyG, downHeavyB);  //Initialise the move
 						moveDuration = downHeavyStartUpDuration + moveArray[i].IsActiveDuration() + downHeavyEndLagDuration; //Set the player lag
 					}
 					else { //If doing a move forwards
-						moveArray[i].Activate(width, facingRight, forwardHeavyAdditionalX, forwardHeavyAdditionalY, forwardHeavyWidth, forwardHeavyHeight, forwardHeavyStunDuration, forwardHeavyScalarX, forwardHeavyScalarY, forwardHeavyFixedX, forwardHeavyFixedY, forwardHeavyVx, forwardHeavyVy, forwardHeavyAccelerationx, forwardHeavyAccelerationy, forwardHeavyDamage, forwardHeavyStartUpDuration, forwardHeavyActiveDuration, forwardHeavyEndLagDuration, forwardHeavyIsAttachedToPlayer, forwardHeavyIsPlayerAttachedToIt, forwardHeavyDisappearOnHit, forwardHeavyR, forwardHeavyG, forwardHeavyB);  //Initialise the move
+						moveArray[i].Activate(width, height, facingRight, forwardHeavyAdditionalX, forwardHeavyAdditionalY, forwardHeavyWidth, forwardHeavyHeight, forwardHeavyStunDuration, forwardHeavyScalarX, forwardHeavyScalarY, forwardHeavyFixedX, forwardHeavyFixedY, forwardHeavyVx, forwardHeavyVy, forwardHeavyAccelerationx, forwardHeavyAccelerationy, forwardHeavyDamage, forwardHeavyStartUpDuration, forwardHeavyActiveDuration, forwardHeavyEndLagDuration, forwardHeavyIsAttachedToPlayer, forwardHeavyIsPlayerAttachedToIt, forwardHeavyDisappearOnHit, forwardHeavyR, forwardHeavyG, forwardHeavyB);  //Initialise the move
 						moveDuration = forwardHeavyStartUpDuration + moveArray[i].IsActiveDuration() + forwardHeavyEndLagDuration; //Set the player lag
 					}
 					i = 5;
@@ -190,19 +216,31 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			for (int i = 0; i < 5; i++) {
 				if (moveArray[i].activeDuration == 0) {
 					if (up) { //If doing a move upwards
-						moveArray[i].Activate(width, facingRight, upAerialAdditionalX, upAerialAdditionalY, upAerialWidth, upAerialHeight, upAerialStunDuration, upAerialScalarX, upAerialScalarY, upAerialFixedX, upAerialFixedY, upAerialVx, upAerialVy, upAerialAccelerationx, upAerialAccelerationy, upAerialDamage, upAerialStartUpDuration, upAerialActiveDuration, upAerialEndLagDuration, upAerialIsAttachedToPlayer, upAerialIsPlayerAttachedToIt, upAerialDisappearOnHit, upAerialR, upAerialG, upAerialB);  //Initialise the move
+						if (right) {
+							facingRight = true;
+						}
+						else if (left) {
+							facingRight = false;
+						}
+						moveArray[i].Activate(width, height, facingRight, upAerialAdditionalX, upAerialAdditionalY, upAerialWidth, upAerialHeight, upAerialStunDuration, upAerialScalarX, upAerialScalarY, upAerialFixedX, upAerialFixedY, upAerialVx, upAerialVy, upAerialAccelerationx, upAerialAccelerationy, upAerialDamage, upAerialStartUpDuration, upAerialActiveDuration, upAerialEndLagDuration, upAerialIsAttachedToPlayer, upAerialIsPlayerAttachedToIt, upAerialDisappearOnHit, upAerialR, upAerialG, upAerialB);  //Initialise the move
 						moveDuration = upAerialStartUpDuration + moveArray[i].IsActiveDuration() + upAerialEndLagDuration; //Set the player lag
 					}
-					else if (down) { //If doing a move upwards
-						moveArray[i].Activate(width, facingRight, downAerialAdditionalX, downAerialAdditionalY, downAerialWidth, downAerialHeight, downAerialStunDuration, downAerialScalarX, downAerialScalarY, downAerialFixedX, downAerialFixedY, downAerialVx, downAerialVy, downAerialAccelerationx, downAerialAccelerationy, downAerialDamage, downAerialStartUpDuration, downAerialActiveDuration, downAerialEndLagDuration, downAerialIsAttachedToPlayer, downAerialIsPlayerAttachedToIt, downAerialDisappearOnHit, downAerialR, downAerialG, downAerialB);  //Initialise the move
+					else if (down) { //If doing a move downwards
+						if (right) {
+							facingRight = true;
+						}
+						else if (left) {
+							facingRight = false;
+						}
+						moveArray[i].Activate(width, height, facingRight, downAerialAdditionalX, downAerialAdditionalY, downAerialWidth, downAerialHeight, downAerialStunDuration, downAerialScalarX, downAerialScalarY, downAerialFixedX, downAerialFixedY, downAerialVx, downAerialVy, downAerialAccelerationx, downAerialAccelerationy, downAerialDamage, downAerialStartUpDuration, downAerialActiveDuration, downAerialEndLagDuration, downAerialIsAttachedToPlayer, downAerialIsPlayerAttachedToIt, downAerialDisappearOnHit, downAerialR, downAerialG, downAerialB);  //Initialise the move
 						moveDuration = downAerialStartUpDuration + moveArray[i].IsActiveDuration() + downAerialEndLagDuration; //Set the player lag
 					}
 					else if ((facingRight && left)||(!facingRight && right)){ //If doing a move backwards
-						moveArray[i].Activate(width, facingRight, backAerialAdditionalX, backAerialAdditionalY, backAerialWidth, backAerialHeight, backAerialStunDuration, backAerialScalarX, backAerialScalarY, backAerialFixedX, backAerialFixedY, backAerialVx, backAerialVy, backAerialAccelerationx, backAerialAccelerationy, backAerialDamage, backAerialStartUpDuration, backAerialActiveDuration, backAerialEndLagDuration, backAerialIsAttachedToPlayer, backAerialIsPlayerAttachedToIt, backAerialDisappearOnHit, backAerialR, backAerialG, backAerialB);  //Initialise the move
+						moveArray[i].Activate(width, height, facingRight, backAerialAdditionalX, backAerialAdditionalY, backAerialWidth, backAerialHeight, backAerialStunDuration, backAerialScalarX, backAerialScalarY, backAerialFixedX, backAerialFixedY, backAerialVx, backAerialVy, backAerialAccelerationx, backAerialAccelerationy, backAerialDamage, backAerialStartUpDuration, backAerialActiveDuration, backAerialEndLagDuration, backAerialIsAttachedToPlayer, backAerialIsPlayerAttachedToIt, backAerialDisappearOnHit, backAerialR, backAerialG, backAerialB);  //Initialise the move
 						moveDuration = forwardAerialStartUpDuration + moveArray[i].IsActiveDuration() + forwardAerialEndLagDuration; //Set the player lag
 					}
 					else { //If doing a move forwards
-						moveArray[i].Activate(width, facingRight, forwardAerialAdditionalX, forwardAerialAdditionalY, forwardAerialWidth, forwardAerialHeight, forwardAerialStunDuration, forwardAerialScalarX, forwardAerialScalarY, forwardAerialFixedX, forwardAerialFixedY, forwardAerialVx, forwardAerialVy, forwardAerialAccelerationx, forwardAerialAccelerationy, forwardAerialDamage, forwardAerialStartUpDuration, forwardAerialActiveDuration, forwardAerialEndLagDuration, forwardAerialIsAttachedToPlayer, forwardAerialIsPlayerAttachedToIt, forwardAerialDisappearOnHit, forwardAerialR, forwardAerialG, forwardAerialB);  //Initialise the move
+						moveArray[i].Activate(width, height, facingRight, forwardAerialAdditionalX, forwardAerialAdditionalY, forwardAerialWidth, forwardAerialHeight, forwardAerialStunDuration, forwardAerialScalarX, forwardAerialScalarY, forwardAerialFixedX, forwardAerialFixedY, forwardAerialVx, forwardAerialVy, forwardAerialAccelerationx, forwardAerialAccelerationy, forwardAerialDamage, forwardAerialStartUpDuration, forwardAerialActiveDuration, forwardAerialEndLagDuration, forwardAerialIsAttachedToPlayer, forwardAerialIsPlayerAttachedToIt, forwardAerialDisappearOnHit, forwardAerialR, forwardAerialG, forwardAerialB);  //Initialise the move
 						moveDuration = forwardAerialStartUpDuration + moveArray[i].IsActiveDuration() + forwardAerialEndLagDuration; //Set the player lag
 					}
 					i = 5;
@@ -213,15 +251,33 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			for (int i = 0; i < 5; i++) {
 				if (moveArray[i].activeDuration == 0) {
 					if (up) { //If doing a move upwards
-						moveArray[i].Activate(width, facingRight, upSpecialAdditionalX, upSpecialAdditionalY, upSpecialWidth, upSpecialHeight, upSpecialStunDuration, upSpecialScalarX, upSpecialScalarY, upSpecialFixedX, upSpecialFixedY, upSpecialVx, upSpecialVy, upSpecialAccelerationx, upSpecialAccelerationy, upSpecialDamage, upSpecialStartUpDuration, upSpecialActiveDuration, upSpecialEndLagDuration, upSpecialIsAttachedToPlayer, upSpecialIsPlayerAttachedToIt, upSpecialDisappearOnHit, upSpecialR, upSpecialG, upSpecialB);  //Initialise the move
+						if (right) {
+							facingRight = true;
+						}
+						else if (left) {
+							facingRight = false;
+						}
+						moveArray[i].Activate(width, height, facingRight, upSpecialAdditionalX, upSpecialAdditionalY, upSpecialWidth, upSpecialHeight, upSpecialStunDuration, upSpecialScalarX, upSpecialScalarY, upSpecialFixedX, upSpecialFixedY, upSpecialVx, upSpecialVy, upSpecialAccelerationx, upSpecialAccelerationy, upSpecialDamage, upSpecialStartUpDuration, upSpecialActiveDuration, upSpecialEndLagDuration, upSpecialIsAttachedToPlayer, upSpecialIsPlayerAttachedToIt, upSpecialDisappearOnHit, upSpecialR, upSpecialG, upSpecialB);  //Initialise the move
 						moveDuration = upSpecialStartUpDuration + moveArray[i].IsActiveDuration() + upSpecialEndLagDuration; //Set the player lag
 					}
 					else if (down) { //If doing a move upwards
-						moveArray[i].Activate(width, facingRight, downSpecialAdditionalX, upSpecialAdditionalY, downSpecialWidth, downSpecialHeight, downSpecialStunDuration, downSpecialScalarX, downSpecialScalarY, downSpecialFixedX, downSpecialFixedY, downSpecialVx, downSpecialVy, downSpecialAccelerationx, downSpecialAccelerationy, downSpecialDamage, downSpecialStartUpDuration, downSpecialActiveDuration, downSpecialEndLagDuration, downSpecialIsAttachedToPlayer, downSpecialIsPlayerAttachedToIt, downSpecialDisappearOnHit, downSpecialR, downSpecialG, downSpecialB);  //Initialise the move
+						if (right) {
+							facingRight = true;
+						}
+						else if (left) {
+							facingRight = false;
+						}
+						moveArray[i].Activate(width, height, facingRight, downSpecialAdditionalX, downSpecialAdditionalY, downSpecialWidth, downSpecialHeight, downSpecialStunDuration, downSpecialScalarX, downSpecialScalarY, downSpecialFixedX, downSpecialFixedY, downSpecialVx, downSpecialVy, downSpecialAccelerationx, downSpecialAccelerationy, downSpecialDamage, downSpecialStartUpDuration, downSpecialActiveDuration, downSpecialEndLagDuration, downSpecialIsAttachedToPlayer, downSpecialIsPlayerAttachedToIt, downSpecialDisappearOnHit, downSpecialR, downSpecialG, downSpecialB);  //Initialise the move
 						moveDuration = downSpecialStartUpDuration + moveArray[i].IsActiveDuration() + downSpecialEndLagDuration; //Set the player lag
 					}
 					else { //If doing a move forwards
-						moveArray[i].Activate(width, facingRight, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration, forwardSpecialScalarX, forwardSpecialScalarY, forwardSpecialFixedX, forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialAccelerationx, forwardSpecialAccelerationy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialIsPlayerAttachedToIt, forwardSpecialDisappearOnHit, forwardSpecialR, forwardSpecialG, forwardSpecialB);  //Initialise the move
+						if (right) {
+							facingRight = true;
+						}
+						else if (left) {
+							facingRight = false;
+						}
+						moveArray[i].Activate(width, height, facingRight, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration, forwardSpecialScalarX, forwardSpecialScalarY, forwardSpecialFixedX, forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialAccelerationx, forwardSpecialAccelerationy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialIsPlayerAttachedToIt, forwardSpecialDisappearOnHit, forwardSpecialR, forwardSpecialG, forwardSpecialB);  //Initialise the move
 						moveDuration = forwardSpecialStartUpDuration + moveArray[i].IsActiveDuration() + forwardSpecialEndLagDuration; //Set the player lag
 					}
 					i = 5;
@@ -233,9 +289,11 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 				vx = -speed; //Make the character move left
 			}
 			else if (right) { //
+				facingRight = true;
 				vx = speed;
 			}
 			else {
+				facingRight = false;
 				vx = 0;
 			}
 			if (!onStage) {
@@ -252,45 +310,57 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			invincibility = 20;
 			moveDuration = 30 * weight;
 			invincibilityCooldown = 120 * weight;
-		}
-		for (int i = 0; i < 5; i++) { //For every move
-			moveArray[i].CheckStatus(x,y); //Run the necesarry functions every frame
-			if (moveArray[i].isPlayerAttachedToIt && moveArray[i].startUpDuration == 0 && moveArray[i].activeDuration > 0) { //If an active move attaches the player to it
-				x = moveArray[i].x; //Update the x coordinate
-				y = moveArray[i].y; //Update the y coordinate
-				if (!facingRight) {
-					x += moveArray[i].width + moveArray[i].additionalX;
-				}
-				freeFallDuration = 30;
-			}
+			groundTouchedAfterDodging = false;
 		}
 	}
 	else {
 		stun--;
 		x += vx;
 		y += vy;
+		bool xOnStage = x + width > stageX0 && x < stageX1;
+		bool yOnStage = y + height >= stageY0 && y <= stageY1;
+
+		if (yOnStage && x + width > stageX0 && x + width <= stageX0 + vx) { //If clipping into stage from the left
+			x = float(stageX0 - width); //Stop clipping
+			vx *= -1;
+		}
+		else if (yOnStage && x >= stageX1 - vx && x < stageX1) { //If clipping into stage from right
+			x = (float)stageX1; //Stop clipping
+			vx *= -1;
+		}
+
+		if (xOnStage && y + height >= stageY0 && y + height <= stageY0 + vy) {
+			y = (float)stageY0 - height; //Stop clipping
+			vy *= -1;
+		}
+		else if (xOnStage && y >= stageY1 - vy && y <= stageY1) {
+			y = (float)stageY1; //Stop clipping
+			vy *= -1;
+		}
 	}
+	downHeld = down;
 }
 
 bool Character::IsAlive(int stageWidth, int stageHeight, int leniancy)
 {
-	if (x + width<0 - leniancy ||
-		x>stageWidth + leniancy ||
-		(y+height < 0 - leniancy && stun>0) ||
+	if (x + width < 0 - leniancy ||
+		x > stageWidth + leniancy ||
+		(y + height < 0 - leniancy && stun > 0) ||
 		y > stageHeight + leniancy
-		) {
+	) {
 		lives--;
 		vx = 0;
 		vy = 0;
 		playerPercentage = 0;
+		stun = 0;
+		invincibilityCooldown = 0;
 		for (int i = 0; i < 5; i++) {
 			moveArray[i].EndMove();
 		}
 		if (lives > 0) {
-			y = 500-height;
+			y = 500 - height;
 			x = stageWidth / 2;
 			invincibility = 300;
-			return true;
 		}
 		else {
 			invincibility = 0;
@@ -329,7 +399,7 @@ int Character::MoveY0(int move)
 
 int Character::MoveX1(int move)
 {
-	return moveArray[move].x + moveArray[move].additionalX + moveArray[0].width;
+	return moveArray[move].x + moveArray[move].additionalX + moveArray[move].width;
 }
 
 int Character::MoveY1(int move)
@@ -354,8 +424,7 @@ int Character::MoveB(int move)
 
 int Character::MoveThatHitStun()
 {
-	return 50;
-	//return moveArray[moveThatHit].stunDuration;
+	return moveArray[moveThatHit].stunDuration;
 }
 
 float Character::MoveThatHitDamage()
@@ -380,14 +449,26 @@ float Character::MoveThatHitFixedX()
 
 float Character::MoveThatHitFixedY()
 {
+	if ((!moveArray[moveThatHit].isPlayerAttachedToIt || moveArray[moveThatHit].disappearOnHit) && moveArray[moveThatHit].isAttachedToPlayer) {
+		moveDuration -= moveArray[moveThatHit].activeDuration;
+		moveArray[moveThatHit].activeDuration = 1;
+	}
 	return moveArray[moveThatHit].fixedY;
 }
 
 void Character::Initialise(std::vector<float>& parameters){
-	y = 700 - height;
 	lives = 3;
+	for (int i = 0; i < 5; i++) {
+		moveArray[i].EndMove();
+	}
+	vx = 0;
+	vy = 0;
+	moveDuration = 0;
+	stun = 0;
+	playerPercentage = 0;
 	width = (int)parameters[0];
 	height = (int)parameters[1];
+	y = 700 - height;
 	walkSpeed = parameters[2];
 	aerialSpeed = parameters[3];
 	aerialAcceleration = parameters[4];
@@ -716,9 +797,13 @@ void Character::IsHit(int stunReferral, float damageReferral, int fixedXReferral
 	if (invincibility == 0) {
 		stun = stunReferral;
 		playerPercentage += damageReferral;
+		if (playerPercentage >= 100) {
+			playerPercentage = 99.9;
+		}
 		vx = (fixedXReferral + scalarXReferral * playerPercentage / 100) / weight;
 		vy = (fixedYReferral + scalarYReferral * playerPercentage / 100) / weight;
 		moveDuration = 0;
+		freeFallDuration = 0;
 		for (int i = 0; i < 5; i++) {
 			if (!moveArray[i].isAttachedToPlayer) {
 				moveArray[i].PlayerIsHit();

@@ -23,26 +23,27 @@
 #include <random>
 #include "SpriteEffect.h"
 
-Game::Game(MainWindow& wnd)
+
+Game::Game(MainWindow& mainWindow)
 	:
-	wnd(wnd),
-	gfx(wnd)
+	wnd(mainWindow),
+	gfx(mainWindow)
 {
 	//Initialise the numbers used for the percentage display
 	numbers[0] = { "Images\\0.bmp" }; 
-	numbers[1] = {"Images\\1.bmp"};
-	numbers[2] = {"Images\\2.bmp"};
-	numbers[3] = {"Images\\3.bmp"};
-	numbers[4] = {"Images\\4.bmp"};
-	numbers[5] = {"Images\\5.bmp"};
-	numbers[6] = {"Images\\6.bmp"};
-	numbers[7] = {"Images\\7.bmp"};
-	numbers[8] = {"Images\\8.bmp"};
-	numbers[9] = {"Images\\9.bmp"};
+	numbers[1] = { "Images\\1.bmp" };
+	numbers[2] = { "Images\\2.bmp" };
+	numbers[3] = { "Images\\3.bmp" };
+	numbers[4] = { "Images\\4.bmp" };
+	numbers[5] = { "Images\\5.bmp" };
+	numbers[6] = { "Images\\6.bmp" };
+	numbers[7] = { "Images\\7.bmp" };
+	numbers[8] = { "Images\\8.bmp" };
+	numbers[9] = { "Images\\9.bmp" };
 
 	idle[0] = { "Images\\CircleIdle.bmp" };
 	idle[1] = { "Images\\aIdle.bmp" };
-	idle[2] = { "Images\\LightningIdle.bmp" };
+	idle[2] = { "Images\\SigmaMonkeyOfDoomIdle.bmp" };
 	idle[3] = { "Images\\DogIdle.bmp" };
 	idle[4] = { "Images\\ChickenIdle.bmp" };
 	idle[5] = { "Images\\RockIdle.bmp" };
@@ -51,7 +52,7 @@ Game::Game(MainWindow& wnd)
 
 	move[0] = { "Images\\Circlemove.bmp" };
 	move[1] = { "Images\\aMove.bmp" };
-	move[2] = { "Images\\LightningMove.bmp" };
+	move[2] = { "Images\\SigmaMonkeyOfDoomMove.bmp" };
 	move[3] = { "Images\\DogMove.bmp" };
 	move[4] = { "Images\\ChickenMove.bmp" };
 	move[5] = { "Images\\RockMove.bmp" };
@@ -60,7 +61,7 @@ Game::Game(MainWindow& wnd)
 
 	hit[0] = {"Images\\CircleHit.bmp"};
 	hit[1] = { "Images\\aHit.bmp" };
-	hit[2] = { "Images\\LightningHit.bmp" };
+	hit[2] = { "Images\\SigmaMonkeyOfDoomHit.bmp" };
 	hit[3] = { "Images\\DogHit.bmp" };
 	hit[4] = { "Images\\ChickenHit.bmp" };
 	hit[5] = { "Images\\RockHit.bmp" };
@@ -69,7 +70,7 @@ Game::Game(MainWindow& wnd)
 
 	lives[0] = {"Images\\CircleLivesIcon.bmp"};
 	lives[1] = { "Images\\aLivesIcon.bmp" };
-	lives[2] = { "Images\\LightningLivesIcon.bmp" };
+	lives[2] = { "Images\\SigmaMonkeyOfDoomLivesIcon.bmp" };
 	lives[3] = { "Images\\DogLivesIcon.bmp" };
 	lives[4] = { "Images\\ChickenLivesIcon.bmp" };
 	lives[5] = { "Images\\RockLivesIcon.bmp" };
@@ -123,7 +124,7 @@ void Game::UpdateModel()
 			player2LivesIcon = lives[player2CharacterID]; //Set player 2's lives icon
 			Player2.Initialise(parameters[player2CharacterID]); //Set player 1's variables
 
-			timeUntilStart = 180; //Initialise the countdown
+			timeUntilStart = 0; //Initialise the countdown
 			timeGoIsDisplayed = 60; //Initialise go
 		}
 	}
@@ -137,25 +138,32 @@ void Game::UpdateModel()
 			}
 		}
 		else if (Player1.IsAlive(gfx.ScreenWidth, gfx.ScreenHeight, leniancy) && Player2.IsAlive(gfx.ScreenWidth, gfx.ScreenHeight, leniancy)) {//If both players are alive
-			if (enterOrEscapeHeld == false && (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE))) { //If the pause button is pressed
-				timeUntilStart = 180; //Initialise the countdown
-				timeGoIsDisplayed = 60; //Initialise go
-				paused = true; //Pause the game
+			if (hitStun > 0) {
+				hitStun--;
 			}
+			else {
+				if (enterOrEscapeHeld == false && (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE))) { //If the pause button is pressed
+					timeUntilStart = 180; //Initialise the countdown
+					timeGoIsDisplayed = 60; //Initialise go
+					paused = true; //Pause the game
+				}
 
-			if (timeGoIsDisplayed > 0) { //If go should be displayed
-				timeGoIsDisplayed--; //Reduce the tme go should be displayed
-			}
+				if (timeGoIsDisplayed > 0) { //If go should be displayed
+					timeGoIsDisplayed--; //Reduce the tme go should be displayed
+				}
 
-			//Update models
-			Player1.UpdateCharacter(wnd.kbd.KeyIsPressed(0x41), wnd.kbd.KeyIsPressed(0x44), wnd.kbd.KeyIsPressed(0x53), wnd.kbd.KeyIsPressed(0x57), wnd.kbd.KeyIsPressed(0x47), wnd.kbd.KeyIsPressed(0x46), wnd.kbd.KeyIsPressed(0x54), wnd.kbd.KeyIsPressed(0x48), wnd.kbd.KeyIsPressed(VK_LSHIFT), stageX0, stageY0, stageX1, stageY1);
-			Player2.UpdateCharacter(wnd.kbd.KeyIsPressed(VK_LEFT), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(VK_UP), wnd.kbd.KeyIsPressed(0x4C), wnd.kbd.KeyIsPressed(0x4B), wnd.kbd.KeyIsPressed(0x4F), wnd.kbd.KeyIsPressed(VK_OEM_1), wnd.kbd.KeyIsPressed(0x4E), stageX0, stageY0, stageX1, stageY1);
+				//Update models
+				Player1.UpdateCharacter(wnd.kbd.KeyIsPressed(0x41), wnd.kbd.KeyIsPressed(0x44), wnd.kbd.KeyIsPressed(0x53), wnd.kbd.KeyIsPressed(0x57), wnd.kbd.KeyIsPressed(0x47), wnd.kbd.KeyIsPressed(0x46), wnd.kbd.KeyIsPressed(0x54), wnd.kbd.KeyIsPressed(0x48), wnd.kbd.KeyIsPressed(VK_SHIFT), stageX0, stageY0, stageX1, stageY1);
+				Player2.UpdateCharacter(wnd.kbd.KeyIsPressed(VK_LEFT), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(VK_UP), wnd.kbd.KeyIsPressed(0x4C), wnd.kbd.KeyIsPressed(0x4B), wnd.kbd.KeyIsPressed(0x4F), wnd.kbd.KeyIsPressed(VK_OEM_1), wnd.kbd.KeyIsPressed(0x4E), stageX0, stageY0, stageX1, stageY1);
 
-			if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
-				Player2.IsHit(Player1.MoveThatHitStun(), Player1.MoveThatHitDamage(), Player1.MoveThatHitFixedX(), Player1.MoveThatHitFixedY(), Player1.MoveThatHitScalarX(), Player1.MoveThatHitScalarY()); //Register that player 2 has been hit
-			}
-			if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) { //Is player 2 hitting any move
-				Player1.IsHit(Player2.MoveThatHitStun(), Player2.MoveThatHitDamage(), Player2.MoveThatHitFixedX(), Player2.MoveThatHitFixedY(), Player2.MoveThatHitScalarX(), Player2.MoveThatHitScalarY()); //Register that player 1 has been hit
+				if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
+					hitStun = Player1.MoveThatHitDamage() * 2; //Hit stun activation
+					Player2.IsHit(Player1.MoveThatHitStun(), Player1.MoveThatHitDamage(), Player1.MoveThatHitFixedX(), Player1.MoveThatHitFixedY(), Player1.MoveThatHitScalarX(), Player1.MoveThatHitScalarY()); //Register that player 2 has been hit
+				}
+				if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) { //Is player 2 hitting any move
+					hitStun = Player2.MoveThatHitDamage() * 2; //Hit stun activation
+					Player1.IsHit(Player2.MoveThatHitStun(), Player2.MoveThatHitDamage(), Player2.MoveThatHitFixedX(), Player2.MoveThatHitFixedY(), Player2.MoveThatHitScalarX(), Player2.MoveThatHitScalarY()); //Register that player 1 has been hit
+				}
 			}
 		}
 		else {
@@ -202,13 +210,13 @@ void Game::ComposeFrame()
 				gfx.DrawRect(gfx.ScreenWidth / 4 - 1, 349, gfx.ScreenWidth / 4 + Player1.width + 1, 351 + Player1.height, 255, 199, 0); //Player 1 border
 				gfx.DrawSprite(gfx.ScreenWidth / 4, 350, player1Idle, SpriteEffect::Copy{}, false); //Display player 1 on the left side
 				gfx.DrawRect(gfx.ScreenWidth / 4 * 3 - 1, 349, gfx.ScreenWidth / 4 * 3 + Player2.width + 1, 351 + Player2.height, 255, 199, 0); //Player 2 border
-				gfx.DrawSprite(gfx.ScreenWidth / 4 * 3, 350, player2Move, SpriteEffect::Copy{}, false); //Display player 2 on the right side
+				gfx.DrawSprite(gfx.ScreenWidth / 4 * 3, 350, player2Hit, SpriteEffect::Copy{}, false); //Display player 2 on the right side
 			}
 			else {
 				gfx.DrawRect(gfx.ScreenWidth / 4 - 1, 349, gfx.ScreenWidth / 4 + Player2.width + 1, 351 + Player2.height, 255, 199, 0); //Player 1 border
 				gfx.DrawSprite(gfx.ScreenWidth / 4, 350, player2Idle, SpriteEffect::Copy{}, false); //Display player 2 on the left side
 				gfx.DrawRect(gfx.ScreenWidth / 4 * 3 - 1, 349, gfx.ScreenWidth / 4 * 3 + Player1.width + 1, 351 + Player1.height, 255, 199, 0); //Player 2 border
-				gfx.DrawSprite(gfx.ScreenWidth / 4 * 3, 350, player1Move, SpriteEffect::Copy{}, false); //Display player 1 on the right side
+				gfx.DrawSprite(gfx.ScreenWidth / 4 * 3, 350, player1Hit, SpriteEffect::Copy{}, false); //Display player 1 on the right side
 			}
 		}
 		else if (timeUntilStart > 120) { //If you should display 3
@@ -269,7 +277,7 @@ void Game::ComposeFrame()
 			gfx.DrawSprite(Player2.x, Player2.y, player2Move, SpriteEffect::Copy{}, !Player2.facingRight); //Display move animation
 		}
 		else if (Player2.stun > 0) { //If player 2 is in stun
-			gfx.DrawSprite(Player2.x, Player2.y, player2Hit, SpriteEffect::Copy{}, !Player1.facingRight); //Display stun animation
+			gfx.DrawSprite(Player2.x, Player2.y, player2Hit, SpriteEffect::Copy{}, !Player2.facingRight); //Display stun animation
 		}
 		else {
 			gfx.DrawSprite(Player2.x, Player2.y, player2Idle, SpriteEffect::Copy{}, !Player2.facingRight); //Display normal animation
