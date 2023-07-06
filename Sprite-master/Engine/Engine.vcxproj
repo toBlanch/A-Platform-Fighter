@@ -271,6 +271,15 @@
   <ItemGroup>
     <Image Include="Chili.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Battle Theme 0.wav" />
+    <Media Include="Battle Theme 1.wav" />
+    <Media Include="Battle Theme 2.wav" />
+    <Media Include="Battle Theme 3.wav" />
+    <Media Include="Credits.wav" />
+    <Media Include="hit.wav" />
+    <Media Include="MainMenuTheme.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

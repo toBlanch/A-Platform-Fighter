@@ -4,8 +4,12 @@
 
 class Character {
 public:
-	void UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1);
-	bool IsAlive(int stageWidth, int stageHeight, int leniancy);
+	void UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int player2Width, int player2Height);
+	bool IsOnStage();
+	bool ClippingIntoStageFromLeft();
+	bool ClippingIntoStageFromRight();
+	bool ClippingIntoStageFromBottom();
+	bool IsAlive(int screenWidth, int screenHeight, int leniancy);
 	bool MoveDraw(int move);
 	bool IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height);
 	int MoveX0(int move);
@@ -21,8 +25,9 @@ public:
 	float MoveThatHitScalarY();
 	float MoveThatHitFixedX();
 	float MoveThatHitFixedY();
-	void Initialise(std::vector<float>& parameters);
-	void Character::IsHit(int stunReferral, float damageReferral, int fixedXReferral, int fixedYReferral, int scalarXReferral, int scalarYReferral);
+	void Initialise(std::vector<float>& parameters, int stageX0Referral, int stageY0Referral, int stageX1Referral, int stageY1Referral);
+	void IsHit(int stunReferral, float damageReferral, int fixedXReferral, int fixedYReferral, int scalarXReferral, int scalarYReferral);
+	void Restart();
 	int lives = 3;
 	float x = 800;
 	float y = 0;
@@ -35,6 +40,10 @@ public:
 	int invincibility = 0;
 	int freeFallDuration = 0;
 private:
+	int stageX0 = 0;
+	int stageY0 = 0;
+	int stageX1 = 0;
+	int stageY1 = 0;
 	int invincibilityCooldown = 0;
 	float vx = 0;
 	float vy = 0;

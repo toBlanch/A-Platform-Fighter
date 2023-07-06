@@ -27,7 +27,15 @@
 Game::Game(MainWindow& mainWindow)
 	:
 	wnd(mainWindow),
-	gfx(mainWindow)
+	gfx(mainWindow),
+	MainMenuTheme(L"MainMenuTheme.wav", 0.0f, 200.0f),
+	HitSound(L"hit.wav"),
+	CreditsTheme(L"Credits.wav", 0.0f, 225.0f),
+	BattleTheme0(L"Battle Theme 0.wav", 0.0f, 236.0f),
+	BattleTheme1(L"Battle Theme 1.wav", 0.0f, 232.0f),
+	BattleTheme2(L"Battle Theme 2.wav", 0.0f, 147.0f),
+	BattleTheme3(L"Battle Theme 3.wav", 0.0f, 159.0f),
+	musicDist(0,3.9)
 {
 	//Initialise the numbers used for the percentage display
 	numbers[0] = { "Images\\0.bmp" }; 
@@ -41,6 +49,7 @@ Game::Game(MainWindow& mainWindow)
 	numbers[8] = { "Images\\8.bmp" };
 	numbers[9] = { "Images\\9.bmp" };
 
+	//Initialise idle sprites
 	idle[0] = { "Images\\CircleIdle.bmp" };
 	idle[1] = { "Images\\aIdle.bmp" };
 	idle[2] = { "Images\\SigmaMonkeyOfDoomIdle.bmp" };
@@ -50,6 +59,7 @@ Game::Game(MainWindow& mainWindow)
 	idle[6] = { "Images\\TrollIdle.bmp" };
 	idle[7] = { "Images\\BigBIdle.bmp" };
 
+	//Initialise move sprites
 	move[0] = { "Images\\Circlemove.bmp" };
 	move[1] = { "Images\\aMove.bmp" };
 	move[2] = { "Images\\SigmaMonkeyOfDoomMove.bmp" };
@@ -59,6 +69,7 @@ Game::Game(MainWindow& mainWindow)
 	move[6] = { "Images\\TrollMove.bmp" };
 	move[7] = { "Images\\BigBMove.bmp" };
 
+	//Initialise hit sprites
 	hit[0] = {"Images\\CircleHit.bmp"};
 	hit[1] = { "Images\\aHit.bmp" };
 	hit[2] = { "Images\\SigmaMonkeyOfDoomHit.bmp" };
@@ -68,6 +79,7 @@ Game::Game(MainWindow& mainWindow)
 	hit[6] = { "Images\\TrollHit.bmp" };
 	hit[7] = { "Images\\BigBHit.bmp" };
 
+	//Initialise lives sprites
 	lives[0] = {"Images\\CircleLivesIcon.bmp"};
 	lives[1] = { "Images\\aLivesIcon.bmp" };
 	lives[2] = { "Images\\SigmaMonkeyOfDoomLivesIcon.bmp" };
@@ -81,14 +93,47 @@ Game::Game(MainWindow& mainWindow)
 void Game::Go()
 {
 	gfx.BeginFrame();	
-	UpdateModel();
+	GameState();
 	ComposeFrame();
 	gfx.EndFrame();
 }
 
-void Game::UpdateModel()
+void Game::GameState()
 {
-	if (startMenu) {
+	if (credits) {
+		if (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE) && !enterOrEscapeHeld) {
+			credits = false;
+			CreditsTheme.StopAll();
+		}
+	}
+	else if (startMenu) {
+		StartMenu();
+	}
+	else if (!paused && timeUntilStart > 0) { //If the game is starting
+		timeUntilStart--; //Reduce time until the game starts
+	}
+	else {
+		GameLoop();
+	}
+	enterOrEscapeHeld = wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE); //If enter or escape is held set it to true, otherwise set it to false
+}
+
+void Game::StartMenu()
+{
+	if (wnd.kbd.KeyIsPressed(VK_CONTROL) && wnd.kbd.KeyIsPressed(VK_SPACE)) {
+		abort();
+	}
+	else if (wnd.kbd.KeyIsPressed(VK_SPACE)) {
+		credits = true;
+		MainMenuTheme.StopAll();
+		mainMenuThemeIsPlaying = false;
+		CreditsTheme.Play();
+	}
+	else {
+		if (!mainMenuThemeIsPlaying) {
+			MainMenuTheme.Play();
+			mainMenuThemeIsPlaying = true;
+		}
 		if (wnd.kbd.KeyIsPressed(0x45) && player1CharacterID < 7 && !eHeld) { //If Player 1 wants to increase their character ID
 			player1CharacterID++; //Increase it
 		}
@@ -107,84 +152,134 @@ void Game::UpdateModel()
 		iHeld = wnd.kbd.KeyIsPressed(0x49); //If i is held set it to true, otherwise set it to false
 		pHeld = wnd.kbd.KeyIsPressed(0x50); //If p is held set it to true, otherwise set it to false
 
-		if (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE)) { //If the game is starting
+		if ((wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE)) && !enterOrEscapeHeld) { //If the game is starting
 			startMenu = false; //Disable the start menu
-
-			Player1.x = gfx.ScreenWidth / 4 + 100; //Set player 1's starting position
+			Restart();
 			player1Idle = idle[player1CharacterID]; //Set player 1's idle animation
 			player1Move = move[player1CharacterID]; //Set player 1's move animation
 			player1Hit = hit[player1CharacterID]; //Set player 1's hit animation
 			player1LivesIcon = lives[player1CharacterID]; //Set player 1's lives icon
-			Player1.Initialise(parameters[player1CharacterID]); //Set player 1's variables
+			Player1.Initialise(parameters[player1CharacterID], stageX0, stageY0, stageX1, stageY1); //Set player 1's variables
 
-			Player2.x = gfx.ScreenWidth / 4 * 3 - Player2.width - 100; //Set player 1's starting position
+			
 			player2Idle = idle[player2CharacterID]; //Set player 1's idle animation
 			player2Move = move[player2CharacterID]; //Set player 1's move animation
 			player2Hit = hit[player2CharacterID]; //Set player 1's hit animation
 			player2LivesIcon = lives[player2CharacterID]; //Set player 2's lives icon
-			Player2.Initialise(parameters[player2CharacterID]); //Set player 1's variables
-
-			timeUntilStart = 0; //Initialise the countdown
-			timeGoIsDisplayed = 60; //Initialise go
+			Player2.Initialise(parameters[player2CharacterID], stageX0, stageY0, stageX1, stageY1); //Set player 1's variables
 		}
 	}
-	else if (!paused && timeUntilStart > 0) { //If the game is starting
-		timeUntilStart--; //Reduce time until the game starts
+}
+
+void Game::StartBattleTheme()
+{
+	BattleTheme0.StopAll();
+	BattleTheme1.StopAll();
+	BattleTheme2.StopAll();
+	BattleTheme3.StopAll();
+	MainMenuTheme.StopAll();
+	mainMenuThemeIsPlaying = false;
+	int battleMusic = musicDist(rng);
+	if (battleMusic == 0) {
+		BattleTheme0.Play();
+	}
+	else if (battleMusic == 1) {
+		BattleTheme1.Play();
+	}
+	else if (battleMusic == 2) {
+		BattleTheme2.Play();
 	}
 	else {
-		if (paused) {
-			if (enterOrEscapeHeld == false && (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE))) { //If the pause button is pressd
-				paused = false; //Unpause the game
-			}
+		BattleTheme3.Play();
+	}
+}
+
+void Game::GameLoop()
+{
+	if (paused) {
+		if (wnd.kbd.KeyIsPressed(VK_CONTROL) && !enterOrEscapeHeld && (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE))) {
+			paused = false;
+			startMenu = true; //Enable the start menu
+			BattleTheme0.StopAll();
+			BattleTheme1.StopAll();
+			BattleTheme2.StopAll();
+			BattleTheme3.StopAll();
+			previousWinner = 0;
 		}
-		else if (Player1.IsAlive(gfx.ScreenWidth, gfx.ScreenHeight, leniancy) && Player2.IsAlive(gfx.ScreenWidth, gfx.ScreenHeight, leniancy)) {//If both players are alive
-			if (hitStun > 0) {
-				hitStun--;
-			}
-			else {
-				if (enterOrEscapeHeld == false && (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE))) { //If the pause button is pressed
-					timeUntilStart = 180; //Initialise the countdown
-					timeGoIsDisplayed = 60; //Initialise go
-					paused = true; //Pause the game
-				}
-
-				if (timeGoIsDisplayed > 0) { //If go should be displayed
-					timeGoIsDisplayed--; //Reduce the tme go should be displayed
-				}
-
-				//Update models
-				Player1.UpdateCharacter(wnd.kbd.KeyIsPressed(0x41), wnd.kbd.KeyIsPressed(0x44), wnd.kbd.KeyIsPressed(0x53), wnd.kbd.KeyIsPressed(0x57), wnd.kbd.KeyIsPressed(0x47), wnd.kbd.KeyIsPressed(0x46), wnd.kbd.KeyIsPressed(0x54), wnd.kbd.KeyIsPressed(0x48), wnd.kbd.KeyIsPressed(VK_SHIFT), stageX0, stageY0, stageX1, stageY1);
-				Player2.UpdateCharacter(wnd.kbd.KeyIsPressed(VK_LEFT), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(VK_UP), wnd.kbd.KeyIsPressed(0x4C), wnd.kbd.KeyIsPressed(0x4B), wnd.kbd.KeyIsPressed(0x4F), wnd.kbd.KeyIsPressed(VK_OEM_1), wnd.kbd.KeyIsPressed(0x4E), stageX0, stageY0, stageX1, stageY1);
-
-				if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
-					hitStun = Player1.MoveThatHitDamage() * 2; //Hit stun activation
-					Player2.IsHit(Player1.MoveThatHitStun(), Player1.MoveThatHitDamage(), Player1.MoveThatHitFixedX(), Player1.MoveThatHitFixedY(), Player1.MoveThatHitScalarX(), Player1.MoveThatHitScalarY()); //Register that player 2 has been hit
-				}
-				if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) { //Is player 2 hitting any move
-					hitStun = Player2.MoveThatHitDamage() * 2; //Hit stun activation
-					Player1.IsHit(Player2.MoveThatHitStun(), Player2.MoveThatHitDamage(), Player2.MoveThatHitFixedX(), Player2.MoveThatHitFixedY(), Player2.MoveThatHitScalarX(), Player2.MoveThatHitScalarY()); //Register that player 1 has been hit
-				}
-			}
+		else if (wnd.kbd.KeyIsPressed(VK_CONTROL) && wnd.kbd.KeyIsPressed(0x52)) { //If the game should be restarted
+			Restart();
+		}
+		else if (!enterOrEscapeHeld && (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE))) { //If the pause button is pressd
+			paused = false; //Unpause the game
+		}
+	}
+	else if (Player1.IsAlive(gfx.ScreenWidth, gfx.ScreenHeight, leniancy) && Player2.IsAlive(gfx.ScreenWidth, gfx.ScreenHeight, leniancy)) {//If both players are alive
+		if (hitStun > 0) {
+			hitStun--;
 		}
 		else {
-			startMenu = true; //Enable the start menu
-			if (Player1.lives == 0) { //Set the previous winner
-				previousWinner = 2;
+			if (enterOrEscapeHeld == false && (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE))) { //If the pause button is pressed
+				timeUntilStart = 180; //Initialise the countdown
+				timeGoIsDisplayed = 60; //Initialise go
+				paused = true; //Pause the game
 			}
-			else {
-				previousWinner = 1;
+
+			if (timeGoIsDisplayed > 0) { //If go should be displayed
+				timeGoIsDisplayed--; //Reduce the time go should be displayed
+			}
+
+			//Update models
+			Player1.UpdateCharacter(wnd.kbd.KeyIsPressed(0x41), wnd.kbd.KeyIsPressed(0x44), wnd.kbd.KeyIsPressed(0x53), wnd.kbd.KeyIsPressed(0x57), wnd.kbd.KeyIsPressed(0x47), wnd.kbd.KeyIsPressed(0x46), wnd.kbd.KeyIsPressed(0x54), wnd.kbd.KeyIsPressed(0x48), wnd.kbd.KeyIsPressed(VK_SHIFT), Player2.width, Player2.height);
+			Player2.UpdateCharacter(wnd.kbd.KeyIsPressed(VK_LEFT), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(VK_UP), wnd.kbd.KeyIsPressed(0x4C), wnd.kbd.KeyIsPressed(0x4B), wnd.kbd.KeyIsPressed(0x4F), wnd.kbd.KeyIsPressed(VK_OEM_1), wnd.kbd.KeyIsPressed(0x4E), Player1.width, Player1.height);
+
+			if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
+				HitSound.Play(10 / Player1.MoveThatHitDamage());
+				hitStun = Player1.MoveThatHitDamage() * 2; //Hit stun activation
+				Player2.IsHit(Player1.MoveThatHitStun(), Player1.MoveThatHitDamage(), Player1.MoveThatHitFixedX(), Player1.MoveThatHitFixedY(), Player1.MoveThatHitScalarX(), Player1.MoveThatHitScalarY()); //Register that player 2 has been hit
+			}
+			if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) { //Is player 2 hitting any move
+				HitSound.Play(10 / Player2.MoveThatHitDamage());
+				hitStun = Player2.MoveThatHitDamage() * 2; //Hit stun activation
+				Player1.IsHit(Player2.MoveThatHitStun(), Player2.MoveThatHitDamage(), Player2.MoveThatHitFixedX(), Player2.MoveThatHitFixedY(), Player2.MoveThatHitScalarX(), Player2.MoveThatHitScalarY()); //Register that player 1 has been hit
 			}
 		}
 	}
-	enterOrEscapeHeld = wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE); //If enter or escape is held set it to true, otherwise set it to false
+	else {
+		startMenu = true; //Enable the start menu
+		BattleTheme0.StopAll();
+		BattleTheme1.StopAll();
+		BattleTheme2.StopAll();
+		BattleTheme3.StopAll();
+		if (Player1.lives == 0) { //Set the previous winner
+			previousWinner = 2;
+		}
+		else {
+			previousWinner = 1;
+		}
+	}
+}
+
+void Game::Restart()
+{
+	StartBattleTheme();
+	Player1.x = gfx.ScreenWidth / 4 + 100; //Set player 1's starting position
+	Player1.facingRight = true;
+	Player1.Restart();
+	Player2.x = gfx.ScreenWidth / 4 * 3 - Player2.width - 100; //Set player 2's starting position
+	Player2.facingRight = false;
+	Player2.Restart();
+	timeUntilStart = 180;
+	timeGoIsDisplayed = 60;
+	paused = false;
 }
 
 void Game::ComposeFrame()
 {
-	if (startMenu) {
-		gfx.DrawSprite(gfx.ScreenWidth / 2 - 200, 100, cycling, SpriteEffect::Copy{}, false); //Display the controls for switching between characters
-		gfx.DrawSprite(gfx.ScreenWidth / 4 - 200, 400, controls1, SpriteEffect::Copy{}, false); //Display the controls for player 1
-		gfx.DrawSprite(gfx.ScreenWidth / 4 * 3 - 200, 400, controls2, SpriteEffect::Copy{}, false); //Display the controls for player 2
+	if (credits) {
+		gfx.DrawSprite(0, 0, creditsVisual , SpriteEffect::Copy{}, false);
+	}
+	else if (startMenu) {
+		gfx.DrawSprite(0, 0, startVisual, SpriteEffect::Copy{}, false); //Displays the visual for the start menu
 
 		if (previousWinner == 1) { //If Player 1 won the last match
 			gfx.DrawSprite(gfx.ScreenWidth / 2 - 250, 500, player1Win, SpriteEffect::Copy{}, false); //Dislpay a sprite that shows this
@@ -198,7 +293,7 @@ void Game::ComposeFrame()
 	}
 	else {
 		if (paused) {
-			gfx.DrawSprite(0, 0, pauseMenu, SpriteEffect::Copy{}, false); //Display the pause menu
+			gfx.DrawSprite(0, 0, pauseVisual , SpriteEffect::Copy{}, false); //Display the pause menu
 
 			if (Player1.lives == Player2.lives && Player1.playerPercentage == Player2.playerPercentage) { //If both players are even
 				gfx.DrawRect(gfx.ScreenWidth / 2 - Player1.width - 1, 99, gfx.ScreenWidth / 2 + 1, 100 + Player1.height + 1, 255, 199, 0); //Player 1 border
@@ -219,6 +314,7 @@ void Game::ComposeFrame()
 				gfx.DrawSprite(gfx.ScreenWidth / 4 * 3, 350, player1Hit, SpriteEffect::Copy{}, false); //Display player 1 on the right side
 			}
 		}
+
 		else if (timeUntilStart > 120) { //If you should display 3
 			gfx.DrawSprite(gfx.ScreenWidth / 2 - 150, gfx.ScreenHeight / 4 - 150, startThree, SpriteEffect::Copy{}, false); //Display 3
 		}

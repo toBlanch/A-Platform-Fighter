@@ -28,6 +28,8 @@
 #include "Move.h"
 #include <vector>
 #include <winnt.h>
+#include "Sound.h"
+#include "SoundEffect.h"
 
 class Game
 {
@@ -38,26 +40,35 @@ public:
 	void Go();
 private:
 	void ComposeFrame();
-	void UpdateModel();
+	void GameState();
 	/********************************/
 	/*  User Functions              */
 	/********************************/
+	void StartMenu();
+	void StartBattleTheme();
+	void GameLoop();
+	void Restart();
 
 private:
 	MainWindow& wnd;
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	std::random_device rd;
+	std::mt19937 rng;
+	std::uniform_real_distribution<float> musicDist;
 	int stageX0 = 480;
 	int stageY0 = 700;
 	int stageX1 = 1440;
 	int stageY1 = 880;
 	int leniancy = 0;
-	int player1CharacterID = 7;
+	int player1CharacterID = 0;
 	int player2CharacterID = 1;
 	int previousWinner = 0;
 	int timeUntilStart = 0;
 	int timeGoIsDisplayed = 0;
+	int timer = 0;
+	bool credits = false;
 	bool startMenu = true;
 	bool paused = false;
 	bool enterOrEscapeHeld = false;
@@ -66,6 +77,7 @@ private:
 	bool iHeld = false;
 	bool pHeld = false;
 	int hitStun = 0;
+	bool mainMenuThemeIsPlaying = false;
 
 	Surface player1Idle = { "Images\\CircleIdle.bmp" };
 	Surface player1Move = { "Images\\CircleIdle.bmp" };
@@ -82,9 +94,6 @@ private:
 	Surface hit[8];
 	Surface lives[8];
 
-	Surface cycling = { "Images\\Cycling.bmp" };
-	Surface controls1 = { "Images\\Player1Controls.bmp" };
-	Surface controls2 = { "Images\\Player2Controls.bmp" };
 	Surface startThree = { "Images\\StartThree.bmp" };
 	Surface startTwo = { "Images\\StartTwo.bmp" };
 	Surface startOne = { "Images\\StartOne.bmp" };
@@ -100,9 +109,19 @@ private:
 	Surface seven = { "Images\\7.bmp" };
 	Surface eight = { "Images\\8.bmp" };
 	Surface nine = { "Images\\9.bmp" };
-	Surface pauseMenu = { "Images\\Pause Menu.bmp" };
+	Surface startVisual = { "Images\\Start Menu.bmp" };
+	Surface mapSelectVisual = { "Images\\Map Select Menu.bmp" };
+	Surface pauseVisual = { "Images\\Pause Menu.bmp" };
+	Surface creditsVisual = { "Images\\Credits Menu.bmp" };
 	Surface player1Win = { "Images\\Player1Win.bmp" };
 	Surface player2Win = { "Images\\Player2Win.bmp" };
+	Sound MainMenuTheme;
+	Sound HitSound;
+	Sound CreditsTheme;
+	Sound BattleTheme0;
+	Sound BattleTheme1;
+	Sound BattleTheme2;
+	Sound BattleTheme3;
 	Character Player1;
 	Character Player2;
 	/********************************/
@@ -1428,7 +1447,7 @@ private:
 		23, //parameters[7]AerialJumpHeight
 		1.78, //parameters[8]FallAcceleration
 		6, //parameters[9]FallSpeed
-		1.3, //parameters[10]Weight
+		1.2, //parameters[10]Weight
 		2, //parameters[11]DoubleJumps
 
 		150, //parameters[12]Forward Light Additional x
@@ -1645,7 +1664,7 @@ private:
 		70, //parameters[213]Forward Special Additional y
 		300, //parameters[214]Forward Special Width
 		10, //parameters[215]Forward Special Height
-		20, //parameters[216]Forward Special Stun Duration
+		40, //parameters[216]Forward Special Stun Duration
 		0, //parameters[217]Forward Special Scalar X
 		0, //parameters[218]Forward Special Scalar y
 		-5, //parameters[219]Forward Special Fixed x
@@ -1657,7 +1676,7 @@ private:
 		5, //parameters[225]Forward Special Damage
 		13, //parameters[226]Forward Special Start Up Duraiton
 		1, //parameters[227]Forward Special Active Duration
-		5, //parameters[228]Forward Special End Lag Duration
+		20, //parameters[228]Forward Special End Lag Duration
 		1, //parameters[229]Forward Special Is Attached To Player
 		0, //parameters[230] Is Player Attached To It
 		0, //parameters[231]Forward Special Disappear On Hit
@@ -2080,7 +2099,7 @@ private:
 		0.75, //parameters[5]WalkAcceleration
 		28, //parameters[6]GroundedJumpHeight
 		33, //parameters[7]AerialJumpHeight
-		2, //parameters[8]FallAcceleration
+		1.25, //parameters[8]FallAcceleration
 		15, //parameters[9]FallSpeed
 		0.91, //parameters[10]Weight
 		2, //parameters[11]DoubleJumps
@@ -2437,11 +2456,11 @@ private:
 		-100, //parameters[33]Up Light Additional y
 		2, //parameters[34]Up Light Width
 		106, //parameters[35]Up Light Height
-		25, //parameters[36]Up Light Stun Duration
+		30, //parameters[36]Up Light Stun Duration
 		2, //parameters[37]Up Light Scalar X
-		-8, //parameters[38]Up Light Scalar y
+		-12, //parameters[38]Up Light Scalar y
 		1, //parameters[39]Up Light Fixed x
-		-15, //parameters[40]Up Light Fixed y
+		-10, //parameters[40]Up Light Fixed y
 		0, //parameters[41]Up Light vx
 		0, //parameters[42]Up Light vy
 		0, //parameters[43]Acceleration x
@@ -2584,7 +2603,7 @@ private:
 		-100, //parameters[173]Up Aerial Additional y
 		2, //parameters[174]Up Aerial Width
 		106, //parameters[175]Up Aerial Height
-		25, //parameters[176]Up Aerial Stun Duration
+		30, //parameters[176]Up Aerial Stun Duration
 		2, //parameters[177]Up Aerial Scalar X
 		-8, //parameters[178]Up Aerial Scalar y
 		1, //parameters[179]Up Aerial Fixed x
@@ -2629,16 +2648,16 @@ private:
 		5, //parameters[216]Forward Special Stun Duration
 		20, //parameters[217]Forward Special Scalar X
 		5, //parameters[218]Forward Special Scalar y
-		1, //parameters[219]Forward Special Fixed x
+		5, //parameters[219]Forward Special Fixed x
 		-3, //parameters[220]Forward Special Fixed y
 		2, //parameters[221]Forward Special vx
 		0.5, //parameters[222]Forward Special vy
 		0.1, //parameters[223]Acceleration x
 		0, //parameters[224]Acceleration y
-		35.2, //parameters[225]Forward Special Damage
+		15.2, //parameters[225]Forward Special Damage
 		20, //parameters[226]Forward Special Start Up Duraiton
 		50, //parameters[227]Forward Special Active Duration
-		10, //parameters[228]Forward Special End Lag Duration
+		30, //parameters[228]Forward Special End Lag Duration
 		1, //parameters[229]Forward Special Is Attached To Player
 		1, //parameters[230] Is Player Attached To It
 		0, //parameters[231]Forward Special Disappear On Hit
