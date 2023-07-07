@@ -154,7 +154,7 @@ void Game::StartMenu()
 
 		if ((wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE)) && !enterOrEscapeHeld) { //If the game is starting
 			startMenu = false; //Disable the start menu
-			Restart();
+			GameStart();
 			player1Idle = idle[player1CharacterID]; //Set player 1's idle animation
 			player1Move = move[player1CharacterID]; //Set player 1's move animation
 			player1Hit = hit[player1CharacterID]; //Set player 1's hit animation
@@ -207,13 +207,17 @@ void Game::GameLoop()
 			previousWinner = 0;
 		}
 		else if (wnd.kbd.KeyIsPressed(VK_CONTROL) && wnd.kbd.KeyIsPressed(0x52)) { //If the game should be restarted
-			Restart();
+			GameStart();
 		}
 		else if (!enterOrEscapeHeld && (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE))) { //If the pause button is pressd
 			paused = false; //Unpause the game
 		}
 	}
+	else if (timer == 0) {
+		GameEnd();
+	}
 	else if (Player1.IsAlive(gfx.ScreenWidth, gfx.ScreenHeight, leniancy) && Player2.IsAlive(gfx.ScreenWidth, gfx.ScreenHeight, leniancy)) {//If both players are alive
+		timer--;
 		if (hitStun > 0) {
 			hitStun--;
 		}
@@ -245,22 +249,13 @@ void Game::GameLoop()
 		}
 	}
 	else {
-		startMenu = true; //Enable the start menu
-		BattleTheme0.StopAll();
-		BattleTheme1.StopAll();
-		BattleTheme2.StopAll();
-		BattleTheme3.StopAll();
-		if (Player1.lives == 0) { //Set the previous winner
-			previousWinner = 2;
-		}
-		else {
-			previousWinner = 1;
-		}
+		GameEnd();
 	}
 }
 
-void Game::Restart()
+void Game::GameStart()
 {
+	timer = 10 * 60 * 60 - 1;
 	StartBattleTheme();
 	Player1.x = gfx.ScreenWidth / 4 + 100; //Set player 1's starting position
 	Player1.facingRight = true;
@@ -271,6 +266,24 @@ void Game::Restart()
 	timeUntilStart = 180;
 	timeGoIsDisplayed = 60;
 	paused = false;
+}
+
+void Game::GameEnd()
+{
+	startMenu = true; //Enable the start menu
+	BattleTheme0.StopAll();
+	BattleTheme1.StopAll();
+	BattleTheme2.StopAll();
+	BattleTheme3.StopAll();
+	if (Player2.lives < Player1.lives || (Player1.lives == Player2.lives && Player1.playerPercentage < Player2.playerPercentage)) { //Set the previous winner
+		previousWinner = 1;
+	}
+	else if (Player1.lives < Player2.lives || (Player1.lives == Player2.lives && Player2.playerPercentage < Player1.playerPercentage)) {
+		previousWinner = 2;
+	}
+	else {
+		previousWinner = 0;
+	}
 }
 
 void Game::ComposeFrame()
@@ -332,24 +345,18 @@ void Game::ComposeFrame()
 
 		gfx.DrawSprite(gfx.ScreenWidth / 4, 900, numbers[((int)Player1.playerPercentage - (int)Player1.playerPercentage % 10) / 10], SpriteEffect::Copy{}, false); //Player 1 percent
 		gfx.DrawSprite(gfx.ScreenWidth / 4 + 30, 900, numbers[(int)Player1.playerPercentage % 10], SpriteEffect::Copy{}, false); //Player 1 percent
-		gfx.PutPixel(gfx.ScreenWidth / 4 + 65, 940, 255, 255, 255); //Decimal point
-		gfx.PutPixel(gfx.ScreenWidth / 4 + 65, 939, 255, 255, 255); //Decimal point
-		gfx.PutPixel(gfx.ScreenWidth / 4 + 66, 940, 255, 255, 255); //Decimal point
-		gfx.PutPixel(gfx.ScreenWidth / 4 + 66, 939, 255, 255, 255); //Decimal point
+		gfx.DrawRect(gfx.ScreenWidth / 4 + 64, 939, gfx.ScreenWidth / 4 + 66, 941, 255, 255, 255); //Decimal point
 		gfx.DrawSprite(gfx.ScreenWidth / 4 + 70, 900, numbers[(int)(Player1.playerPercentage * 10) % 10], SpriteEffect::Copy{}, false); //Player 1 percent
 		for (int i = 0; i < Player1.lives; i++) {
-			gfx.DrawSprite(gfx.ScreenWidth / 4 + i * 30, 950, player1LivesIcon, SpriteEffect::Copy{}, false); //Player 1 percent
+			gfx.DrawSprite(gfx.ScreenWidth / 4 + i * 30, 950, player1LivesIcon, SpriteEffect::Copy{}, false); //Player 1 lives icon
 		}
 		for (int i = 0; i < Player2.lives; i++) {
-			gfx.DrawSprite(gfx.ScreenWidth / 4 * 3 + i * 30, 950, player2LivesIcon, SpriteEffect::Copy{}, false); //Player 1 percent
+			gfx.DrawSprite(gfx.ScreenWidth / 4 * 3 + i * 30, 950, player2LivesIcon, SpriteEffect::Copy{}, false); //Player 2 lives icon
 		}
 
 		gfx.DrawSprite(gfx.ScreenWidth / 4 * 3, 900, numbers[((int)Player2.playerPercentage - (int)Player2.playerPercentage % 10) / 10], SpriteEffect::Copy{}, false); //Player 2 percent
 		gfx.DrawSprite(gfx.ScreenWidth / 4 * 3 + 30, 900, numbers[(int)Player2.playerPercentage % 10], SpriteEffect::Copy{}, false); //Player 2 percent
-		gfx.PutPixel(gfx.ScreenWidth / 4 * 3 + 65, 940, 255, 255, 255); //Decimal point
-		gfx.PutPixel(gfx.ScreenWidth / 4 * 3 + 65, 939, 255, 255, 255); //Decimal point
-		gfx.PutPixel(gfx.ScreenWidth / 4 * 3 + 66, 940, 255, 255, 255); //Decimal point
-		gfx.PutPixel(gfx.ScreenWidth / 4 * 3 + 66, 939, 255, 255, 255); //Decimal point
+		gfx.DrawRect(gfx.ScreenWidth / 4 * 3 + 64, 939, gfx.ScreenWidth * 3 / 4 + 66, 941, 255, 255, 255); //Decimal point
 		gfx.DrawSprite(gfx.ScreenWidth / 4 * 3 + 70, 900, numbers[(int)(Player2.playerPercentage * 10) % 10], SpriteEffect::Copy{}, false); //Player 2 percent
 
 		if (Player1.invincibility > 0) { //If player 1 has invincibility
@@ -388,5 +395,10 @@ void Game::ComposeFrame()
 				gfx.DrawRect(Player2.MoveX0(i), Player2.MoveY0(i), Player2.MoveX1(i), Player2.MoveY1(i), Player2.MoveR(i), Player2.MoveG(i), Player2.MoveB(i)); //Draw it
 			}
 		}
+		gfx.DrawSprite(gfx.ScreenWidth / 2 - 50, 50, numbers[(int)(timer / 60 / 60)], SpriteEffect::Copy{}, false); //Time in minutes
+		gfx.DrawRect(gfx.ScreenWidth / 2 - 15, 60, gfx.ScreenWidth / 2 - 10, 65, 255, 255, 255); //Colon
+		gfx.DrawRect(gfx.ScreenWidth / 2 - 15, 85, gfx.ScreenWidth / 2 - 10, 90, 255, 255, 255); //Colon
+		gfx.DrawSprite(gfx.ScreenWidth / 2, 50, numbers[(int)((timer /60 % 60 - timer / 60 % 10)/10)], SpriteEffect::Copy{}, false); //Time in tens
+		gfx.DrawSprite(gfx.ScreenWidth / 2 + 50, 50, numbers[(int)(timer / 60 % 10)], SpriteEffect::Copy{}, false); //Time in seconds
 	}
 }

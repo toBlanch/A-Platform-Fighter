@@ -47,7 +47,8 @@ private:
 	void StartMenu();
 	void StartBattleTheme();
 	void GameLoop();
-	void Restart();
+	void GameStart();
+	void GameEnd();
 
 private:
 	MainWindow& wnd;
@@ -110,7 +111,6 @@ private:
 	Surface eight = { "Images\\8.bmp" };
 	Surface nine = { "Images\\9.bmp" };
 	Surface startVisual = { "Images\\Start Menu.bmp" };
-	Surface mapSelectVisual = { "Images\\Map Select Menu.bmp" };
 	Surface pauseVisual = { "Images\\Pause Menu.bmp" };
 	Surface creditsVisual = { "Images\\Credits Menu.bmp" };
 	Surface player1Win = { "Images\\Player1Win.bmp" };
