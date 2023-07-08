@@ -17,8 +17,6 @@ public:
 	int height = 0;
 	int startUpDuration = 0;
 	int endLagDuration = 0;
-	int playerWidth = 0;
-	int playerHeight = 0;
 	float stunDuration = 0;
 	float scalarX = 0;
 	float scalarY = 0;

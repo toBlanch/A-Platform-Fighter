@@ -4,11 +4,11 @@
 
 class Character {
 public:
-	void UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int player2Width, int player2Height);
-	bool IsOnStage();
-	bool ClippingIntoStageFromLeft();
-	bool ClippingIntoStageFromRight();
-	bool ClippingIntoStageFromBottom();
+	void UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int player2Width, int player2Height, int stageX0, int stageY0, int stageX1, int stageY1);
+	bool IsOnStage(int stageX0, int stageY0, int stageX1, int stageY1);
+	bool ClippingIntoStageFromLeft(int stageX0, int stageY0, int stageX1, int stageY1);
+	bool ClippingIntoStageFromRight(int stageX0, int stageY0, int stageX1, int stageY1);
+	bool ClippingIntoStageFromBottom(int stageX0, int stageY0, int stageX1, int stageY1);
 	bool IsAlive(int screenWidth, int screenHeight, int leniancy);
 	bool MoveDraw(int move);
 	bool IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height);
@@ -28,8 +28,9 @@ public:
 	void Initialise(std::vector<float>& parameters, int stageX0Referral, int stageY0Referral, int stageX1Referral, int stageY1Referral);
 	void IsHit(int stunReferral, float damageReferral, int fixedXReferral, int fixedYReferral, int scalarXReferral, int scalarYReferral);
 	void Restart();
+	void OnlyProjectiles(int stageX0, int stageY0, int stageX1, int stageY1);
 	int lives = 3;
-	float x = 800;
+	float x = 0;
 	float y = 0;
 	int width = 100;
 	int height = 100;
@@ -39,18 +40,15 @@ public:
 	bool facingRight = true;
 	int invincibility = 0;
 	int freeFallDuration = 0;
-private:
-	int stageX0 = 0;
-	int stageY0 = 0;
-	int stageX1 = 0;
-	int stageY1 = 0;
 	int invincibilityCooldown = 0;
 	float vx = 0;
 	float vy = 0;
 	float speed = 0;
+	float acceleration = 0;
+	int doubleJump = 0;
+private:
 	float walkSpeed = 0;
 	float aerialSpeed = 0;
-	float acceleration = 0;
 	float walkAcceleration = 0;
 	float aerialAcceleration = 0;
 	float groundJumpHeight = 0;
@@ -58,7 +56,6 @@ private:
 	float fallAcceleration = 0;
 	float fallSpeed = 0;
 	float weight = 0;
-	int doubleJump = 0;
 	int maxDoubleJump = 0;
 	int moveThatHit = 0;
 	bool onStage = false;

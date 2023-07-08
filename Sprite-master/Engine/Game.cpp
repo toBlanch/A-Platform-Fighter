@@ -35,7 +35,8 @@ Game::Game(MainWindow& mainWindow)
 	BattleTheme1(L"Battle Theme 1.wav", 0.0f, 232.0f),
 	BattleTheme2(L"Battle Theme 2.wav", 0.0f, 147.0f),
 	BattleTheme3(L"Battle Theme 3.wav", 0.0f, 159.0f),
-	musicDist(0,3.9)
+	musicDist(0,3.9),
+	aiMoveDist(0,3.9)
 {
 	//Initialise the numbers used for the percentage display
 	numbers[0] = { "Images\\0.bmp" }; 
@@ -101,7 +102,7 @@ void Game::Go()
 void Game::GameState()
 {
 	if (credits) {
-		if (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE) && !enterOrEscapeHeld) {
+		if ((wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE) && !enterOrEscapeHeld) || (wnd.kbd.KeyIsPressed(VK_SPACE) && !spaceHeld)) {
 			credits = false;
 			CreditsTheme.StopAll();
 		}
@@ -116,6 +117,7 @@ void Game::GameState()
 		GameLoop();
 	}
 	enterOrEscapeHeld = wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE); //If enter or escape is held set it to true, otherwise set it to false
+	spaceHeld = wnd.kbd.KeyIsPressed(VK_SPACE);
 }
 
 void Game::StartMenu()
@@ -123,7 +125,7 @@ void Game::StartMenu()
 	if (wnd.kbd.KeyIsPressed(VK_CONTROL) && wnd.kbd.KeyIsPressed(VK_SPACE)) {
 		abort();
 	}
-	else if (wnd.kbd.KeyIsPressed(VK_SPACE)) {
+	else if (wnd.kbd.KeyIsPressed(VK_SPACE) && !spaceHeld) {
 		credits = true;
 		MainMenuTheme.StopAll();
 		mainMenuThemeIsPlaying = false;
@@ -147,10 +149,15 @@ void Game::StartMenu()
 			player2CharacterID--; //Decrease it
 		}
 
+		if (wnd.kbd.KeyIsPressed(VK_TAB) && !tabHeld) {
+			AISelected = !AISelected;
+		}
+
 		qHeld = wnd.kbd.KeyIsPressed(0x51); //If q is held set it to true, otherwise set it to false
 		eHeld = wnd.kbd.KeyIsPressed(0x45); //If e is held set it to true, otherwise set it to false
 		iHeld = wnd.kbd.KeyIsPressed(0x49); //If i is held set it to true, otherwise set it to false
 		pHeld = wnd.kbd.KeyIsPressed(0x50); //If p is held set it to true, otherwise set it to false
+		tabHeld = wnd.kbd.KeyIsPressed(VK_TAB);
 
 		if ((wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE)) && !enterOrEscapeHeld) { //If the game is starting
 			startMenu = false; //Disable the start menu
@@ -220,6 +227,8 @@ void Game::GameLoop()
 		timer--;
 		if (hitStun > 0) {
 			hitStun--;
+			Player1.OnlyProjectiles(stageX0, stageY0, stageX1, stageY1);
+			Player2.OnlyProjectiles(stageX0, stageY0, stageX1, stageY1);
 		}
 		else {
 			if (enterOrEscapeHeld == false && (wnd.kbd.KeyIsPressed(VK_RETURN) || wnd.kbd.KeyIsPressed(VK_ESCAPE))) { //If the pause button is pressed
@@ -233,19 +242,26 @@ void Game::GameLoop()
 			}
 
 			//Update models
-			Player1.UpdateCharacter(wnd.kbd.KeyIsPressed(0x41), wnd.kbd.KeyIsPressed(0x44), wnd.kbd.KeyIsPressed(0x53), wnd.kbd.KeyIsPressed(0x57), wnd.kbd.KeyIsPressed(0x47), wnd.kbd.KeyIsPressed(0x46), wnd.kbd.KeyIsPressed(0x54), wnd.kbd.KeyIsPressed(0x48), wnd.kbd.KeyIsPressed(VK_SHIFT), Player2.width, Player2.height);
-			Player2.UpdateCharacter(wnd.kbd.KeyIsPressed(VK_LEFT), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(VK_UP), wnd.kbd.KeyIsPressed(0x4C), wnd.kbd.KeyIsPressed(0x4B), wnd.kbd.KeyIsPressed(0x4F), wnd.kbd.KeyIsPressed(VK_OEM_1), wnd.kbd.KeyIsPressed(0x4E), Player1.width, Player1.height);
+			Player1.UpdateCharacter(wnd.kbd.KeyIsPressed(0x41), wnd.kbd.KeyIsPressed(0x44), wnd.kbd.KeyIsPressed(0x53), wnd.kbd.KeyIsPressed(0x57), wnd.kbd.KeyIsPressed(0x47), wnd.kbd.KeyIsPressed(0x46), wnd.kbd.KeyIsPressed(0x54), wnd.kbd.KeyIsPressed(0x48), wnd.kbd.KeyIsPressed(VK_SHIFT), Player2.width, Player2.height, stageX0, stageY0, stageX1, stageY1);
+			if (AISelected) {
+				int aiSelectedMove = 12 + (int)aiMoveDist(rng);
+				ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.width, Player2.height, Player2.invincibilityCooldown==0, Player2.vy, Player2.doubleJump, stageX0, stageY0, stageX1, stageY1, aiMoveDist(rng));
+				Player2.UpdateCharacter(ArtifialFriend.left, ArtifialFriend.right, ArtifialFriend.down, ArtifialFriend.up, ArtifialFriend.jump, ArtifialFriend.light, ArtifialFriend.heavy, ArtifialFriend.special, ArtifialFriend.dodge, Player1.width, Player1.height, stageX0, stageY0, stageX1, stageY1);
+			}
+			else {
+				Player2.UpdateCharacter(wnd.kbd.KeyIsPressed(VK_LEFT), wnd.kbd.KeyIsPressed(VK_RIGHT), wnd.kbd.KeyIsPressed(VK_DOWN), wnd.kbd.KeyIsPressed(VK_UP), wnd.kbd.KeyIsPressed(0x4C), wnd.kbd.KeyIsPressed(0x4B), wnd.kbd.KeyIsPressed(0x4F), wnd.kbd.KeyIsPressed(VK_OEM_1), wnd.kbd.KeyIsPressed(0x4E), Player1.width, Player1.height, stageX0, stageY0, stageX1, stageY1);
+			}
 
-			if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
-				HitSound.Play(10 / Player1.MoveThatHitDamage());
-				hitStun = Player1.MoveThatHitDamage() * 2; //Hit stun activation
-				Player2.IsHit(Player1.MoveThatHitStun(), Player1.MoveThatHitDamage(), Player1.MoveThatHitFixedX(), Player1.MoveThatHitFixedY(), Player1.MoveThatHitScalarX(), Player1.MoveThatHitScalarY()); //Register that player 2 has been hit
-			}
-			if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) { //Is player 2 hitting any move
-				HitSound.Play(10 / Player2.MoveThatHitDamage());
-				hitStun = Player2.MoveThatHitDamage() * 2; //Hit stun activation
-				Player1.IsHit(Player2.MoveThatHitStun(), Player2.MoveThatHitDamage(), Player2.MoveThatHitFixedX(), Player2.MoveThatHitFixedY(), Player2.MoveThatHitScalarX(), Player2.MoveThatHitScalarY()); //Register that player 1 has been hit
-			}
+		}
+		if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
+			HitSound.Play(10 / Player1.MoveThatHitDamage());
+			hitStun = Player1.MoveThatHitDamage() * 2; //Hit stun activation
+			Player2.IsHit(Player1.MoveThatHitStun(), Player1.MoveThatHitDamage(), Player1.MoveThatHitFixedX(), Player1.MoveThatHitFixedY(), Player1.MoveThatHitScalarX(), Player1.MoveThatHitScalarY()); //Register that player 2 has been hit
+		}
+		if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) { //Is player 2 hitting any move
+			HitSound.Play(10 / Player2.MoveThatHitDamage());
+			hitStun = Player2.MoveThatHitDamage() * 2; //Hit stun activation
+			Player1.IsHit(Player2.MoveThatHitStun(), Player2.MoveThatHitDamage(), Player2.MoveThatHitFixedX(), Player2.MoveThatHitFixedY(), Player2.MoveThatHitScalarX(), Player2.MoveThatHitScalarY()); //Register that player 1 has been hit
 		}
 	}
 	else {
@@ -293,6 +309,10 @@ void Game::ComposeFrame()
 	}
 	else if (startMenu) {
 		gfx.DrawSprite(0, 0, startVisual, SpriteEffect::Copy{}, false); //Displays the visual for the start menu
+
+		if (AISelected) {
+			gfx.DrawSprite(1600, 100, aiWarning, SpriteEffect::Copy{}, false);
+		}
 
 		if (previousWinner == 1) { //If Player 1 won the last match
 			gfx.DrawSprite(gfx.ScreenWidth / 2 - 250, 500, player1Win, SpriteEffect::Copy{}, false); //Dislpay a sprite that shows this
@@ -358,6 +378,9 @@ void Game::ComposeFrame()
 		gfx.DrawSprite(gfx.ScreenWidth / 4 * 3 + 30, 900, numbers[(int)Player2.playerPercentage % 10], SpriteEffect::Copy{}, false); //Player 2 percent
 		gfx.DrawRect(gfx.ScreenWidth / 4 * 3 + 64, 939, gfx.ScreenWidth * 3 / 4 + 66, 941, 255, 255, 255); //Decimal point
 		gfx.DrawSprite(gfx.ScreenWidth / 4 * 3 + 70, 900, numbers[(int)(Player2.playerPercentage * 10) % 10], SpriteEffect::Copy{}, false); //Player 2 percent
+		if (AISelected) {
+			gfx.DrawSprite(gfx.ScreenWidth / 4 * 3 + 120, 900, aiWarning, SpriteEffect::Copy{}, false);
+		}
 
 		if (Player1.invincibility > 0) { //If player 1 has invincibility
 			gfx.DrawRect(Player1.x - 1, Player1.y - 1, Player1.x + Player1.width + 1, Player1.y + Player1.height + 1, 0, 237, 255); //Give them a border

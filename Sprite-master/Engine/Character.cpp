@@ -1,10 +1,10 @@
 #include "Character.h"
 #include "Game.h"
 
-void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int player2Width, int player2Height) {
+void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int player2Width, int player2Height, int stageX0, int stageY0, int stageX1, int stageY1) {
 	if (stun == 0) { //If not in stun
 		//If on stage
-		if (IsOnStage()) {
+		if (IsOnStage(stageX0, stageY0, stageX1, stageY1)) {
 			doubleJump = maxDoubleJump; //Refresh double jumps
 			fastFalling = false; //Stop fast falling
 			acceleration = walkAcceleration; //Sets acceleration to grounded acceleration
@@ -159,12 +159,37 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			}
 		}
 
-		onStage = IsOnStage();
-		ClippingIntoStageFromLeft();
-		ClippingIntoStageFromRight();
-		ClippingIntoStageFromBottom();
+		onStage = IsOnStage(stageX0, stageY0, stageX1, stageY1);
+		ClippingIntoStageFromLeft(stageX0, stageY0, stageX1, stageY1);
+		ClippingIntoStageFromRight(stageX0, stageY0, stageX1, stageY1);
+		ClippingIntoStageFromBottom(stageX0, stageY0, stageX1, stageY1);
 
-		if (light && onStage) { //If using a light attack
+		if (special) { //If using a special attack
+			for (int i = 0; i < 5; i++) {
+				if (moveArray[i].activeDuration == 0) {
+					if (right) {
+						facingRight = true;
+					}
+					else if (left) {
+						facingRight = false;
+					}
+					if (up) { //If doing a move upwards
+						moveArray[i].Activate(width, height, facingRight, upSpecialAdditionalX, upSpecialAdditionalY, upSpecialWidth, upSpecialHeight, upSpecialStunDuration, upSpecialScalarX, upSpecialScalarY, upSpecialFixedX, upSpecialFixedY, upSpecialVx, upSpecialVy, upSpecialAccelerationx, upSpecialAccelerationy, upSpecialDamage, upSpecialStartUpDuration, upSpecialActiveDuration, upSpecialEndLagDuration, upSpecialIsAttachedToPlayer, upSpecialIsPlayerAttachedToIt, upSpecialDisappearOnHit, upSpecialR, upSpecialG, upSpecialB, player2Width, player2Height);  //Initialise the move
+						moveDuration = upSpecialStartUpDuration + moveArray[i].IsActiveDuration() + upSpecialEndLagDuration; //Set the player lag
+					}
+					else if (down) { //If doing a move upwards
+						moveArray[i].Activate(width, height, facingRight, downSpecialAdditionalX, downSpecialAdditionalY, downSpecialWidth, downSpecialHeight, downSpecialStunDuration, downSpecialScalarX, downSpecialScalarY, downSpecialFixedX, downSpecialFixedY, downSpecialVx, downSpecialVy, downSpecialAccelerationx, downSpecialAccelerationy, downSpecialDamage, downSpecialStartUpDuration, downSpecialActiveDuration, downSpecialEndLagDuration, downSpecialIsAttachedToPlayer, downSpecialIsPlayerAttachedToIt, downSpecialDisappearOnHit, downSpecialR, downSpecialG, downSpecialB, player2Width, player2Height);  //Initialise the move
+						moveDuration = downSpecialStartUpDuration + moveArray[i].IsActiveDuration() + downSpecialEndLagDuration; //Set the player lag
+					}
+					else { //If doing a move forwards
+						moveArray[i].Activate(width, height, facingRight, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration, forwardSpecialScalarX, forwardSpecialScalarY, forwardSpecialFixedX, forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialAccelerationx, forwardSpecialAccelerationy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialIsPlayerAttachedToIt, forwardSpecialDisappearOnHit, forwardSpecialR, forwardSpecialG, forwardSpecialB, player2Width, player2Height);  //Initialise the move
+						moveDuration = forwardSpecialStartUpDuration + moveArray[i].IsActiveDuration() + forwardSpecialEndLagDuration; //Set the player lag
+					}
+					i = 5; //End the loop
+				}
+			}
+		}
+		else if (light && onStage) { //If using a light attack
 			for (int i = 0; i < 5; i++) { //For each move
 				if (moveArray[i].activeDuration == 0) {
 					if (right) {
@@ -249,31 +274,6 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 				}
 			}
 		}
-		else if (special) { //If using a special attack
-			for (int i = 0; i < 5; i++) {
-				if (moveArray[i].activeDuration == 0) {
-					if (right) {
-						facingRight = true;
-					}
-					else if (left) {
-						facingRight = false;
-					}
-					if (up) { //If doing a move upwards
-						moveArray[i].Activate(width, height, facingRight, upSpecialAdditionalX, upSpecialAdditionalY, upSpecialWidth, upSpecialHeight, upSpecialStunDuration, upSpecialScalarX, upSpecialScalarY, upSpecialFixedX, upSpecialFixedY, upSpecialVx, upSpecialVy, upSpecialAccelerationx, upSpecialAccelerationy, upSpecialDamage, upSpecialStartUpDuration, upSpecialActiveDuration, upSpecialEndLagDuration, upSpecialIsAttachedToPlayer, upSpecialIsPlayerAttachedToIt, upSpecialDisappearOnHit, upSpecialR, upSpecialG, upSpecialB, player2Width, player2Height);  //Initialise the move
-						moveDuration = upSpecialStartUpDuration + moveArray[i].IsActiveDuration() + upSpecialEndLagDuration; //Set the player lag
-					}
-					else if (down) { //If doing a move upwards
-						moveArray[i].Activate(width, height, facingRight, downSpecialAdditionalX, downSpecialAdditionalY, downSpecialWidth, downSpecialHeight, downSpecialStunDuration, downSpecialScalarX, downSpecialScalarY, downSpecialFixedX, downSpecialFixedY, downSpecialVx, downSpecialVy, downSpecialAccelerationx, downSpecialAccelerationy, downSpecialDamage, downSpecialStartUpDuration, downSpecialActiveDuration, downSpecialEndLagDuration, downSpecialIsAttachedToPlayer, downSpecialIsPlayerAttachedToIt, downSpecialDisappearOnHit, downSpecialR, downSpecialG, downSpecialB, player2Width, player2Height);  //Initialise the move
-						moveDuration = downSpecialStartUpDuration + moveArray[i].IsActiveDuration() + downSpecialEndLagDuration; //Set the player lag
-					}
-					else { //If doing a move forwards
-						moveArray[i].Activate(width, height, facingRight, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration, forwardSpecialScalarX, forwardSpecialScalarY, forwardSpecialFixedX, forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialAccelerationx, forwardSpecialAccelerationy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialIsPlayerAttachedToIt, forwardSpecialDisappearOnHit, forwardSpecialR, forwardSpecialG, forwardSpecialB, player2Width, player2Height);  //Initialise the move
-						moveDuration = forwardSpecialStartUpDuration + moveArray[i].IsActiveDuration() + forwardSpecialEndLagDuration; //Set the player lag
-					}
-					i = 5; //End the loop
-				}
-			}
-		}
 		else if (dodge && invincibilityCooldown == 0) { //If dodging
 			if (left) { //If holding left
 				facingRight = false; //Face left
@@ -309,24 +309,25 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 		x += vx;
 		y += vy;
 
-		if (ClippingIntoStageFromLeft()) { //If clipping into stage from the left
+		if (ClippingIntoStageFromLeft(stageX0, stageY0, stageX1, stageY1)) { //If clipping into stage from the left
 			vx *= -1;
 		}
-		else if (ClippingIntoStageFromRight()) { //If clipping into stage from right
+		else if (ClippingIntoStageFromRight(stageX0, stageY0, stageX1, stageY1)) { //If clipping into stage from right
 			vx *= -1;
 		}
 
-		if (IsOnStage()) {
+		if (IsOnStage(stageX0, stageY0, stageX1, stageY1)) {
 			vy *= -1;
 		}
-		else if (ClippingIntoStageFromBottom()) {
+		else if (ClippingIntoStageFromBottom(stageX0, stageY0, stageX1, stageY1)) {
 			vy *= -1;
 		}
+		OnlyProjectiles(stageX0,stageY0,stageX1,stageY1);
 	}
 	downHeld = down;
 }
 
-bool Character::IsOnStage()
+bool Character::IsOnStage(int stageX0, int stageY0, int stageX1, int stageY1)
 {
 	if (x + width >= stageX0 && x <= stageX1 && //If X coordinate is over the stage
 		y + height >= stageY0 && y + height <= stageY0 + vy * 2 //If Y coordinate is level with the stage
@@ -337,7 +338,7 @@ bool Character::IsOnStage()
 	return false;
 }
 
-bool Character::ClippingIntoStageFromLeft()
+bool Character::ClippingIntoStageFromLeft(int stageX0, int stageY0, int stageX1, int stageY1)
 {
 	if (y + height > stageY0 && y <= stageY1 && x + width > stageX0 && x + width <= stageX0 + vx) {
 		x = float(stageX0 - width); //Stop clipping
@@ -346,7 +347,7 @@ bool Character::ClippingIntoStageFromLeft()
 	return false;
 }
 
-bool Character::ClippingIntoStageFromRight()
+bool Character::ClippingIntoStageFromRight(int stageX0, int stageY0, int stageX1, int stageY1)
 {
 	if (y + height > stageY0 && y <= stageY1 && x >= stageX1 + vx && x < stageX1) {
 		x = (float)stageX1; //Stop clipping
@@ -355,7 +356,7 @@ bool Character::ClippingIntoStageFromRight()
 	return false;
 }
 
-bool Character::ClippingIntoStageFromBottom()
+bool Character::ClippingIntoStageFromBottom(int stageX0, int stageY0, int stageX1, int stageY1)
 {
 	if (x + width > stageX0 && x < stageX1 && y >= stageY1 + vy && y <= stageY1) {
 		y = (float)stageY1; //Stop clipping
@@ -480,10 +481,6 @@ float Character::MoveThatHitFixedY()
 }
 
 void Character::Initialise(std::vector<float>& parameters, int stageX0Referral, int stageY0Referral, int stageX1Referral, int stageY1Referral){
-	stageX0 = stageX0Referral;
-	stageY0 = stageY0Referral;
-	stageX1 = stageX1Referral;
-	stageY1 = stageY1Referral;
 	width = (int)parameters[0];
 	height = (int)parameters[1];
 	walkSpeed = parameters[2];
@@ -823,9 +820,7 @@ void Character::IsHit(int stunReferral, float damageReferral, int fixedXReferral
 		moveDuration = 0;
 		freeFallDuration = 0;
 		for (int i = 0; i < 5; i++) {
-			if (!moveArray[i].isAttachedToPlayer) {
-				moveArray[i].PlayerIsHit();
-			}
+			moveArray[i].PlayerIsHit();
 		}
 	}
 }
@@ -845,4 +840,11 @@ void Character::Restart()
 	invincibilityCooldown = 0;
 	freeFallDuration = 0;
 	y = 700 - height;
+}
+
+void Character::OnlyProjectiles(int stageX0, int stageY0, int stageX1, int stageY1)
+{
+	for (int i = 0; i < 5; i++) {
+		moveArray[i].CheckStatus(x,y,stageX0, stageY0, stageX1, stageY1);
+	}
 }

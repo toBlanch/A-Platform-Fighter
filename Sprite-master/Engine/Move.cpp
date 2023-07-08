@@ -64,8 +64,6 @@ void Move::Activate(int playerWidthReferral, int playerHeightReferral, bool isFa
 {
 	//Refer variables 
 	hasHit = false;
-	playerWidth = playerWidthReferral;
-	playerHeight = playerHeightReferral;
 	additionalX = additionalXReferral;
 	additionalY = additionalYReferral;
 	width = widthReferral;
@@ -88,7 +86,7 @@ void Move::Activate(int playerWidthReferral, int playerHeightReferral, bool isFa
 	disappearOnHit = disappearOnHitReferral;
 
 	if (!isFacingRight) { //If facing left
-		additionalX = additionalX*-1+playerWidth-width; //Flip the additional value left
+		additionalX = additionalX*-1+playerWidthReferral-width; //Flip the additional value left
 		fixedX *= -1; //Flip the fixed horizontal knockback
 		scalarX *= -1; //Fix the scalar horizontal knockback
 		vx *= -1; //Flip thehorizontal movement

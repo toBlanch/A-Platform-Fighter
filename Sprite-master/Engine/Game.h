@@ -30,6 +30,7 @@
 #include <winnt.h>
 #include "Sound.h"
 #include "SoundEffect.h"
+#include "AI.h"
 
 class Game
 {
@@ -55,9 +56,9 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	std::random_device rd;
 	std::mt19937 rng;
 	std::uniform_real_distribution<float> musicDist;
+	std::uniform_real_distribution<float> aiMoveDist;
 	int stageX0 = 480;
 	int stageY0 = 700;
 	int stageX1 = 1440;
@@ -77,6 +78,9 @@ private:
 	bool eHeld = false;
 	bool iHeld = false;
 	bool pHeld = false;
+	bool spaceHeld = false;
+	bool tabHeld = false;
+	bool AISelected = false;
 	int hitStun = 0;
 	bool mainMenuThemeIsPlaying = false;
 
@@ -95,6 +99,7 @@ private:
 	Surface hit[8];
 	Surface lives[8];
 
+	Surface aiWarning = { "Images\\AI Warning.bmp" };
 	Surface startThree = { "Images\\StartThree.bmp" };
 	Surface startTwo = { "Images\\StartTwo.bmp" };
 	Surface startOne = { "Images\\StartOne.bmp" };
@@ -124,6 +129,7 @@ private:
 	Sound BattleTheme3;
 	Character Player1;
 	Character Player2;
+	AI ArtifialFriend;
 	/********************************/
 	std::vector<std::vector<float>> parameters = {
 	//Circle
@@ -176,7 +182,7 @@ private:
 		0, //parameters[43]Acceleration x
 		0, //parameters[44]Acceleration y
 		6, //parameters[45]Up Light Damage
-		10, //parameters[46]Up Light Start Up Duraiton
+		4, //parameters[46]Up Light Start Up Duraiton
 		30, //parameters[47]Up Light Active Duration
 		10, //parameters[48]Up Light End Lag Duration
 		1, //parameters[49]Up Light Is Attached To Player
@@ -197,7 +203,7 @@ private:
 		0, //parameters[63]Acceleration x
 		0, //parameters[64]Acceleration y
 		0.1, //parameters[65]Down Light Damage
-		10, //parameters[66]Down Light Start Up Duraiton
+		1, //parameters[66]Down Light Start Up Duraiton
 		10, //parameters[67]Down Light Active Duration
 		30, //parameters[68]Down Light End Lag Duration
 		1, //parameters[69]Down Light Is Attached To Player
@@ -209,8 +215,8 @@ private:
 		50, //parameters[74]Forward Heavy Width
 		10, //parameters[75]Forward Heavy Height
 		80, //parameters[76]Forward Heavy Stun Duration
-		6, //parameters[77]Forward Heavy Scalar X
-		-6, //parameters[78]Forward Heavy Scalar y
+		10, //parameters[77]Forward Heavy Scalar X
+		-4, //parameters[78]Forward Heavy Scalar y
 		3.5, //parameters[79]Forward Heavy Fixed x
 		-3.5, //parameters[80]Forward Heavy Fixed y
 		0, //parameters[81]Forward Heavy vx
@@ -231,7 +237,7 @@ private:
 		10, //parameters[95]Up Heavy Height
 		40, //parameters[96]Up Heavy Stun Duration
 		1, //parameters[97]Up Heavy Scalar X
-		-1, //parameters[98]Up Heavy Scalar y
+		-8, //parameters[98]Up Heavy Scalar y
 		1, //parameters[99]Up Heavy Fixed x
 		-4, //parameters[100]Up Heavy Fixed y
 		0, //parameters[101]Up Heavy vx
@@ -323,7 +329,7 @@ private:
 		0, //parameters[183]Acceleration x
 		0, //parameters[184]Acceleration y
 		5.3, //parameters[185]Up Aerial Damage
-		15, //parameters[186]Up Aerial Start Up Duraiton
+		5, //parameters[186]Up Aerial Start Up Duraiton
 		20, //parameters[187]Up Aerial Active Duration
 		25, //parameters[188]Up Aerial End Lag Duration
 		1, //parameters[189]Up Aerial Is Attached To Player
@@ -332,7 +338,7 @@ private:
 
 		50, //parameters[192]Down Aerial Additional x
 		110, //parameters[193]Down Aerial Additional y
-		50, //parameters[194]Down Aerial Width
+		60, //parameters[194]Down Aerial Width
 		10, //parameters[195]Down Aerial Height
 		40, //parameters[196]Down Aerial Stun Duration
 		0, //parameters[197]Down Aerial Scalar X
@@ -344,7 +350,7 @@ private:
 		0, //parameters[203]Acceleration x
 		0, //parameters[204]Acceleration y
 		5.3, //parameters[205]Down Aerial Damage
-		25, //parameters[206]Down Aerial Start Up Duraiton
+		3, //parameters[206]Down Aerial Start Up Duraiton
 		20, //parameters[207]Down Aerial Active Duration
 		15, //parameters[208]Down Aerial End Lag Duration
 		1, //parameters[209]Down Aerial Is Attached To Player
@@ -356,7 +362,7 @@ private:
 		50, //parameters[214]Forward Special Width
 		10, //parameters[215]Forward Special Height
 		20, //parameters[216]Forward Special Stun Duration
-		15, //parameters[217]Forward Special Scalar X
+		1, //parameters[217]Forward Special Scalar X
 		-1, //parameters[218]Forward Special Scalar y
 		3, //parameters[219]Forward Special Fixed x
 		-3, //parameters[220]Forward Special Fixed y
@@ -474,7 +480,7 @@ private:
 		35, //parameters[14]Forward Light Width
 		10, //parameters[15]Forward Light Height
 		40, //parameters[16]Forward Light Stun Duration
-		2, //parameters[17]Forward Light Scalar X
+		3, //parameters[17]Forward Light Scalar X
 		-2, //parameters[18]Forward Light Scalar y
 		7, //parameters[19]Forward Light Fixed x
 		-1, //parameters[20]Forward Light Fixed y
@@ -483,9 +489,9 @@ private:
 		0, //parameters[23]Acceleration x
 		0, //parameters[24]Acceleration y
 		6, //parameters[25]Forward Light Damage
-		10, //parameters[26]Forward Light Start Up Duraiton
-		30, //parameters[27]Forward Light Active Duration
-		20, //parameters[28]Forward Light End Lag Duration
+		3, //parameters[26]Forward Light Start Up Duraiton
+		20, //parameters[27]Forward Light Active Duration
+		27, //parameters[28]Forward Light End Lag Duration
 		1, //parameters[29]Forward Light Is Attached To Player
 		0, //parameters[30] Is Player Attached To It
 		0, //parameters[31]Forward Light Disappear On Hit
@@ -494,9 +500,9 @@ private:
 		-3, //parameters[33]Up Light Additional y
 		100, //parameters[34]Up Light Width
 		5, //parameters[35]Up Light Height
-		20, //parameters[36]Up Light Stun Duration
+		30, //parameters[36]Up Light Stun Duration
 		1, //parameters[37]Up Light Scalar X
-		-6, //parameters[38]Up Light Scalar y
+		-7, //parameters[38]Up Light Scalar y
 		1, //parameters[39]Up Light Fixed x
 		-2, //parameters[40]Up Light Fixed y
 		0, //parameters[41]Up Light vx
@@ -504,9 +510,9 @@ private:
 		0, //parameters[43]Acceleration x
 		0, //parameters[44]Acceleration y
 		4, //parameters[45]Up Light Damage
-		10, //parameters[46]Up Light Start Up Duraiton
+		4, //parameters[46]Up Light Start Up Duraiton
 		30, //parameters[47]Up Light Active Duration
-		15, //parameters[48]Up Light End Lag Duration
+		21, //parameters[48]Up Light End Lag Duration
 		1, //parameters[49]Up Light Is Attached To Player
 		0, //parameters[50] Is Player Attached To It
 		0, //parameters[51]Up Light Disappear On Hit
@@ -524,8 +530,8 @@ private:
 		0, //parameters[62]Down Light vy
 		0, //parameters[63]Acceleration x
 		0, //parameters[64]Acceleration y
-		7, //parameters[65]Down Light Damage
-		20, //parameters[66]Down Light Start Up Duraiton
+		13, //parameters[65]Down Light Damage
+		12, //parameters[66]Down Light Start Up Duraiton
 		15, //parameters[67]Down Light Active Duration
 		20, //parameters[68]Down Light End Lag Duration
 		1, //parameters[69]Down Light Is Attached To Player
@@ -538,7 +544,7 @@ private:
 		50, //parameters[75]Forward Heavy Height
 		40, //parameters[76]Forward Heavy Stun Duration
 		1, //parameters[77]Forward Heavy Scalar X
-		-5, //parameters[78]Forward Heavy Scalar y
+		-6, //parameters[78]Forward Heavy Scalar y
 		0, //parameters[79]Forward Heavy Fixed x
 		-3, //parameters[80]Forward Heavy Fixed y
 		0, //parameters[81]Forward Heavy vx
@@ -559,7 +565,7 @@ private:
 		52, //parameters[95]Up Heavy Height
 		40, //parameters[96]Up Heavy Stun Duration
 		1, //parameters[97]Up Heavy Scalar X
-		-2, //parameters[98]Up Heavy Scalar y
+		-12, //parameters[98]Up Heavy Scalar y
 		0, //parameters[99]Up Heavy Fixed x
 		-6, //parameters[100]Up Heavy Fixed y
 		0, //parameters[101]Up Heavy vx
@@ -609,7 +615,7 @@ private:
 		0, //parameters[143]Acceleration x
 		0, //parameters[144]Acceleration y
 		10, //parameters[145]Forward Aerial Damage
-		10, //parameters[146]Forward Aerial Start Up Duraiton
+		7, //parameters[146]Forward Aerial Start Up Duraiton
 		40, //parameters[147]Forward Aerial Active Duration
 		25, //parameters[148]Forward Aerial End Lag Duration
 		1, //parameters[149]Forward Aerial Is Attached To Player
@@ -621,7 +627,7 @@ private:
 		50, //parameters[154]Back Aerial Width
 		10, //parameters[155]Back Aerial Height
 		20, //parameters[156]Back Aerial Stun Duration
-		0, //parameters[157]Back Aerial Scalar X
+		-8, //parameters[157]Back Aerial Scalar X
 		-1, //parameters[158]Back Aerial Scalar y
 		-2, //parameters[159]Back Aerial Fixed x
 		-3, //parameters[160]Back Aerial Fixed y
@@ -629,8 +635,8 @@ private:
 		0, //parameters[162]Back Aerial vy
 		0, //parameters[163]Acceleration x
 		0, //parameters[164]Acceleration y
-		10, //parameters[165]Back Aerial Damage
-		10, //parameters[166]Back Aerial Start Up Duraiton
+		7.3, //parameters[165]Back Aerial Damage
+		6, //parameters[166]Back Aerial Start Up Duraiton
 		30, //parameters[167]Back Aerial Active Duration
 		10, //parameters[168]Back Aerial End Lag Duration
 		1, //parameters[169]Back Aerial Is Attached To Player
@@ -674,7 +680,7 @@ private:
 		13.7, //parameters[205]Down Aerial Damage
 		10, //parameters[206]Down Aerial Start Up Duraiton
 		70, //parameters[207]Down Aerial Active Duration
-		50, //parameters[208]Down Aerial End Lag Duration
+		40, //parameters[208]Down Aerial End Lag Duration
 		0, //parameters[209]Down Aerial Is Attached To Player
 		0, //parameters[210] Is Player Attached To It
 		0, //parameters[211]Down Aerial Disappear On Hit
@@ -821,7 +827,7 @@ private:
 		-10, //parameters[33]Up Light Additional y
 		43, //parameters[34]Up Light Width
 		10, //parameters[35]Up Light Height
-		13, //parameters[36]Up Light Stun Duration
+		20, //parameters[36]Up Light Stun Duration
 		2, //parameters[37]Up Light Scalar X
 		-5, //parameters[38]Up Light Scalar y
 		3, //parameters[39]Up Light Fixed x
@@ -866,7 +872,7 @@ private:
 		40, //parameters[76]Forward Heavy Stun Duration
 		13, //parameters[77]Forward Heavy Scalar X
 		-5, //parameters[78]Forward Heavy Scalar y
-		3, //parameters[79]Forward Heavy Fixed x
+		4, //parameters[79]Forward Heavy Fixed x
 		-3, //parameters[80]Forward Heavy Fixed y
 		3, //parameters[81]Forward Heavy vx
 		0, //parameters[82]Forward Heavy vy
@@ -886,7 +892,7 @@ private:
 		30, //parameters[95]Up Heavy Height
 		40, //parameters[96]Up Heavy Stun Duration
 		1, //parameters[97]Up Heavy Scalar X
-		-8, //parameters[98]Up Heavy Scalar y
+		-10, //parameters[98]Up Heavy Scalar y
 		1, //parameters[99]Up Heavy Fixed x
 		-3, //parameters[100]Up Heavy Fixed y
 		0, //parameters[101]Up Heavy vx
@@ -906,7 +912,7 @@ private:
 		63, //parameters[114]Down Heavy Width
 		10, //parameters[115]Down Heavy Height
 		30, //parameters[116]Down Heavy Stun Duration
-		9, //parameters[117]Down Heavy Scalar X
+		12, //parameters[117]Down Heavy Scalar X
 		-5, //parameters[118]Down Heavy Scalar y
 		5, //parameters[119]Down Heavy Fixed x
 		-3, //parameters[120]Down Heavy Fixed y
@@ -927,7 +933,7 @@ private:
 		70, //parameters[134]Forward Aerial Width
 		20, //parameters[135]Forward Aerial Height
 		40, //parameters[136]Forward Aerial Stun Duration
-		3, //parameters[137]Forward Aerial Scalar X
+		7, //parameters[137]Forward Aerial Scalar X
 		-4, //parameters[138]Forward Aerial Scalar y
 		2, //parameters[139]Forward Aerial Fixed x
 		-1, //parameters[140]Forward Aerial Fixed y
@@ -968,11 +974,11 @@ private:
 		-30, //parameters[173]Up Aerial Additional y
 		43, //parameters[174]Up Aerial Width
 		30, //parameters[175]Up Aerial Height
-		11, //parameters[176]Up Aerial Stun Duration
+		15, //parameters[176]Up Aerial Stun Duration
 		2, //parameters[177]Up Aerial Scalar X
-		-3, //parameters[178]Up Aerial Scalar y
+		-7, //parameters[178]Up Aerial Scalar y
 		3, //parameters[179]Up Aerial Fixed x
-		-9, //parameters[180]Up Aerial Fixed y
+		-7, //parameters[180]Up Aerial Fixed y
 		0, //parameters[181]Up Aerial vx
 		0, //parameters[182]Up Aerial vy
 		0, //parameters[183]Acceleration x
@@ -991,7 +997,7 @@ private:
 		30, //parameters[195]Down Aerial Height
 		30, //parameters[196]Down Aerial Stun Duration
 		2, //parameters[197]Down Aerial Scalar X
-		7, //parameters[198]Down Aerial Scalar y
+		12, //parameters[198]Down Aerial Scalar y
 		1, //parameters[199]Down Aerial Fixed x
 		6, //parameters[200]Down Aerial Fixed y
 		0, //parameters[201]Down Aerial vx
@@ -1108,7 +1114,7 @@ private:
 		255, //parameters[309]
 		255 //parameters[310]  
 	}, 
-	//Dog MAKE DOWN SPECIAL
+	//Dog
 	{
 		70, //parameters[0]Width
 		40, //parameters[1]Height
@@ -1116,7 +1122,7 @@ private:
 		4, //parameters[3]AerialSpeed
 		4, //parameters[4]AerialAcceleration
 		3, //parameters[5]WalkAcceleration
-		20, //parameters[6]GroundedJumpHeight
+		25, //parameters[6]GroundedJumpHeight
 		25, //parameters[7]AerialJumpHeight
 		1, //parameters[8]FallAcceleration
 		7, //parameters[9]FallSpeed
@@ -1158,7 +1164,7 @@ private:
 		0, //parameters[43]Acceleration x
 		0, //parameters[44]Acceleration y
 		10, //parameters[45]Up Light Damage
-		10, //parameters[46]Up Light Start Up Duraiton
+		7, //parameters[46]Up Light Start Up Duraiton
 		30, //parameters[47]Up Light Active Duration
 		10, //parameters[48]Up Light End Lag Duration
 		1, //parameters[49]Up Light Is Attached To Player
@@ -1179,7 +1185,7 @@ private:
 		0, //parameters[63]Acceleration x
 		0, //parameters[64]Acceleration y
 		4, //parameters[65]Down Light Damage
-		10, //parameters[66]Down Light Start Up Duraiton
+		5, //parameters[66]Down Light Start Up Duraiton
 		30, //parameters[67]Down Light Active Duration
 		15, //parameters[68]Down Light End Lag Duration
 		1, //parameters[69]Down Light Is Attached To Player
@@ -1191,7 +1197,7 @@ private:
 		30, //parameters[74]Forward Heavy Width
 		20, //parameters[75]Forward Heavy Height
 		40, //parameters[76]Forward Heavy Stun Duration
-		13, //parameters[77]Forward Heavy Scalar X
+		15, //parameters[77]Forward Heavy Scalar X
 		-4, //parameters[78]Forward Heavy Scalar y
 		3, //parameters[79]Forward Heavy Fixed x
 		0, //parameters[80]Forward Heavy Fixed y
@@ -1213,7 +1219,7 @@ private:
 		20, //parameters[95]Up Heavy Height
 		30, //parameters[96]Up Heavy Stun Duration
 		3, //parameters[97]Up Heavy Scalar X
-		-5, //parameters[98]Up Heavy Scalar y
+		-13, //parameters[98]Up Heavy Scalar y
 		2, //parameters[99]Up Heavy Fixed x
 		-4, //parameters[100]Up Heavy Fixed y
 		1, //parameters[101]Up Heavy vx
@@ -1241,7 +1247,7 @@ private:
 		0, //parameters[122]Down Heavy vy
 		-0.35, //parameters[123]Acceleration x
 		0, //parameters[124]Acceleration y
-		13, //parameters[125]Down Heavy Damage
+		17, //parameters[125]Down Heavy Damage
 		10, //parameters[126]Down Heavy Start Up Duraiton
 		30, //parameters[127]Down Heavy Active Duration
 		10, //parameters[128]Down Heavy End Lag Duration
@@ -1255,7 +1261,7 @@ private:
 		20, //parameters[135]Forward Aerial Height
 		25, //parameters[136]Forward Aerial Stun Duration
 		1, //parameters[137]Forward Aerial Scalar X
-		15, //parameters[138]Forward Aerial Scalar y
+		20, //parameters[138]Forward Aerial Scalar y
 		3, //parameters[139]Forward Aerial Fixed x
 		2, //parameters[140]Forward Aerial Fixed y
 		0, //parameters[141]Forward Aerial vx
@@ -1263,7 +1269,7 @@ private:
 		0, //parameters[143]Acceleration x
 		0, //parameters[144]Acceleration y
 		9.9, //parameters[145]Forward Aerial Damage
-		12, //parameters[146]Forward Aerial Start Up Duraiton
+		9, //parameters[146]Forward Aerial Start Up Duraiton
 		25, //parameters[147]Forward Aerial Active Duration
 		13, //parameters[148]Forward Aerial End Lag Duration
 		1, //parameters[149]Forward Aerial Is Attached To Player
@@ -1295,7 +1301,7 @@ private:
 		10, //parameters[173]Up Aerial Additional y
 		20, //parameters[174]Up Aerial Width
 		15, //parameters[175]Up Aerial Height
-		10, //parameters[176]Up Aerial Stun Duration
+		13, //parameters[176]Up Aerial Stun Duration
 		1, //parameters[177]Up Aerial Scalar X
 		-5, //parameters[178]Up Aerial Scalar y
 		2, //parameters[179]Up Aerial Fixed x
@@ -1305,9 +1311,9 @@ private:
 		0, //parameters[183]Acceleration x
 		0, //parameters[184]Acceleration y
 		4.6, //parameters[185]Up Aerial Damage
-		10, //parameters[186]Up Aerial Start Up Duraiton
+		3, //parameters[186]Up Aerial Start Up Duraiton
 		30, //parameters[187]Up Aerial Active Duration
-		7, //parameters[188]Up Aerial End Lag Duration
+		10, //parameters[188]Up Aerial End Lag Duration
 		1, //parameters[189]Up Aerial Is Attached To Player
 		0, //parameters[190] Is Player Attached To It
 		0, //parameters[191]Up Aerial Disappear On Hit
@@ -1326,7 +1332,7 @@ private:
 		0, //parameters[203]Acceleration x
 		0, //parameters[204]Acceleration y
 		7.8, //parameters[205]Down Aerial Damage
-		15, //parameters[206]Down Aerial Start Up Duraiton
+		6, //parameters[206]Down Aerial Start Up Duraiton
 		24, //parameters[207]Down Aerial Active Duration
 		10, //parameters[208]Down Aerial End Lag Duration
 		1, //parameters[209]Down Aerial Is Attached To Player
@@ -1349,7 +1355,7 @@ private:
 		5, //parameters[225]Forward Special Damage
 		5, //parameters[226]Forward Special Start Up Duraiton
 		15, //parameters[227]Forward Special Active Duration
-		30, //parameters[228]Forward Special End Lag Duration
+		35, //parameters[228]Forward Special End Lag Duration
 		0, //parameters[229]Forward Special Is Attached To Player
 		1, //parameters[230] Is Player Attached To It
 		0, //parameters[231]Forward Special Disappear On Hit
@@ -1448,7 +1454,7 @@ private:
 		1.78, //parameters[8]FallAcceleration
 		6, //parameters[9]FallSpeed
 		1.2, //parameters[10]Weight
-		2, //parameters[11]DoubleJumps
+		5, //parameters[11]DoubleJumps
 
 		150, //parameters[12]Forward Light Additional x
 		65, //parameters[13]Forward Light Additional y
@@ -1833,7 +1839,7 @@ private:
 		0, //parameters[63]Acceleration x
 		0, //parameters[64]Acceleration y
 		6, //parameters[65]Down Light Damage
-		23, //parameters[66]Down Light Start Up Duraiton
+		13, //parameters[66]Down Light Start Up Duraiton
 		10, //parameters[67]Down Light Active Duration
 		20, //parameters[68]Down Light End Lag Duration
 		1, //parameters[69]Down Light Is Attached To Player
@@ -1845,9 +1851,9 @@ private:
 		150, //parameters[74]Forward Heavy Width
 		100, //parameters[75]Forward Heavy Height
 		20, //parameters[76]Forward Heavy Stun Duration
-		13, //parameters[77]Forward Heavy Scalar X
+		10, //parameters[77]Forward Heavy Scalar X
 		-2, //parameters[78]Forward Heavy Scalar y
-		3, //parameters[79]Forward Heavy Fixed x
+		7, //parameters[79]Forward Heavy Fixed x
 		-3, //parameters[80]Forward Heavy Fixed y
 		5, //parameters[81]Forward Heavy vx
 		0, //parameters[82]Forward Heavy vy
@@ -2014,7 +2020,7 @@ private:
 		50, //parameters[235]Up Special Height
 		30, //parameters[236]Up Special Stun Duration
 		1, //parameters[237]Up Special Scalar X
-		10, //parameters[238]Up Special Scalar y
+		15, //parameters[238]Up Special Scalar y
 		1, //parameters[239]Up Special Fixed x
 		3, //parameters[240]Up Special Fixed y
 		3, //parameters[241]Up Special vx
@@ -2110,15 +2116,15 @@ private:
 		30, //parameters[15]Forward Light Height
 		25, //parameters[16]Forward Light Stun Duration
 		2, //parameters[17]Forward Light Scalar X
-		0, //parameters[18]Forward Light Scalar y
+		-3, //parameters[18]Forward Light Scalar y
 		1, //parameters[19]Forward Light Fixed x
 		-1, //parameters[20]Forward Light Fixed y
 		0, //parameters[21]Forward Light vx
 		0, //parameters[22]Forward Light vy
 		0, //parameters[23]Acceleration x
 		0, //parameters[24]Acceleration y
-		8.6, //parameters[25]Forward Light Damage
-		8, //parameters[26]Forward Light Start Up Duraiton
+		4.6, //parameters[25]Forward Light Damage
+		2, //parameters[26]Forward Light Start Up Duraiton
 		14, //parameters[27]Forward Light Active Duration
 		15, //parameters[28]Forward Light End Lag Duration
 		1, //parameters[29]Forward Light Is Attached To Player
@@ -2139,7 +2145,7 @@ private:
 		0, //parameters[43]Acceleration x
 		0, //parameters[44]Acceleration y
 		10, //parameters[45]Up Light Damage
-		10, //parameters[46]Up Light Start Up Duraiton
+		5, //parameters[46]Up Light Start Up Duraiton
 		30, //parameters[47]Up Light Active Duration
 		8, //parameters[48]Up Light End Lag Duration
 		1, //parameters[49]Up Light Is Attached To Player
@@ -2160,7 +2166,7 @@ private:
 		0, //parameters[63]Acceleration x
 		0, //parameters[64]Acceleration y
 		0.1, //parameters[65]Down Light Damage
-		10, //parameters[66]Down Light Start Up Duraiton
+		1, //parameters[66]Down Light Start Up Duraiton
 		10, //parameters[67]Down Light Active Duration
 		10, //parameters[68]Down Light End Lag Duration
 		1, //parameters[69]Down Light Is Attached To Player
@@ -2174,7 +2180,7 @@ private:
 		35, //parameters[76]Forward Heavy Stun Duration
 		17, //parameters[77]Forward Heavy Scalar X
 		-7, //parameters[78]Forward Heavy Scalar y
-		3, //parameters[79]Forward Heavy Fixed x
+		5, //parameters[79]Forward Heavy Fixed x
 		-2, //parameters[80]Forward Heavy Fixed y
 		0, //parameters[81]Forward Heavy vx
 		0, //parameters[82]Forward Heavy vy
@@ -2194,7 +2200,7 @@ private:
 		4, //parameters[95]Up Heavy Height
 		27, //parameters[96]Up Heavy Stun Duration
 		7, //parameters[97]Up Heavy Scalar X
-		-15, //parameters[98]Up Heavy Scalar y
+		-19, //parameters[98]Up Heavy Scalar y
 		2, //parameters[99]Up Heavy Fixed x
 		-2, //parameters[100]Up Heavy Fixed y
 		0, //parameters[101]Up Heavy vx
@@ -2244,7 +2250,7 @@ private:
 		0, //parameters[143]Acceleration x
 		0, //parameters[144]Acceleration y
 		7.1, //parameters[145]Forward Aerial Damage
-		11, //parameters[146]Forward Aerial Start Up Duraiton
+		6, //parameters[146]Forward Aerial Start Up Duraiton
 		11, //parameters[147]Forward Aerial Active Duration
 		11, //parameters[148]Forward Aerial End Lag Duration
 		1, //parameters[149]Forward Aerial Is Attached To Player
@@ -2265,7 +2271,7 @@ private:
 		0, //parameters[163]Acceleration x
 		0, //parameters[164]Acceleration y
 		8.6, //parameters[165]Back Aerial Damage
-		17, //parameters[166]Back Aerial Start Up Duraiton
+		9, //parameters[166]Back Aerial Start Up Duraiton
 		23, //parameters[167]Back Aerial Active Duration
 		14, //parameters[168]Back Aerial End Lag Duration
 		1, //parameters[169]Back Aerial Is Attached To Player
@@ -2286,7 +2292,7 @@ private:
 		0, //parameters[183]Acceleration x
 		0, //parameters[184]Acceleration y
 		6.3, //parameters[185]Up Aerial Damage
-		7, //parameters[186]Up Aerial Start Up Duraiton
+		2, //parameters[186]Up Aerial Start Up Duraiton
 		17, //parameters[187]Up Aerial Active Duration
 		8, //parameters[188]Up Aerial End Lag Duration
 		1, //parameters[189]Up Aerial Is Attached To Player
@@ -2428,7 +2434,7 @@ private:
 		26, //parameters[7]AerialJumpHeight
 		1.75, //parameters[8]FallAcceleration
 		10, //parameters[9]FallSpeed
-		1.5, //parameters[10]Weight
+		1.65, //parameters[10]Weight
 		1, //parameters[11]DoubleJumps
 
 		89, //parameters[12]Forward Light Additional x
