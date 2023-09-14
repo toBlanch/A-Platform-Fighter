@@ -1,0 +1,16 @@
+﻿  CustomGraphics.cpp
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(19,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(20,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(41,75): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(41,34): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(42,56): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(42,34): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(43,75): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(43,34): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(49,56): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(49,34): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(50,75): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(50,34): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(51,56): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+C:\Users\facts\source\repos\GDIPLUS\GDIPLUS\CustomGraphics.cpp(51,34): warning C4244: 'argument': conversion from 'float' to 'INT', possible loss of data
+  GDIPLUS.vcxproj -> C:\Users\facts\source\repos\GDIPLUS\x64\Debug\GDIPLUS.exe
