@@ -61,8 +61,7 @@ SpriteSheet::~SpriteSheet()
 void SpriteSheet::Draw(int x0, int y0, bool flip)
 {
 	if (flip) {
-		D2D1_MATRIX_3X2_F flipTransformation = D2D1::Matrix3x2F(-1, 0, 0, 1, 0, 0);
-		gfx->GetRenderTarget()->SetTransform(flipTransformation);
+		gfx->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F(-1, 0, 0, 1, 0, 0));
 		x0 = -(x0 + bmp->GetSize().width);
 	}
 	gfx->GetRenderTarget()->DrawBitmap(
@@ -77,7 +76,6 @@ void SpriteSheet::Draw(int x0, int y0, bool flip)
 		D2D1::RectF(0, 0, bmp->GetSize().width, bmp->GetSize().height) //Source rectangle
 	);
 	if (flip) {
-		D2D1_MATRIX_3X2_F unflipTransformation = D2D1::Matrix3x2F(1, 0, 0, 1, 0, 0);
-		gfx->GetRenderTarget()->SetTransform(unflipTransformation);
+		gfx->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F(1, 0, 0, 1, 0, 0));
 	}
 }
