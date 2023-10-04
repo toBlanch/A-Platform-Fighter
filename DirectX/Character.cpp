@@ -144,7 +144,7 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 
 		for (int i = 0; i < 5; i++) { //For every move
 			moveArray[i].CheckStatus(x, y, stageX0, stageY0, stageX1, stageY1); //Run the necesarry functions every frame
-			if (moveArray[i].isPlayerAttachedToIt && moveArray[i].startUpDuration == 0 && moveArray[i].activeDuration > 0) { //If an active move attaches the player to it
+			if (moveArray[i].isPlayerAttachedToIt && moveArray[i].startUpDuration < 0 && moveArray[i].activeDuration >= 0) { //If an active move attaches the player to it
 				vx = moveArray[i].vx;
 				vy = moveArray[i].vy;
 				if (moveArray[i].vy < 0) {
@@ -159,9 +159,11 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 		if (moveDuration > 0 && onStage) { //If using a grounded move
 			if (x < stageX0 - width) { //If falling out the left side
 				x = stageX0 - width; //Put back on the stage
+				vx = 0;
 			}
 			if (x > stageX1) { //If falling off the right side
 				x = stageX1; //Put back on the stage
+				vx = 0;
 			}
 		}
 
@@ -170,9 +172,9 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 		ClippingIntoStageFromRight(stageX0, stageY0, stageX1, stageY1);
 		ClippingIntoStageFromBottom(stageX0, stageY0, stageX1, stageY1);
 
-		if (special) { //If using a special attack
+		if (special && (!moveArray[0].isAttachedToPlayer + !moveArray[1].isAttachedToPlayer + !moveArray[2].isAttachedToPlayer + !moveArray[3].isAttachedToPlayer + !moveArray[4].isAttachedToPlayer < 4 || up)) { //If using a special attack
 			for (int i = 0; i < 5; i++) {
-				if (moveArray[i].activeDuration == 0) {
+				if (moveArray[i].activeDuration < 0) {
 					if (right) {
 						facingRight = true;
 					}
@@ -197,7 +199,7 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 		}
 		else if (light && onStage) { //If using a light attack
 			for (int i = 0; i < 5; i++) { //For each move
-				if (moveArray[i].activeDuration == 0) {
+				if (moveArray[i].activeDuration < 0) {
 					if (right) {
 						facingRight = true;
 					}
@@ -222,7 +224,7 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 		}
 		else if (heavy && onStage) { //If using a heavy attack
 			for (int i = 0; i < 5; i++) {
-				if (moveArray[i].activeDuration == 0) {
+				if (moveArray[i].activeDuration < 0) {
 					if (right) {
 						facingRight = true;
 					}
@@ -247,7 +249,7 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 		}
 		else if (light || heavy) { //If using an aerial attack
 			for (int i = 0; i < 5; i++) {
-				if (moveArray[i].activeDuration == 0) {
+				if (moveArray[i].activeDuration < 0) {
 					if (up) { //If doing a move upwards
 						if (right) {
 							facingRight = true;

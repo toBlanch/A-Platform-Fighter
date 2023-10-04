@@ -65,11 +65,18 @@ void Graphics::DrawCircle(float x, float y, float radius, float r, float g, floa
 	//brush->Release();
 }
 
-void Graphics::DrawRect(float x0, float y0, float x1, float y1, float r, float g, float b, float a)
+void Graphics::DrawRectThin(float x0, float y0, float x1, float y1, float r, float g, float b, float a)
 {
 	brush->SetColor(D2D1::ColorF(r, g, b, a));
 
 	renderTarget->DrawRectangle(D2D1::RectF(x0, y0, x1, y1), brush);
+}
+
+void Graphics::DrawRectFill(float x0, float y0, float x1, float y1, float r, float g, float b, float a)
+{
+	brush->SetColor(D2D1::ColorF(r, g, b, a));
+
+	renderTarget->FillRectangle(D2D1::RectF(x0, y0, x1, y1), brush);
 }
 
 void Graphics::Fullscreen()
@@ -77,12 +84,18 @@ void Graphics::Fullscreen()
 	if (fullscreen) {
 		fullscreen = false;
 		MoveWindow(hwnd, clientRect.left, clientRect.top, clientRect.right-clientRect.left, clientRect.bottom-clientRect.top, false);
+		SetWindowLongPtr(hwnd, GWL_STYLE, WS_VISIBLE | WS_OVERLAPPEDWINDOW);
 	}
 	else {
 		fullscreen = true;
 		GetWindowRect(hwnd, &clientRect);
-		RECT fullscreenRect = { 0,0,GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CXSCREEN) };
-		AdjustWindowRectEx(&fullscreenRect, WS_OVERLAPPEDWINDOW, false, WS_EX_OVERLAPPEDWINDOW);
-		MoveWindow(hwnd, fullscreenRect.left, fullscreenRect.top, fullscreenRect.right, fullscreenRect.bottom, false);
+
+		SetWindowLongPtr(hwnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
+		SetWindowPos(hwnd, HWND_TOP, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), SWP_FRAMECHANGED);
 	}
+}
+
+bool Graphics::ifFocus()
+{
+	return hwnd == GetFocus();
 }

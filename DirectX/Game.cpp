@@ -96,7 +96,7 @@ void Game::Go()
 void Game::GameState()
 {
 	if (credits) {
-		if ((GetKeyState(0x0D) & 0x8000 || GetKeyState(0x1B) & 0x8000 && !enterOrEscapeHeld) || (GetKeyState(0x20) & 0x8000 && !spaceHeld)) {
+		if ((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000 && !enterOrEscapeHeld) || (gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld)) {
 			credits = false;
 			mciSendStringA("stop Credits", NULL, 0, NULL);
 			mciSendStringA("play MainMenu from 0 repeat", NULL, 0, NULL);
@@ -111,53 +111,53 @@ void Game::GameState()
 	else {
 		GameLoop();
 	}
-	enterOrEscapeHeld = GetKeyState(0x0D) & 0x8000 || GetKeyState(0x1B) & 0x8000; //If enter or escape is held set it to true, otherwise set it to false
-	spaceHeld = GetKeyState(0x20) & 0x8000;
+	enterOrEscapeHeld = gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000; //If enter or escape is held set it to true, otherwise set it to false
+	spaceHeld = gfx->ifFocus() && GetKeyState(0x20) & 0x8000;
 }
 
 void Game::StartMenu()
 {
-	if (GetKeyState(0xA2) & 0x8000 && GetKeyState(0x20) & 0x8000 && !spaceHeld) {
+	if (gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld) {
 		gfx->Fullscreen();
 	}
-	else if (GetKeyState(0x20) & 0x8000 && !spaceHeld) {
+	else if (gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld) {
 		credits = true;
 		mciSendStringA("stop MainMenu", NULL, 0, NULL);
 		mciSendStringA("play Credits from 0 repeat", NULL, 0, NULL);
 	}
 	else {
-		if (GetKeyState(0x45) & 0x8000 && player1CharacterID < 8 && !eHeld) { //If Player 1 wants to increase their character ID
+		if (gfx->ifFocus() && GetKeyState(0x45) & 0x8000 && player1CharacterID < 8 && !eHeld) { //If Player 1 wants to increase their character ID
 			player1CharacterID++; //Increase it
 			player1Idle -> ~SpriteSheet();
 			player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
 		}
-		if (GetKeyState(0x51) & 0x8000 && player1CharacterID > 0 && !qHeld) { //If Player 1 wants to decrease their character ID
+		if (gfx->ifFocus() && GetKeyState(0x51) & 0x8000 && player1CharacterID > 0 && !qHeld) { //If Player 1 wants to decrease their character ID
 			player1CharacterID--; //Decrease it
 			player1Idle -> ~SpriteSheet();
 			player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
 		}
-		if (GetKeyState(0x50) & 0x8000 && player2CharacterID < 8 && !pHeld) { //If Player 2 wants to increase their character ID
+		if (gfx->ifFocus() && GetKeyState(0x50) & 0x8000 && player2CharacterID < 8 && !pHeld) { //If Player 2 wants to increase their character ID
 			player2CharacterID++; //Incerase it
 			player2Idle -> ~SpriteSheet();
 			player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
 		}
-		if (GetKeyState(0x49) & 0x8000 && player2CharacterID > 0 && !iHeld) { //If Player 2 wants to decrease their character ID
+		if (gfx->ifFocus() && GetKeyState(0x49) & 0x8000 && player2CharacterID > 0 && !iHeld) { //If Player 2 wants to decrease their character ID
 			player2CharacterID--; //Decrease it
 			player2Idle -> ~SpriteSheet();
 			player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
 		}
 
-		if (GetKeyState(0x09) & 0x8000 && !tabHeld) {
+		if (gfx->ifFocus() && GetKeyState(0x09) & 0x8000 && !tabHeld) {
 			AISelected = !AISelected;
 		}
 
-		qHeld = GetKeyState(0x51) & 0x8000; //If q is held set it to true, otherwise set it to false
-		eHeld = GetKeyState(0x45) & 0x8000; //If e is held set it to true, otherwise set it to false
-		iHeld = GetKeyState(0x49) & 0x8000; //If i is held set it to true, otherwise set it to false
-		pHeld = GetKeyState(0x50) & 0x8000; //If p is held set it to true, otherwise set it to false
-		tabHeld = GetKeyState(0x09) & 0x8000;
+		qHeld = gfx->ifFocus() && GetKeyState(0x51) & 0x8000; //If q is held set it to true, otherwise set it to false
+		eHeld = gfx->ifFocus() && GetKeyState(0x45) & 0x8000; //If e is held set it to true, otherwise set it to false
+		iHeld = gfx->ifFocus() && GetKeyState(0x49) & 0x8000; //If i is held set it to true, otherwise set it to false
+		pHeld = gfx->ifFocus() && GetKeyState(0x50) & 0x8000; //If p is held set it to true, otherwise set it to false
+		tabHeld = gfx->ifFocus() && GetKeyState(0x09) & 0x8000;
 
-		if ((GetKeyState(0x0D) & 0x8000 || GetKeyState(0x1B) & 0x8000) && !enterOrEscapeHeld) { //If the game is starting
+		if ((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000) && !enterOrEscapeHeld) { //If the game is starting
 			startMenu = false; //Disable the start menu
 			GameStart();
 			if (player1CharacterID == 8) {
@@ -205,7 +205,7 @@ void Game::StartBattleTheme()
 void Game::GameLoop()
 {
 	if (paused) {
-		if (GetKeyState(0xA2) & 0x8000 && !enterOrEscapeHeld && (GetKeyState(0x0D) & 0x8000 || GetKeyState(0x1B) & 0x8000)) {
+		if (gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && !enterOrEscapeHeld && (gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000)) {
 			paused = false;
 			GameEnd();
 			previousWinner = 0;
@@ -215,10 +215,10 @@ void Game::GameLoop()
 			mciSendStringA("stop BattleTheme3", NULL, 0, NULL);
 			mciSendStringA("play MainMenu from 0 repeat", NULL, 0, NULL);
 		}
-		else if (GetKeyState(0xA2) & 0x8000 && GetKeyState(0x52) & 0x8000) { //If the game should be restarted
+		else if (gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && gfx->ifFocus() && GetKeyState(0x52) & 0x8000) { //If the game should be restarted
 			GameStart();
 		}
-		else if (!enterOrEscapeHeld && (GetKeyState(0x0D) & 0x8000 || GetKeyState(0x1B) & 0x8000)) { //If the pause button is pressd
+		else if (!enterOrEscapeHeld && (gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000)) { //If the pause button is pressd
 			paused = false; //Unpause the game
 		}
 	}
@@ -227,44 +227,34 @@ void Game::GameLoop()
 	}
 	else if (Player1.IsAlive(1920, 1080, leniancy) && Player2.IsAlive(1920, 1080, leniancy)) {//If both players are alive
 		timer--;
-		if (hitStun > 0) {
-			hitStun--;
-			Player1.OnlyProjectiles(stageX0, stageY0, stageX1, stageY1);
-			Player2.OnlyProjectiles(stageX0, stageY0, stageX1, stageY1);
+		if (enterOrEscapeHeld == false && (gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000)) { //If the pause button is pressed
+			timeUntilStart = 180; //Initialise the countdown
+			timeGoIsDisplayed = 60; //Initialise go
+			paused = true; //Pause the game
+		}
+
+		if (timeGoIsDisplayed > 0) { //If go should be displayed
+			timeGoIsDisplayed--; //Reduce the time go should be displayed
+		}
+
+		//Update models
+		Player1.UpdateCharacter(gfx->ifFocus() && GetKeyState(0x41) & 0x8000, gfx->ifFocus() && GetKeyState(0x44) & 0x8000, gfx->ifFocus() && GetKeyState(0x53) & 0x8000, gfx->ifFocus() && GetKeyState(0x57) & 0x8000, gfx->ifFocus() && GetKeyState(0x47) & 0x8000, gfx->ifFocus() && GetKeyState(0x46) & 0x8000, gfx->ifFocus() && GetKeyState(0x54) & 0x8000, gfx->ifFocus() && GetKeyState(0x48) & 0x8000, gfx->ifFocus() && GetKeyState(0xA0) & 0x8000, Player2.width, Player2.height, stageX0, stageY0, stageX1, stageY1);
+		if (AISelected) {
+			ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.vy, Player2.doubleJump, stageX0, stageY0, stageX1, stageY1, randomDist(rng), Player1.playerPercentage);
+			Player2.UpdateCharacter(ArtifialFriend.left, ArtifialFriend.right, ArtifialFriend.down, ArtifialFriend.up, ArtifialFriend.jump, ArtifialFriend.light, ArtifialFriend.heavy, ArtifialFriend.special, ArtifialFriend.dodge, Player1.width, Player1.height, stageX0, stageY0, stageX1, stageY1);
 		}
 		else {
-			if (enterOrEscapeHeld == false && (GetKeyState(0x0D) & 0x8000 || GetKeyState(0x1B) & 0x8000)) { //If the pause button is pressed
-				timeUntilStart = 180; //Initialise the countdown
-				timeGoIsDisplayed = 60; //Initialise go
-				paused = true; //Pause the game
-			}
-
-			if (timeGoIsDisplayed > 0) { //If go should be displayed
-				timeGoIsDisplayed--; //Reduce the time go should be displayed
-			}
-
-			//Update models
-			Player1.UpdateCharacter(GetKeyState(0x41) & 0x8000, GetKeyState(0x44) & 0x8000, GetKeyState(0x53) & 0x8000, GetKeyState(0x57) & 0x8000, GetKeyState(0x47) & 0x8000, GetKeyState(0x46) & 0x8000, GetKeyState(0x54) & 0x8000, GetKeyState(0x48) & 0x8000, GetKeyState(0xA0) & 0x8000, Player2.width, Player2.height, stageX0, stageY0, stageX1, stageY1);
-			if (AISelected) {
-				ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.vy, Player2.doubleJump, stageX0, stageY0, stageX1, stageY1, randomDist(rng));
-				Player2.UpdateCharacter(ArtifialFriend.left, ArtifialFriend.right, ArtifialFriend.down, ArtifialFriend.up, ArtifialFriend.jump, ArtifialFriend.light, ArtifialFriend.heavy, ArtifialFriend.special, ArtifialFriend.dodge, Player1.width, Player1.height, stageX0, stageY0, stageX1, stageY1);
-			}
-			else {
-				Player2.UpdateCharacter(GetKeyState(0x25) & 0x8000, GetKeyState(0x27) & 0x8000, GetKeyState(0x28) & 0x8000, GetKeyState(0x26) & 0x8000, GetKeyState(0x4C) & 0x8000, GetKeyState(0x4B) & 0x8000, GetKeyState(0x4F) & 0x8000, GetKeyState(0xBA) & 0x8000, GetKeyState(0x4E) & 0x8000, Player1.width, Player1.height, stageX0, stageY0, stageX1, stageY1);
-			}
-
+			Player2.UpdateCharacter(gfx->ifFocus() && GetKeyState(0x25) & 0x8000, gfx->ifFocus() && GetKeyState(0x27) & 0x8000, gfx->ifFocus() && GetKeyState(0x28) & 0x8000, gfx->ifFocus() && GetKeyState(0x26) & 0x8000, gfx->ifFocus() && GetKeyState(0x4C) & 0x8000, gfx->ifFocus() && GetKeyState(0x4B) & 0x8000, gfx->ifFocus() && GetKeyState(0x4F) & 0x8000, gfx->ifFocus() && GetKeyState(0xBA) & 0x8000, gfx->ifFocus() && GetKeyState(0x4E) & 0x8000, Player1.width, Player1.height, stageX0, stageY0, stageX1, stageY1);
 		}
 		if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
 			std::string soundString = "set hit speed " + std::to_string(2100 - 100 * (int)Player1.MoveThatHitDamage());
 			mciSendStringA(soundString.c_str(), NULL, 0, NULL);
 			mciSendStringA("play hit from 0", NULL, 0, NULL);
-			hitStun = Player1.MoveThatHitDamage() * 2; //Hit stun activation
 			Player2.IsHit(Player1.MoveThatHitStun(), Player1.MoveThatHitDamage(), Player1.MoveThatHitFixedX(), Player1.MoveThatHitFixedY(), Player1.MoveThatHitScalarX(), Player1.MoveThatHitScalarY()); //Register that player 2 has been hit
 		}
 		if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) { //Is player 2 hitting any move
 			std::string soundString = "set hit speed " + std::to_string(2100 - 100 * (int)Player2.MoveThatHitDamage());
 			mciSendStringA(soundString.c_str(), NULL, 0, NULL);
-			hitStun = Player2.MoveThatHitDamage() * 2; //Hit stun activation
 			Player1.IsHit(Player2.MoveThatHitStun(), Player2.MoveThatHitDamage(), Player2.MoveThatHitFixedX(), Player2.MoveThatHitFixedY(), Player2.MoveThatHitScalarX(), Player2.MoveThatHitScalarY()); //Register that player 1 has been hit
 		}
 	}
@@ -364,21 +354,21 @@ void Game::ComposeFrame()
 			pauseVisual->Draw(0, 0, false); //Display the pause menu
 
 			if (Player1.lives == Player2.lives && Player1.playerPercentage == Player2.playerPercentage) { //If both players are even
-				gfx->DrawRect(1920 / 2 - Player1.width - 1, 99, 1920 / 2 + 1, 100 + Player1.height + 1, 255, 199, 0, 1); //Player 1 border
+				gfx->DrawRectFill(1920 / 2 - Player1.width - 1, 99, 1920 / 2 + 1, 100 + Player1.height + 1, 255, 199, 0, 1); //Player 1 border
 				player1Idle->Draw(1920 / 2 - Player1.width, 100, false); //Display player 1 at the top of the screen
-				gfx->DrawRect(1920 / 2, 99, 1920 / 2 + Player2.width + 1, 100 + Player2.height + 1, 255, 199, 0, 1); //Player 2 border
+				gfx->DrawRectFill(1920 / 2, 99, 1920 / 2 + Player2.width + 1, 100 + Player2.height + 1, 255, 199, 0, 1); //Player 2 border
 				player2Idle->Draw(1920 / 2, 100, false); //Display player 2 at the top of the screen
 			}
 			else if (Player1.lives > Player2.lives || (Player1.lives == Player2.lives && Player1.playerPercentage < Player2.playerPercentage)) {
-				gfx->DrawRect(1920 / 4 - 1, 349, 1920 / 4 + Player1.width + 1, 351 + Player1.height, 255, 199, 0, 1); //Player 1 border
+				gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player1.width + 1, 351 + Player1.height, 255, 199, 0, 1); //Player 1 border
 				player1Idle->Draw(1920 / 4, 350, false); //Display player 1 on the left side
-				gfx->DrawRect(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player2.width + 1, 351 + Player2.height, 255, 199, 0, 1); //Player 2 border
+				gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player2.width + 1, 351 + Player2.height, 255, 199, 0, 1); //Player 2 border
 				player2Hit->Draw(1920 / 4 * 3, 350, false); //Display player 2 on the right side
 			}
 			else {
-				gfx->DrawRect(1920 / 4 - 1, 349, 1920 / 4 + Player2.width + 1, 351 + Player2.height, 255, 199, 0, 1); //Player 1 border
+				gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player2.width + 1, 351 + Player2.height, 255, 199, 0, 1); //Player 1 border
 				player2Idle->Draw(1920 / 4, 350, false); //Display player 2 on the left side
-				gfx->DrawRect(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player1.width + 1, 351 + Player1.height, 255, 199, 0, 1); //Player 2 border
+				gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player1.width + 1, 351 + Player1.height, 255, 199, 0, 1); //Player 2 border
 				player1Hit->Draw(1920 / 4 * 3, 350, false); //Display player 1 on the right side
 			}
 		}
@@ -396,11 +386,11 @@ void Game::ComposeFrame()
 			go->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display go
 		}
 
-		gfx->DrawRect(stageX0, stageY0, stageX1, stageY1, 255, 0, 0, 1); //Stage
+		gfx->DrawRectThin(stageX0, stageY0, stageX1, stageY1, 255, 0, 0, 1); //Stage
 
 		numbers[((int)Player1.playerPercentage - (int)Player1.playerPercentage % 10) / 10]->Draw(1920 / 4, 900, false); //Player 1 percent
 		numbers[(int)Player1.playerPercentage % 10]->Draw(1920 / 4 + 30, 900, false); //Player 1 percent
-		gfx->DrawRect(1920 / 4 + 64, 939, 1920 / 4 + 66, 941, 255, 255, 255, 1); //Decimal point
+		gfx->DrawRectFill(1920 / 4 + 64, 939, 1920 / 4 + 66, 941, 255, 255, 255, 1); //Decimal point
 		numbers[(int)(Player1.playerPercentage * 10) % 10]->Draw(1920 / 4 + 70, 900, false); //Player 1 percent
 		for (int i = 0; i < Player1.lives; i++) {
 			player1LivesIcon->Draw(1920 / 4 + i * 30, 950, false); //Player 1 lives icon
@@ -411,7 +401,7 @@ void Game::ComposeFrame()
 
 		numbers[((int)Player2.playerPercentage - (int)Player2.playerPercentage % 10) / 10]->Draw(1920 / 4 * 3, 900, false); //Player 2 percent
 		numbers[(int)Player2.playerPercentage % 10]->Draw(1920 / 4 * 3 + 30, 900, false); //Player 2 percent
-		gfx->DrawRect(1920 / 4 * 3 + 64, 939, 1920 * 3 / 4 + 66, 941, 255, 255, 255, 1); //Decimal point
+		gfx->DrawRectFill(1920 / 4 * 3 + 64, 939, 1920 * 3 / 4 + 66, 941, 255, 255, 255, 1); //Decimal point
 		numbers[(int)(Player2.playerPercentage * 10) % 10]->Draw(1920 / 4 * 3 + 70, 900, false); //Player 2 percent
 
 		if (AISelected) {
@@ -419,10 +409,10 @@ void Game::ComposeFrame()
 		}
 
 		if (Player1.invincibility > 0) { //If player 1 has invincibility
-			gfx->DrawRect(Player1.x - 1, Player1.y - 1, Player1.x + Player1.width + 1, Player1.y + Player1.height + 1, 0, 237, 255, 1); //Give them a border
+			gfx->DrawRectThin(Player1.x - 1, Player1.y - 1, Player1.x + Player1.width + 1, Player1.y + Player1.height + 1, 0, 237, 255, 1); //Give them a border
 		}
 		if (Player2.invincibility > 0) { //If player 2 has invincibility
-			gfx->DrawRect(Player2.x - 1, Player2.y - 1, Player2.x + Player2.width + 1, Player2.y + Player2.height + 1, 0, 237, 255, 1); //Give them a border
+			gfx->DrawRectThin(Player2.x - 1, Player2.y - 1, Player2.x + Player2.width + 1, Player2.y + Player2.height + 1, 0, 237, 255, 1); //Give them a border
 		}
 
 		if (Player1.moveDuration > 0 || Player1.freeFallDuration > 0) { //If Player 1 is using a move
@@ -448,16 +438,16 @@ void Game::ComposeFrame()
 
 		for (int i = 0; i < 5; i++) { //For every move
 			if (Player1.MoveDraw(i)) { //If it can be drawn
-				gfx->DrawRect(Player1.MoveX0(i), Player1.MoveY0(i), Player1.MoveX1(i), Player1.MoveY1(i), Player1.MoveR(i), Player1.MoveG(i), Player1.MoveB(i), 1); //Draw it
+				gfx->DrawRectFill(Player1.MoveX0(i), Player1.MoveY0(i), Player1.MoveX1(i), Player1.MoveY1(i), Player1.MoveR(i), Player1.MoveG(i), Player1.MoveB(i), 1); //Draw it
 			}
 			if (Player2.MoveDraw(i)) { //If it can be drawn
-				gfx->DrawRect(Player2.MoveX0(i), Player2.MoveY0(i), Player2.MoveX1(i), Player2.MoveY1(i), Player2.MoveR(i), Player2.MoveG(i), Player2.MoveB(i), 1); //Draw it
+				gfx->DrawRectFill(Player2.MoveX0(i), Player2.MoveY0(i), Player2.MoveX1(i), Player2.MoveY1(i), Player2.MoveR(i), Player2.MoveG(i), Player2.MoveB(i), 1); //Draw it
 			}
 		}
 
 		numbers[(int)(timer / 60 / 60)]->Draw(1920 / 2 - 50, 50, false); //Time in minutes
-		gfx->DrawRect(1920 / 2 - 20, 70, 1920 / 2 - 15, 75, 255, 255, 255, 1); //Colon
-		gfx->DrawRect(1920 / 2 - 20, 95, 1920 / 2 - 15, 100, 255, 255, 255, 1); //Colon
+		gfx->DrawRectFill(1920 / 2 - 20, 70, 1920 / 2 - 15, 75, 255, 255, 255, 1); //Colon
+		gfx->DrawRectFill(1920 / 2 - 20, 95, 1920 / 2 - 15, 100, 255, 255, 255, 1); //Colon
 		numbers[(int)((timer / 60 % 60 - timer / 60 % 10) / 10)]->Draw(1920 / 2, 50, false); //Time in tens
 		numbers[(int)(timer / 60 % 10)]->Draw(1920 / 2 + 50, 50, false); //Time in seconds
 	}

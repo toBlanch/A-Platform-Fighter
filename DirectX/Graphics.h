@@ -24,6 +24,8 @@ public:
 
 	void ClearScreen(float r, float g, float b);
 	void DrawCircle(float x, float y, float Radius, float r, float g, float b, float a);
-	void DrawRect(float x0, float y0, float x1, float y1, float r, float g, float b, float a);
+	void DrawRectThin(float x0, float y0, float x1, float y1, float r, float g, float b, float a);
+	void DrawRectFill(float x0, float y0, float x1, float y1, float r, float g, float b, float a);
 	void Fullscreen();
+	bool ifFocus();
 };

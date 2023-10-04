@@ -57,7 +57,6 @@ private:
 	bool spaceHeld = false;
 	bool tabHeld = false;
 	bool AISelected = false;
-	int hitStun = 0;
 	int numbertocall;
 
 	SpriteSheet* aiWarning;
@@ -88,48 +87,7 @@ private:
 	LPCWSTR moveParameters[8];
 	LPCWSTR hitParameters[8];
 	LPCWSTR livesIconParameters[8];
-	/*Image player1Move = {"Images\\CircleIdle.bmp"};
-	Image player1Hit = { "Images\\CircleIdle.bmp" };
-	Image player1LivesIcon = { "Images\\CircleLivesIcon.bmp" };
 
-	Image player2Idle = { "Images\\CircleIdle.bmp" };
-	Image player2Move = { "Images\\CircleIdle.bmp" };
-	Image player2Hit = { "Images\\CircleIdle.bmp" };
-	Image player2LivesIcon = { "Images\\CircleLivesIcon.bmp" };
-
-	Image idle[8];
-	Image move[8];
-	Image hit[8];
-	Image lives[8];
-
-	Image aiWarning = { "Images\\AI Warning.bmp" };
-	Image startThree = { "Images\\StartThree.bmp" };
-	Image startTwo = { "Images\\StartTwo.bmp" };
-	Image startOne = { "Images\\StartOne.bmp" };
-	Image go = { "Images\\Go.bmp" };
-	Image numbers[10];
-	Image zero = { "Images\\0.bmp" };
-	Image one = { "Images\\1.bmp" };
-	Image two = { "Images\\2.bmp" };
-	Image three = { "Images\\3.bmp" };
-	Image four = { "Images\\4.bmp" };
-	Image five = { "Images\\5.bmp" };
-	Image six = { "Images\\6.bmp" };
-	Image seven = { "Images\\7.bmp" };
-	Image eight = { "Images\\8.bmp" };
-	Image nine = { "Images\\9.bmp" };
-	Image startVisual = { "Images\\Start Menu.bmp" };
-	Image pauseVisual = { "Images\\Pause Menu.bmp" };
-	Image creditsVisual = { "Images\\Credits Menu.bmp" };
-	Image player1Win = { "Images\\Player1Win.bmp" };
-	Image player2Win = { "Images\\Player2Win.bmp" };
-	Sound MainMenuTheme;
-	Sound HitSound;
-	Sound CreditsTheme;
-	Sound BattleTheme0;
-	Sound BattleTheme1;
-	Sound BattleTheme2;
-	Sound BattleTheme3;*/
 	Character Player1;
 	Character Player2;
 	AI ArtifialFriend;
@@ -147,7 +105,7 @@ private:
 			25, //parameters[7]AerialJumpHeight
 			1, //parameters[8]FallAcceleration
 			10, //parameters[9]FallSpeed
-			1, //parameters[10]Weight
+			0.9, //parameters[10]Weight
 			2, //parameters[11]DoubleJumps
 
 			100, //parameters[12]Forward Light Additional x
@@ -343,10 +301,10 @@ private:
 			110, //parameters[193]Down Aerial Additional y
 			60, //parameters[194]Down Aerial Width
 			10, //parameters[195]Down Aerial Height
-			40, //parameters[196]Down Aerial Stun Duration
-			0, //parameters[197]Down Aerial Scalar X
+			25, //parameters[196]Down Aerial Stun Duration
+			-4, //parameters[197]Down Aerial Scalar X
 			-5, //parameters[198]Down Aerial Scalar y
-			0, //parameters[199]Down Aerial Fixed x
+			-1, //parameters[199]Down Aerial Fixed x
 			-3, //parameters[200]Down Aerial Fixed y
 			0, //parameters[201]Down Aerial vx
 			0, //parameters[202]Down Aerial vy
@@ -475,7 +433,7 @@ private:
 			25, //parameters[7]AerialJumpHeight
 			1, //parameters[8]FallAcceleration
 			5, //parameters[9]FallSpeed
-			0.85, //parameters[10]Weight
+			0.75, //parameters[10]Weight
 			1, //parameters[11]DoubleJumps
 
 			100, //parameters[12]Forward Light Additional x
@@ -802,7 +760,7 @@ private:
 			10.4, //parameters[7]AerialJumpHeight
 			0.1, //parameters[8]FallAcceleration
 			7, //parameters[9]FallSpeed
-			0.84, //parameters[10]Weight
+			0.74, //parameters[10]Weight
 			1, //parameters[11]DoubleJumps
 
 			63, //parameters[12]Forward Light Additional x
@@ -1129,7 +1087,7 @@ private:
 			25, //parameters[7]AerialJumpHeight
 			1, //parameters[8]FallAcceleration
 			7, //parameters[9]FallSpeed
-			1.2, //parameters[10]Weight
+			1.1, //parameters[10]Weight
 			0, //parameters[11]DoubleJumps
 
 			70, //parameters[12]Forward Light Additional x
@@ -1456,7 +1414,7 @@ private:
 			23, //parameters[7]AerialJumpHeight
 			1.78, //parameters[8]FallAcceleration
 			6, //parameters[9]FallSpeed
-			1.2, //parameters[10]Weight
+			1.1, //parameters[10]Weight
 			5, //parameters[11]DoubleJumps
 
 			150, //parameters[12]Forward Light Additional x
@@ -1783,7 +1741,7 @@ private:
 			10, //parameters[7]AerialJumpHeight
 			1, //parameters[8]FallAcceleration
 			30, //parameters[9]FallSpeed
-			1.5, //parameters[10]Weight
+			1.4, //parameters[10]Weight
 			1, //parameters[11]DoubleJumps
 
 			100, //parameters[12]Forward Light Additional x
@@ -2110,7 +2068,7 @@ private:
 			33, //parameters[7]AerialJumpHeight
 			1.25, //parameters[8]FallAcceleration
 			15, //parameters[9]FallSpeed
-			0.91, //parameters[10]Weight
+			0.81, //parameters[10]Weight
 			2, //parameters[11]DoubleJumps
 
 			31, //parameters[12]Forward Light Additional x
@@ -2332,7 +2290,7 @@ private:
 			-1, //parameters[218]Forward Special Scalar y
 			3, //parameters[219]Forward Special Fixed x
 			-3, //parameters[220]Forward Special Fixed y
-			400, //parameters[221]Forward Special vx
+			800, //parameters[221]Forward Special vx
 			0, //parameters[222]Forward Special vy
 			-400, //parameters[223]Acceleration x
 			0, //parameters[224]Acceleration y
@@ -2437,7 +2395,7 @@ private:
 			26, //parameters[7]AerialJumpHeight
 			1.75, //parameters[8]FallAcceleration
 			10, //parameters[9]FallSpeed
-			1.65, //parameters[10]Weight
+			1.55, //parameters[10]Weight
 			1, //parameters[11]DoubleJumps
 
 			89, //parameters[12]Forward Light Additional x

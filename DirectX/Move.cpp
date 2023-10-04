@@ -2,39 +2,40 @@
 
 void Move::CheckStatus(float xReferral, float yReferral, int stageX0, int stageY0, int stageX1, int stageY1)
 {
-	if (startUpDuration > 0) { //If not active yet
-		startUpDuration--; //Decrease the time until it starts
-	}
-	else if (activeDuration > 0) { //If move is active
-		activeDuration--; //Decrease the time until the move ends
-		vx += accelerationx;
-		vy += accelerationy;
+	startUpDuration--; //Decrease the time until it starts
+	if (startUpDuration < 0) {
+		activeDuration--;
+		if (activeDuration >= 0) { //If move is active
+			vx += accelerationx;
+			vy += accelerationy;
 
-		x += vx;
-		y += vy;
+			x += vx;
+			y += vy;
 
-		if (isPlayerAttachedToIt) {
-			x = xReferral + vx;
-			y = yReferral + vy;
+			if (isPlayerAttachedToIt) {
+				x = xReferral + vx;
+				y = yReferral + vy;
+			}
+			else if (!isAttachedToPlayer) {
+				bool xOnStage = x + additionalX + width > stageX0 && x + additionalX < stageX1;
+				bool yOnStage = y + additionalY + height >= stageY0 && y + additionalY <= stageY1;
+
+				if (yOnStage && x + additionalX + width > stageX0 && x + additionalX + width <= stageX0 + vx) { //If clipping into stage from the left
+					x = float(stageX0) - width - additionalX; //Stop clipping
+				}
+				else if (yOnStage && x + additionalX >= stageX1 + vx && x + additionalX < stageX1) { //If clipping into stage from right
+					x = (float)stageX1 - additionalX; //Stop clipping
+				}
+
+				if (xOnStage && y + additionalY + height >= stageY0 && y + additionalY + height <= stageY0 + vy) {
+					y = (float)stageY0 - height - additionalY; //Stop clipping
+				}
+				else if (xOnStage && y + additionalY >= stageY1 - vy && y + additionalY <= stageY1) {
+					y = (float)stageY1 - additionalY; //Stop clipping
+				}
+			}
 		}
-		else if (!isAttachedToPlayer) {
-			bool xOnStage = x + additionalX + width > stageX0 && x + additionalX < stageX1;
-			bool yOnStage = y + additionalY + height >= stageY0 && y + additionalY <= stageY1;
 
-			if (yOnStage && x + additionalX + width > stageX0 && x + additionalX + width <= stageX0 + vx) { //If clipping into stage from the left
-				x = float(stageX0) - width - additionalX; //Stop clipping
-			}
-			else if (yOnStage && x + additionalX >= stageX1 + vx && x + additionalX < stageX1) { //If clipping into stage from right
-				x = (float)stageX1 - additionalX; //Stop clipping
-			}
-
-			if (xOnStage && y + additionalY + height >= stageY0 && y + additionalY + height <= stageY0 + vy) {
-				y = (float)stageY0 - height - additionalY; //Stop clipping
-			}
-			else if (xOnStage && y + additionalY >= stageY1 - vy && y + additionalY <= stageY1) {
-				y = (float)stageY1 - additionalY; //Stop clipping
-			}
-		}
 	}
 
 	if (isAttachedToPlayer || startUpDuration > 0) { //If the move is activating or if attached to the player
@@ -114,19 +115,20 @@ void Move::Activate(int playerWidthReferral, int playerHeightReferral, bool isFa
 
 bool Move::Draw()
 {
-	return activeDuration > 0 && startUpDuration == 0; //If the move is active and not starting up
+	return activeDuration >= 0 && startUpDuration < 0; //If the move is active and not starting up
 }
 
 void Move::EndMove()
 {
-	activeDuration = 0; //Disable the move
-	startUpDuration = 0; //Remove the startup
+	activeDuration = -1; //Disable the move
+	startUpDuration = -1; //Remove the startup
 	isPlayerAttachedToIt = false;
+	isAttachedToPlayer = true;
 }
 
 bool Move::IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height)
 {
-	if (!hasHit && activeDuration > 0 && startUpDuration == 0) { //If the move has an active hitbox
+	if (!hasHit && activeDuration >= 0 && startUpDuration < 0) { //If the move has an active hitbox
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				if (x + additionalX + xCoordinates[i] >= Player2x && //If the X coordinate is greater than the player's
@@ -136,7 +138,7 @@ bool Move::IsMoveColliding(float Player2x, float Player2y, int Player2width, int
 					) { //If inside the player's coordinates
 					hasHit = true; //Stop the fucntion from running again
 					if (disappearOnHit) {
-						activeDuration = 1; //Disable
+						activeDuration = 0; //Disable
 					}
 					return true; //The move has hit
 				}
@@ -149,8 +151,8 @@ bool Move::IsMoveColliding(float Player2x, float Player2y, int Player2width, int
 void Move::PlayerIsHit()
 {
 	if (isAttachedToPlayer || isPlayerAttachedToIt) { //If the move is dependant on the player
-		startUpDuration = 0; //Disable it
-		activeDuration = 0; //Disable it
+		startUpDuration = -1; //Disable it
+		activeDuration = -1; //Disable it
 	}
 }
 
