@@ -35,6 +35,9 @@ void Move::CheckStatus(float xReferral, float yReferral, int stageX0, int stageY
 				}
 			}
 		}
+		else {
+			isAttachedToPlayer = true;
+		}
 
 	}
 

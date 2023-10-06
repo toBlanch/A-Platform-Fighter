@@ -1,6 +1,7 @@
 #include "Graphics.h"
 #include <d2d1.h>
 #include "SpriteSheet.h"
+#include <Winuser.h>
 
 Graphics::Graphics()
 {
@@ -74,7 +75,7 @@ void Graphics::DrawRectThin(float x0, float y0, float x1, float y1, float r, flo
 
 void Graphics::DrawRectFill(float x0, float y0, float x1, float y1, float r, float g, float b, float a)
 {
-	brush->SetColor(D2D1::ColorF(r, g, b, a));
+	brush->SetColor(D2D1::ColorF(r/255, g/255, b/255, a));
 
 	renderTarget->FillRectangle(D2D1::RectF(x0, y0, x1, y1), brush);
 }
@@ -98,4 +99,18 @@ void Graphics::Fullscreen()
 bool Graphics::ifFocus()
 {
 	return hwnd == GetFocus();
+}
+
+void Graphics::GetClickPosition(POINT* clickPosition)
+{
+	GetCursorPos(clickPosition);
+	ScreenToClient(hwnd, clickPosition);
+	RECT currentRect;
+	GetWindowRect(hwnd, &currentRect);
+	RECT clientRect;
+	GetClientRect(hwnd, &clientRect);
+	currentRect.top = currentRect.bottom - clientRect.bottom;
+
+	clickPosition->x = clickPosition->x * 1920 / (clientRect.right);
+	clickPosition->y = clickPosition->y * 1080 / (clientRect.bottom);
 }

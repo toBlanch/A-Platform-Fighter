@@ -5,7 +5,7 @@
 Game::Game(Graphics* gfx)
 	:
 	randomDist(0, 39),
-	rng( rd( ) )
+	rng(rd())
 {
 	this->gfx = gfx;
 
@@ -74,6 +74,17 @@ Game::Game(Graphics* gfx)
 	livesIconParameters[6] = L"TrollLivesIcon.bmp";
 	livesIconParameters[7] = L"BigBLivesIcon.bmp";
 
+	//Initialise description sprites
+	descParameters[0] = L"CircleDesc.bmp";
+	descParameters[1] = L"aDesc.bmp";
+	descParameters[2] = L"SigmaMonkeyOfDoomDesc.bmp";
+	descParameters[3] = L"DogDesc.bmp";
+	descParameters[4] = L"ChickenDesc.bmp";
+	descParameters[5] = L"RockDesc.bmp";
+	descParameters[6] = L"TrollDesc.bmp";
+	descParameters[7] = L"BigBDesc.bmp";
+	descParameters[8] = L"RandomDesc.bmp";
+
 	//Initialise sounds
 	mciSendStringA("open \"hit.avi\" type mpegvideo alias hit", NULL, 0, NULL);
 	mciSendStringA("open \"Credits.wav\" type mpegvideo alias Credits", NULL, 0, NULL);
@@ -85,6 +96,10 @@ Game::Game(Graphics* gfx)
 	//Initialise menu idle sprites
 	player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
 	player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
+
+	//Initialise menu description sprites
+	player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s idle animation
+	player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s idle animation
 }
 
 void Game::Go()
@@ -95,8 +110,15 @@ void Game::Go()
 
 void Game::GameState()
 {
+	clickPosition.x = -1;
+	if (gfx->ifFocus() && GetKeyState(0x01) != clickHeld && 0x800) {
+		clickHeld = GetKeyState(0x01);
+		gfx->GetClickPosition(&clickPosition);
+	}
+
 	if (credits) {
-		if ((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000 && !enterOrEscapeHeld) || (gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld)) {
+		if ((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000 && !enterOrEscapeHeld) || (gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld) ||
+			(clickPosition.x >= 0 && clickPosition.x <= 205 && clickPosition.y >= 0 && clickPosition.y <= 65)) {
 			credits = false;
 			mciSendStringA("stop Credits", NULL, 0, NULL);
 			mciSendStringA("play MainMenu from 0 repeat", NULL, 0, NULL);
@@ -117,47 +139,63 @@ void Game::GameState()
 
 void Game::StartMenu()
 {
-	if (gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld) {
+	if ((gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld) ||
+		(clickPosition.x >= 0 && clickPosition.x <= 400 && clickPosition.y >= 980 && clickPosition.y <= 1080)) {
 		gfx->Fullscreen();
 	}
-	else if (gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld) {
+	else if (((gfx->ifFocus() && GetKeyState(0x20) & 0x8000) ||
+		(clickPosition.x >= 1520 && clickPosition.x <= 1920 && clickPosition.y >= 980 && clickPosition.y <= 1080)) && !spaceHeld) {
 		credits = true;
 		mciSendStringA("stop MainMenu", NULL, 0, NULL);
 		mciSendStringA("play Credits from 0 repeat", NULL, 0, NULL);
 	}
 	else {
-		if (gfx->ifFocus() && GetKeyState(0x45) & 0x8000 && player1CharacterID < 8 && !eHeld) { //If Player 1 wants to increase their character ID
+		if (((gfx->ifFocus() && GetKeyState(0x45) & 0x8000) ||
+			(clickPosition.x >= 655 && clickPosition.x <= 745 && clickPosition.y >= 115 && clickPosition.y <= 210)) && player1CharacterID < 8 && !eHeld) { //If Player 1 wants to increase their character ID
 			player1CharacterID++; //Increase it
 			player1Idle -> ~SpriteSheet();
 			player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
+			player1Desc -> ~SpriteSheet();
+			player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s description
 		}
-		if (gfx->ifFocus() && GetKeyState(0x51) & 0x8000 && player1CharacterID > 0 && !qHeld) { //If Player 1 wants to decrease their character ID
+		if (((gfx->ifFocus() && GetKeyState(0x51) & 0x8000) ||
+			(clickPosition.x >= 350 && clickPosition.x <= 440 && clickPosition.y >= 115 && clickPosition.y <= 210)) && player1CharacterID > 0 && !qHeld) { //If Player 1 wants to decrease their character ID
 			player1CharacterID--; //Decrease it
 			player1Idle -> ~SpriteSheet();
 			player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
+			player1Desc -> ~SpriteSheet();
+			player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s description
 		}
-		if (gfx->ifFocus() && GetKeyState(0x50) & 0x8000 && player2CharacterID < 8 && !pHeld) { //If Player 2 wants to increase their character ID
+		if (((gfx->ifFocus() && GetKeyState(0x50) & 0x8000) ||
+			(clickPosition.x >= 1485 && clickPosition.x <= 1570 && clickPosition.y >= 115 && clickPosition.y <= 210)) && player2CharacterID < 8 && !pHeld) { //If Player 2 wants to increase their character ID
 			player2CharacterID++; //Incerase it
 			player2Idle -> ~SpriteSheet();
 			player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
+			player2Desc -> ~SpriteSheet();
+			player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
 		}
-		if (gfx->ifFocus() && GetKeyState(0x49) & 0x8000 && player2CharacterID > 0 && !iHeld) { //If Player 2 wants to decrease their character ID
+		if (((gfx->ifFocus() && GetKeyState(0x49) & 0x8000) ||
+			(clickPosition.x >= 1175 && clickPosition.x <= 1265 && clickPosition.y >= 115 && clickPosition.y <= 210)) && player2CharacterID > 0 && !iHeld) { //If Player 2 wants to decrease their character ID
 			player2CharacterID--; //Decrease it
 			player2Idle -> ~SpriteSheet();
 			player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
+			player2Desc -> ~SpriteSheet();
+			player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
 		}
 
-		if (gfx->ifFocus() && GetKeyState(0x09) & 0x8000 && !tabHeld) {
+		if (((gfx->ifFocus() && GetKeyState(0x09) & 0x8000) ||
+			(clickPosition.x >= 1750 && clickPosition.x <= 1850 && clickPosition.y >= 100 && clickPosition.y <= 130)) && !tabHeld) {
 			AISelected = !AISelected;
 		}
 
-		qHeld = gfx->ifFocus() && GetKeyState(0x51) & 0x8000; //If q is held set it to true, otherwise set it to false
-		eHeld = gfx->ifFocus() && GetKeyState(0x45) & 0x8000; //If e is held set it to true, otherwise set it to false
-		iHeld = gfx->ifFocus() && GetKeyState(0x49) & 0x8000; //If i is held set it to true, otherwise set it to false
-		pHeld = gfx->ifFocus() && GetKeyState(0x50) & 0x8000; //If p is held set it to true, otherwise set it to false
-		tabHeld = gfx->ifFocus() && GetKeyState(0x09) & 0x8000;
+		qHeld = (gfx->ifFocus() && GetKeyState(0x51) & 0x8000) || (clickPosition.x >= 350 && clickPosition.x <= 440 && clickPosition.y >= 115 && clickPosition.y <= 210); //If q is held or the button is clicked set it to true, otherwise set it to false
+		eHeld = (gfx->ifFocus() && GetKeyState(0x45) & 0x8000) || (clickPosition.x >= 655 && clickPosition.x <= 745 && clickPosition.y >= 115 && clickPosition.y <= 210); //If e is held or the button is clicked set it to true, otherwise set it to false
+		iHeld = (gfx->ifFocus() && GetKeyState(0x49) & 0x8000) || (clickPosition.x >= 1320 && clickPosition.x <= 1410 && clickPosition.y >= 115 && clickPosition.y <= 210); //If i is held or the button is clicked set it to true, otherwise set it to false
+		pHeld = (gfx->ifFocus() && GetKeyState(0x50) & 0x8000) || (clickPosition.x >= 1625 && clickPosition.x <= 1715 && clickPosition.y >= 115 && clickPosition.y <= 210); //If p is held or the button is clicked set it to true, otherwise set it to false
+		tabHeld = (gfx->ifFocus() && GetKeyState(0x09) & 0x8000) || (clickPosition.x >= 1750 && clickPosition.x <= 1850 && clickPosition.y >= 100 && clickPosition.y <= 130); //If tab is held or the button is clicked set it to true, otherwise set it to false
 
-		if ((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000) && !enterOrEscapeHeld) { //If the game is starting
+		if (((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000) && !enterOrEscapeHeld) ||
+			(clickPosition.x >= 760 && clickPosition.x <= 1160 && clickPosition.y >= 490 && clickPosition.y <= 660)) { //If the game is starting
 			startMenu = false; //Disable the start menu
 			GameStart();
 			if (player1CharacterID == 8) {
@@ -205,7 +243,8 @@ void Game::StartBattleTheme()
 void Game::GameLoop()
 {
 	if (paused) {
-		if (gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && !enterOrEscapeHeld && (gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000)) {
+		if ((gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && !enterOrEscapeHeld && (gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000)) ||
+			(clickPosition.x >= 1620 && clickPosition.x <= 1920 && clickPosition.y >= 0 && clickPosition.y <= 200)) {
 			paused = false;
 			GameEnd();
 			previousWinner = 0;
@@ -215,7 +254,8 @@ void Game::GameLoop()
 			mciSendStringA("stop BattleTheme3", NULL, 0, NULL);
 			mciSendStringA("play MainMenu from 0 repeat", NULL, 0, NULL);
 		}
-		else if (gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && gfx->ifFocus() && GetKeyState(0x52) & 0x8000) { //If the game should be restarted
+		else if ((gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && gfx->ifFocus() && GetKeyState(0x52) & 0x8000) ||
+			(clickPosition.x >= 0 && clickPosition.x <= 300 && clickPosition.y >= 0 && clickPosition.y <= 200)) { //If the game should be restarted
 			GameStart();
 		}
 		else if (!enterOrEscapeHeld && (gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000)) { //If the pause button is pressd
@@ -336,18 +376,21 @@ void Game::ComposeFrame()
 		startVisual->Draw(0, 0, false); //Displays the visual for the start menu
 
 		if (AISelected) {
-			aiWarning->Draw(1600, 100, false);
+			aiWarning->Draw(1750, 100, false);
 		}
 
 		if (previousWinner == 1) { //If Player 1 won the last match
-			player1Win->Draw(1920 / 2 - 250, 500, false); //Dislpay a sprite that shows this
+			player1Win->Draw(1920 / 2 - 250, 100, false); //Dislpay a sprite that shows this
 		}
 		else if (previousWinner == 2) { //If player 2 won the last match
-			player2Win->Draw(1920 / 2 - 250, 500, false); //Dislpay a sprite that shows this
+			player2Win->Draw(1920 / 2 - 250, 100, false); //Dislpay a sprite that shows this
 		}
 
-		player1Idle->Draw(1920 / 4, 100, false); //Draws an appropriate sprite based on character ID in the start menu
-		player2Idle->Draw(1920 / 4 * 3, 100, player2CharacterID!=8); //Draws an appropriate sprite based on character ID in the start menu
+		player1Idle->Draw(550-parameters[player1CharacterID][0]/2, 100, false); //Draws an appropriate sprite based on character ID in the start menu
+		player2Idle->Draw(1370 - parameters[player2CharacterID][0] / 2, 100, player2CharacterID != 8); //Draws an appropriate sprite based on character ID in the start menu
+
+		player1Desc->Draw(345, 250, false); //Draws an appropriate sprite based on character ID in the start menu
+		player2Desc->Draw(1175, 250, false); //Draws an appropriate sprite based on character ID in the start menu
 	}
 	else {
 		if (paused) {

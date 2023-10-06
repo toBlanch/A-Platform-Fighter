@@ -28,4 +28,5 @@ public:
 	void DrawRectFill(float x0, float y0, float x1, float y1, float r, float g, float b, float a);
 	void Fullscreen();
 	bool ifFocus();
+	void GetClickPosition(POINT* clickPosition);
 };

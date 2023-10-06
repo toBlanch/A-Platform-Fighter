@@ -56,8 +56,11 @@ private:
 	bool pHeld = false;
 	bool spaceHeld = false;
 	bool tabHeld = false;
+	bool clickHeld = GetKeyState(0x01);
 	bool AISelected = false;
 	int numbertocall;
+
+	POINT clickPosition;
 
 	SpriteSheet* aiWarning;
 
@@ -77,16 +80,19 @@ private:
 	SpriteSheet* player1Move;
 	SpriteSheet* player1Hit;
 	SpriteSheet* player1LivesIcon;
+	SpriteSheet* player1Desc;
 
 	SpriteSheet* player2Idle;
 	SpriteSheet* player2Move;
 	SpriteSheet* player2Hit;
 	SpriteSheet* player2LivesIcon;
+	SpriteSheet* player2Desc;
 
-	LPCWSTR idleParameters[9];
+	LPCWSTR idleParameters[9]; //The 9th is Random
 	LPCWSTR moveParameters[8];
 	LPCWSTR hitParameters[8];
 	LPCWSTR livesIconParameters[8];
+	LPCWSTR descParameters[9];
 
 	Character Player1;
 	Character Player2;
@@ -384,42 +390,42 @@ private:
 			0, //parameters[272]Forward Light R
 			255, //parameters[273]Forward Light G
 			255, //parameters[274]Forward Light B
-			255, //parameters[275]
-			255, //parameters[276]
-			255, //parameters[277]
-			255, //parameters[278]
-			255, //parameters[279]
-			255, //parameters[280]
-			255, //parameters[281]
-			255, //parameters[282]
-			255, //parameters[283]
-			255, //parameters[284]
-			255, //parameters[285]
-			255, //parameters[286]
-			255, //parameters[287]
-			255, //parameters[288]
-			255, //parameters[289]
-			255, //parameters[290]
-			255, //parameters[291]
-			255, //parameters[292]
-			255, //parameters[293]
-			255, //parameters[294]
-			255, //parameters[295]
-			255, //parameters[296]
-			255, //parameters[297]
-			255, //parameters[298]
-			255, //parameters[299]
-			255, //parameters[300]
-			255, //parameters[301]
-			255, //parameters[302]
-			255, //parameters[303]
-			255, //parameters[304]
-			255, //parameters[305]
-			255, //parameters[306]
-			255, //parameters[307]
-			255, //parameters[308]
-			255, //parameters[309]
-			255 //parameters[310]
+			140, //parameters[275]Up Light R
+			140, //parameters[276]Up Light G
+			155, //parameters[277]Up Light B
+			140, //parameters[278]Down Light R
+			140, //parameters[279]Down Light G
+			155, //parameters[280]Down Light B
+			0, //parameters[281]Forward Heavy R
+			0, //parameters[282]Forward Heavy G
+			255, //parameters[283]Forward Heavy B
+			140, //parameters[284]Up Heavy R
+			140, //parameters[285]Up Heavy G
+			155, //parameters[286]Up Heavy B
+			140, //parameters[287]Down Heavy R
+			140, //parameters[288]Down Heavy G
+			155, //parameters[289]Down Heavy B
+			0, //parameters[290]Forward Aerial R
+			255, //parameters[291]Forward Aerial G
+			255, //parameters[292]Forward Aerial B
+			140, //parameters[293]Back Aerial R
+			140, //parameters[294]Back Aerial G
+			155, //parameters[295]Back Aerial B
+			140, //parameters[296]Up Aerial R
+			140, //parameters[297]Up Aerial G
+			155, //parameters[298]Up Aerial B
+			140, //parameters[299]Down Aerial R
+			140, //parameters[300]Down Aerial G
+			155, //parameters[301]Down Aerial B
+			0, //parameters[302]Foward Special R
+			255, //parameters[303]Foward Special G
+			0, //parameters[304]Foward Special B
+			140, //parameters[305]Up Special R
+			140, //parameters[306]Up Special G
+			155, //parameters[307]Up Special B
+			140, //parameters[308]Down Special R
+			140, //parameters[309]Down Special G
+			155 //parameters[310]Down Special B
 		},
 		//a
 		{
@@ -708,45 +714,45 @@ private:
 			0, //parameters[269]Down Special Is Attached To Player
 			1, //parameters[270] Is Player Attached To It
 			0, //parameters[271]Down Special Disappear On Hit     
-			255, //parameters[272]Forward Light R
-			255, //parameters[273]Forward Light G
+			0, //parameters[272]Forward Light R
+			0, //parameters[273]Forward Light G
 			255, //parameters[274]Forward Light B
-			255, //parameters[275]
-			255, //parameters[276]
-			255, //parameters[277]
-			255, //parameters[278]
-			255, //parameters[279]
-			255, //parameters[280]
-			255, //parameters[281]
-			255, //parameters[282]
-			255, //parameters[283]
-			255, //parameters[284]
-			255, //parameters[285]
-			255, //parameters[286]
-			255, //parameters[287]
-			255, //parameters[288]
-			255, //parameters[289]
-			255, //parameters[290]
-			255, //parameters[291]
-			255, //parameters[292]
-			255, //parameters[293]
-			255, //parameters[294]
-			255, //parameters[295]
-			255, //parameters[296]
-			255, //parameters[297]
-			255, //parameters[298]
-			255, //parameters[299]
-			255, //parameters[300]
-			255, //parameters[301]
-			255, //parameters[302]
-			255, //parameters[303]
-			255, //parameters[304]
-			255, //parameters[305]
-			255, //parameters[306]
-			255, //parameters[307]
-			255, //parameters[308]
-			255, //parameters[309]
-			255 //parameters[310] 
+			0, //parameters[275]Up Light R
+			0, //parameters[276]Up Light G
+			255, //parameters[277]Up Light B
+			0, //parameters[278]Down Light R
+			0, //parameters[279]Down Light G
+			255, //parameters[280]Down Light B
+			0, //parameters[281]Forward Heavy R
+			0, //parameters[282]Forward Heavy G
+			255, //parameters[283]Forward Heavy B
+			0, //parameters[284]Up Heavy R
+			0, //parameters[285]Up Heavy G
+			255, //parameters[286]Up Heavy B
+			0, //parameters[287]Down Heavy R
+			0, //parameters[288]Down Heavy G
+			255, //parameters[289]Down Heavy B
+			0, //parameters[290]Forward Aerial R
+			0, //parameters[291]Forward Aerial G
+			255, //parameters[292]Forward Aerial B
+			0, //parameters[293]Back Aerial R
+			0, //parameters[294]Back Aerial G
+			255, //parameters[295]Back Aerial B
+			0, //parameters[296]Up Aerial R
+			0, //parameters[297]Up Aerial G
+			255, //parameters[298]Up Aerial B
+			255, //parameters[299]Down Aerial R
+			255, //parameters[300]Down Aerial G
+			255, //parameters[301]Down Aerial B
+			0, //parameters[302]Foward Special R
+			0, //parameters[303]Foward Special G
+			255, //parameters[304]Foward Special B
+			0, //parameters[305]Up Special R
+			0, //parameters[306]Up Special G
+			255, //parameters[307]Up Special B
+			0, //parameters[308]Down Special R
+			0, //parameters[309]Down Special G
+			255 //parameters[310]Down Special B 
 		},
 		//Sigma Monkey Of Doom
 		{
@@ -1017,8 +1023,8 @@ private:
 
 			73, //parameters[252]Down Special Additional x
 			40, //parameters[253]Down Special Additional y
-			20, //parameters[254]Down Special Width
-			20, //parameters[255]Down Special Height
+			30, //parameters[254]Down Special Width
+			10, //parameters[255]Down Special Height
 			50, //parameters[256]Down Special Stun Duration
 			15, //parameters[257]Down Special Scalar X
 			-1, //parameters[258]Down Special Scalar y
@@ -1035,45 +1041,45 @@ private:
 			0, //parameters[269]Down Special Is Attached To Player
 			0, //parameters[270] Is Player Attached To It
 			1, //parameters[271]Down Special Disappear On Hit    
-			255, //parameters[272]Forward Light R
-			255, //parameters[273]Forward Light G
-			255, //parameters[274]Forward Light B
-			255, //parameters[275]
-			255, //parameters[276]
-			255, //parameters[277]
-			255, //parameters[278]
-			255, //parameters[279]
-			255, //parameters[280]
-			255, //parameters[281]
-			255, //parameters[282]
-			255, //parameters[283]
-			255, //parameters[284]
-			255, //parameters[285]
-			255, //parameters[286]
-			255, //parameters[287]
-			255, //parameters[288]
-			255, //parameters[289]
-			255, //parameters[290]
-			255, //parameters[291]
-			255, //parameters[292]
-			255, //parameters[293]
-			255, //parameters[294]
-			255, //parameters[295]
-			255, //parameters[296]
-			255, //parameters[297]
-			255, //parameters[298]
-			255, //parameters[299]
-			255, //parameters[300]
-			255, //parameters[301]
-			255, //parameters[302]
-			255, //parameters[303]
-			255, //parameters[304]
-			255, //parameters[305]
-			255, //parameters[306]
-			255, //parameters[307]
-			255, //parameters[308]
-			255, //parameters[309]
-			255 //parameters[310]  
+			120, //parameters[272]Forward Light R
+			50, //parameters[273]Forward Light G
+			50, //parameters[274]Forward Light B
+			120, //parameters[275]Up Light R
+			50, //parameters[276]Up Light G
+			50, //parameters[277]Up Light B
+			120, //parameters[278]Down Light R
+			50, //parameters[279]Down Light G
+			50, //parameters[280]Down Light B
+			120, //parameters[281]Forward Heavy R
+			50, //parameters[282]Forward Heavy G
+			50, //parameters[283]Forward Heavy B
+			120, //parameters[284]Up Heavy R
+			50, //parameters[285]Up Heavy G
+			50, //parameters[286]Up Heavy B
+			120, //parameters[287]Down Heavy R
+			50, //parameters[288]Down Heavy G
+			50, //parameters[289]Down Heavy B
+			120, //parameters[290]Forward Aerial R
+			50, //parameters[291]Forward Aerial G
+			50, //parameters[292]Forward Aerial B
+			120, //parameters[293]Back Aerial R
+			50, //parameters[294]Back Aerial G
+			50, //parameters[295]Back Aerial B
+			120, //parameters[296]Up Aerial R
+			50, //parameters[297]Up Aerial G
+			50, //parameters[298]Up Aerial B
+			120, //parameters[299]Down Aerial R
+			50, //parameters[300]Down Aerial G
+			50, //parameters[301]Down Aerial B
+			120, //parameters[302]Foward Special R
+			50, //parameters[303]Foward Special G
+			50, //parameters[304]Foward Special B
+			120, //parameters[305]Up Special R
+			50, //parameters[306]Up Special G
+			50, //parameters[307]Up Special B
+			255, //parameters[308]Down Special R
+			255, //parameters[309]Down Special G
+			0 //parameters[310]Down Special B  
 		},
 		//Dog
 		{
@@ -1362,45 +1368,45 @@ private:
 			0, //parameters[269]Down Special Is Attached To Player
 			1, //parameters[270] Is Player Attached To It
 			1, //parameters[271]Down Special Disappear On Hit      
-			255, //parameters[272]Forward Light R
-			255, //parameters[273]Forward Light G
-			255, //parameters[274]Forward Light B
-			255, //parameters[275]
-			255, //parameters[276]
-			255, //parameters[277]
-			255, //parameters[278]
-			255, //parameters[279]
-			255, //parameters[280]
-			255, //parameters[281]
-			255, //parameters[282]
-			255, //parameters[283]
-			255, //parameters[284]
-			255, //parameters[285]
-			255, //parameters[286]
-			255, //parameters[287]
-			255, //parameters[288]
-			255, //parameters[289]
-			255, //parameters[290]
-			255, //parameters[291]
-			255, //parameters[292]
-			255, //parameters[293]
-			255, //parameters[294]
-			255, //parameters[295]
-			255, //parameters[296]
-			255, //parameters[297]
-			255, //parameters[298]
-			255, //parameters[299]
-			255, //parameters[300]
-			255, //parameters[301]
-			255, //parameters[302]
-			255, //parameters[303]
-			255, //parameters[304]
-			50, //parameters[305]
-			50, //parameters[306]
-			50, //parameters[307]
-			255, //parameters[308]
-			255, //parameters[309]
-			255 //parameters[310]
+			84, //parameters[272]Forward Light R
+			84, //parameters[273]Forward Light G
+			84, //parameters[274]Forward Light B
+			84, //parameters[275]Up Light R
+			84, //parameters[276]Up Light G
+			84, //parameters[277]Up Light B
+			84, //parameters[278]Down Light R
+			84, //parameters[279]Down Light G
+			84, //parameters[280]Down Light B
+			84, //parameters[281]Forward Heavy R
+			84, //parameters[282]Forward Heavy G
+			84, //parameters[283]Forward Heavy B
+			84, //parameters[284]Up Heavy R
+			84, //parameters[285]Up Heavy G
+			84, //parameters[286]Up Heavy B
+			84, //parameters[287]Down Heavy R
+			84, //parameters[288]Down Heavy G
+			84, //parameters[289]Down Heavy B
+			84, //parameters[290]Forward Aerial R
+			84, //parameters[291]Forward Aerial G
+			84, //parameters[292]Forward Aerial B
+			84, //parameters[293]Back Aerial R
+			84, //parameters[294]Back Aerial G
+			84, //parameters[295]Back Aerial B
+			160, //parameters[296]Up Aerial R
+			160, //parameters[297]Up Aerial G
+			160, //parameters[298]Up Aerial B
+			84, //parameters[299]Down Aerial R
+			84, //parameters[300]Down Aerial G
+			84, //parameters[301]Down Aerial B
+			84, //parameters[302]Foward Special R
+			84, //parameters[303]Foward Special G
+			84, //parameters[304]Foward Special B
+			50, //parameters[305]Up Special R
+			50, //parameters[306]Up Special G
+			50, //parameters[307]Up Special B
+			84, //parameters[308]Down Special R
+			84, //parameters[309]Down Special G
+			84 //parameters[310]Down Special B
 		},
 		//Chicken
 		{
@@ -1690,44 +1696,44 @@ private:
 			0, //parameters[270] Is Player Attached To It
 			1, //parameters[271]Down Special Disappear On Hit      
 			255, //parameters[272]Forward Light R
-			255, //parameters[273]Forward Light G
+			0, //parameters[273]Forward Light G
 			255, //parameters[274]Forward Light B
-			255, //parameters[275]
-			255, //parameters[276]
-			255, //parameters[277]
-			255, //parameters[278]
-			255, //parameters[279]
-			255, //parameters[280]
-			255, //parameters[281]
-			255, //parameters[282]
-			255, //parameters[283]
-			255, //parameters[284]
-			255, //parameters[285]
-			255, //parameters[286]
-			255, //parameters[287]
-			255, //parameters[288]
-			255, //parameters[289]
-			255, //parameters[290]
-			255, //parameters[291]
-			255, //parameters[292]
-			255, //parameters[293]
-			255, //parameters[294]
-			255, //parameters[295]
-			255, //parameters[296]
-			255, //parameters[297]
-			255, //parameters[298]
-			255, //parameters[299]
-			255, //parameters[300]
-			255, //parameters[301]
-			255, //parameters[302]
-			255, //parameters[303]
-			255, //parameters[304]
-			255, //parameters[305]
-			255, //parameters[306]
-			255, //parameters[307]
-			255, //parameters[308]
-			0, //parameters[309]
-			255 //parameters[310]
+			255, //parameters[275]Up Light R
+			0, //parameters[276]Up Light G
+			255, //parameters[277]Up Light B
+			255, //parameters[278]Down Light R
+			0, //parameters[279]Down Light G
+			255, //parameters[280]Down Light B
+			255, //parameters[281]Forward Heavy R
+			0, //parameters[282]Forward Heavy G
+			255, //parameters[283]Forward Heavy B
+			255, //parameters[284]Up Heavy R
+			0, //parameters[285]Up Heavy G
+			255, //parameters[286]Up Heavy B
+			255, //parameters[287]Down Heavy R
+			0, //parameters[288]Down Heavy G
+			255, //parameters[289]Down Heavy B
+			255, //parameters[290]Forward Aerial R
+			0, //parameters[291]Forward Aerial G
+			255, //parameters[292]Forward Aerial B
+			255, //parameters[293]Back Aerial R
+			0, //parameters[294]Back Aerial G
+			255, //parameters[295]Back Aerial B
+			255, //parameters[296]Up Aerial R
+			0, //parameters[297]Up Aerial G
+			255, //parameters[298]Up Aerial B
+			255, //parameters[299]Down Aerial R
+			0, //parameters[300]Down Aerial G
+			255, //parameters[301]Down Aerial B
+			255, //parameters[302]Foward Special R
+			0, //parameters[303]Foward Special G
+			255, //parameters[304]Foward Special B
+			255, //parameters[305]Up Special R
+			0, //parameters[306]Up Special G
+			255, //parameters[307]Up Special B
+			255, //parameters[308]Down Special R
+			0, //parameters[309]Down Special G
+			255 //parameters[310]Down Special B
 		},
 		//Rock
 		{
@@ -2016,45 +2022,45 @@ private:
 			0, //parameters[269]Down Special Is Attached To Player
 			0, //parameters[270] Is Player Attached To It
 			1, //parameters[271]Down Special Disappear On Hit      
-			255, //parameters[272]Forward Light R
-			255, //parameters[273]Forward Light G
-			255, //parameters[274]Forward Light B
-			255, //parameters[275]
-			255, //parameters[276]
-			255, //parameters[277]
-			255, //parameters[278]
-			255, //parameters[279]
-			255, //parameters[280]
-			255, //parameters[281]
-			255, //parameters[282]
-			255, //parameters[283]
-			255, //parameters[284]
-			255, //parameters[285]
-			255, //parameters[286]
-			255, //parameters[287]
-			255, //parameters[288]
-			255, //parameters[289]
-			255, //parameters[290]
-			255, //parameters[291]
-			255, //parameters[292]
-			255, //parameters[293]
-			255, //parameters[294]
-			255, //parameters[295]
-			255, //parameters[296]
-			255, //parameters[297]
-			255, //parameters[298]
-			255, //parameters[299]
-			255, //parameters[300]
-			255, //parameters[301]
-			255, //parameters[302]
-			255, //parameters[303]
-			255, //parameters[304]
-			255, //parameters[305]
-			255, //parameters[306]
-			255, //parameters[307]
-			255, //parameters[308]
-			255, //parameters[309]
-			255, //parameters[310]
+			120, //parameters[272]Forward Light R
+			120, //parameters[273]Forward Light G
+			120, //parameters[274]Forward Light B
+			120, //parameters[275]Up Light R
+			120, //parameters[276]Up Light G
+			120, //parameters[277]Up Light B
+			120, //parameters[278]Down Light R
+			120, //parameters[279]Down Light G
+			120, //parameters[280]Down Light B
+			120, //parameters[281]Forward Heavy R
+			120, //parameters[282]Forward Heavy G
+			120, //parameters[283]Forward Heavy B
+			120, //parameters[284]Up Heavy R
+			120, //parameters[285]Up Heavy G
+			120, //parameters[286]Up Heavy B
+			120, //parameters[287]Down Heavy R
+			120, //parameters[288]Down Heavy G
+			120, //parameters[289]Down Heavy B
+			120, //parameters[290]Forward Aerial R
+			120, //parameters[291]Forward Aerial G
+			120, //parameters[292]Forward Aerial B
+			120, //parameters[293]Back Aerial R
+			120, //parameters[294]Back Aerial G
+			120, //parameters[295]Back Aerial B
+			120, //parameters[296]Up Aerial R
+			120, //parameters[297]Up Aerial G
+			120, //parameters[298]Up Aerial B
+			120, //parameters[299]Down Aerial R
+			120, //parameters[300]Down Aerial G
+			120, //parameters[301]Down Aerial B
+			120, //parameters[302]Foward Special R
+			120, //parameters[303]Foward Special G
+			120, //parameters[304]Foward Special B
+			120, //parameters[305]Up Special R
+			120, //parameters[306]Up Special G
+			120, //parameters[307]Up Special B
+			120, //parameters[308]Down Special R
+			120, //parameters[309]Down Special G
+			120, //parameters[310]Down Special B
 		},
 		//Troll
 		{
@@ -2346,42 +2352,42 @@ private:
 			0, //parameters[272]Forward Light R
 			0, //parameters[273]Forward Light G
 			0, //parameters[274]Forward Light B
-			255, //parameters[275]
-			255, //parameters[276]
-			255, //parameters[277]
-			255, //parameters[278]
-			255, //parameters[279]
-			255, //parameters[280]
-			255, //parameters[281]
-			255, //parameters[282]
-			255, //parameters[283]
-			255, //parameters[284]
-			255, //parameters[285]
-			255, //parameters[286]
-			255, //parameters[287]
-			255, //parameters[288]
-			255, //parameters[289]
-			0, //parameters[290]
-			255, //parameters[291]
-			255, //parameters[292]
-			255, //parameters[293]
-			255, //parameters[294]
-			255, //parameters[295]
-			255, //parameters[296]
-			255, //parameters[297]
-			255, //parameters[298]
-			255, //parameters[299]
-			255, //parameters[300]
-			255, //parameters[301]
-			255, //parameters[302]
-			255, //parameters[303]
-			255, //parameters[304]
-			255, //parameters[305]
-			255, //parameters[306]
-			255, //parameters[307]
-			255, //parameters[308]
-			255, //parameters[309]
-			255 //parameters[310]
+			255, //parameters[275]Up Light R
+			255, //parameters[276]Up Light G
+			255, //parameters[277]Up Light B
+			255, //parameters[278]Down Light R
+			255, //parameters[279]Down Light G
+			255, //parameters[280]Down Light B
+			255, //parameters[281]Forward Heavy R
+			255, //parameters[282]Forward Heavy G
+			255, //parameters[283]Forward Heavy B
+			255, //parameters[284]Up Heavy R
+			255, //parameters[285]Up Heavy G
+			255, //parameters[286]Up Heavy B
+			255, //parameters[287]Down Heavy R
+			255, //parameters[288]Down Heavy G
+			255, //parameters[289]Down Heavy B
+			0, //parameters[290]Forward Aerial R
+			255, //parameters[291]Forward Aerial G
+			255, //parameters[292]Forward Aerial B
+			255, //parameters[293]Back Aerial R
+			255, //parameters[294]Back Aerial G
+			255, //parameters[295]Back Aerial B
+			255, //parameters[296]Up Aerial R
+			255, //parameters[297]Up Aerial G
+			255, //parameters[298]Up Aerial B
+			255, //parameters[299]Down Aerial R
+			255, //parameters[300]Down Aerial G
+			255, //parameters[301]Down Aerial B
+			255, //parameters[302]Foward Special R
+			255, //parameters[303]Foward Special G
+			255, //parameters[304]Foward Special B
+			255, //parameters[305]Up Special R
+			255, //parameters[306]Up Special G
+			255, //parameters[307]Up Special B
+			255, //parameters[308]Down Special R
+			255, //parameters[309]Down Special G
+			255 //parameters[310]Down Special B
 		},
 		//Big B
 		{
@@ -2671,44 +2677,49 @@ private:
 			1, //parameters[270] Is Player Attached To It
 			0, //parameters[271]Down Special Disappear On Hit    
 			255, //parameters[272]Forward Light R
-			255, //parameters[273]Forward Light G
-			255, //parameters[274]Forward Light B
-			255, //parameters[275]
-			255, //parameters[276]
-			255, //parameters[277]
-			255, //parameters[278]
-			255, //parameters[279]
-			255, //parameters[280]
-			255, //parameters[281]
-			255, //parameters[282]
-			255, //parameters[283]
-			255, //parameters[284]
-			255, //parameters[285]
-			255, //parameters[286]
-			255, //parameters[287]
-			255, //parameters[288]
-			255, //parameters[289]
-			255, //parameters[290]
-			255, //parameters[291]
-			255, //parameters[292]
-			255, //parameters[293]
-			255, //parameters[294]
-			255, //parameters[295]
-			255, //parameters[296]
-			255, //parameters[297]
-			255, //parameters[298]
-			255, //parameters[299]
-			255, //parameters[300]
-			255, //parameters[301]
-			255, //parameters[302]
-			255, //parameters[303]
-			255, //parameters[304]
-			255, //parameters[305]
-			255, //parameters[306]
-			255, //parameters[307]
-			255, //parameters[308]
-			255, //parameters[309]
-			255 //parameters[310]  
+			180, //parameters[273]Forward Light G
+			130, //parameters[274]Forward Light B
+			255, //parameters[275]Up Light R
+			180, //parameters[276]Up Light G
+			130, //parameters[277]Up Light B
+			130, //parameters[278]Down Light R
+			180, //parameters[279]Down Light G
+			130, //parameters[280]Down Light B
+			255, //parameters[281]Forward Heavy R
+			180, //parameters[282]Forward Heavy G
+			130, //parameters[283]Forward Heavy B
+			255, //parameters[284]Up Heavy R
+			180, //parameters[285]Up Heavy G
+			130, //parameters[286]Up Heavy B
+			255, //parameters[287]Down Heavy R
+			180, //parameters[288]Down Heavy G
+			130, //parameters[289]Down Heavy B
+			255, //parameters[290]Forward Aerial R
+			180, //parameters[291]Forward Aerial G
+			130, //parameters[292]Forward Aerial B
+			255, //parameters[293]Back Aerial R
+			180, //parameters[294]Back Aerial G
+			130, //parameters[295]Back Aerial B
+			255, //parameters[296]Up Aerial R
+			180, //parameters[297]Up Aerial G
+			130, //parameters[298]Up Aerial B
+			255, //parameters[299]Down Aerial R
+			180, //parameters[300]Down Aerial G
+			130, //parameters[301]Down Aerial B
+			255, //parameters[302]Foward Special R
+			180, //parameters[303]Foward Special G
+			130, //parameters[304]Foward Special B
+			255, //parameters[305]Up Special R
+			180, //parameters[306]Up Special G
+			130, //parameters[307]Up Special B
+			255, //parameters[308]Down Special R
+			180, //parameters[309]Down Special G
+			130 //parameters[310]Down Special B  
+		},
+		//Random
+		{
+			36, //Width
+			88 //Height
 		}
 	};
 };

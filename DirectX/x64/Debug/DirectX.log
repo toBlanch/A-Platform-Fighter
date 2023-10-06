@@ -1,855 +1,1514 @@
-﻿  Game.cpp
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(108,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+﻿  Character.cpp
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(114,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(166,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(172,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(292,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(298,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(313,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(319,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(354,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(360,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(486,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(492,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(515,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(521,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(599,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(605,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(640,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(646,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(641,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(647,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(682,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(688,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(703,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(709,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(704,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(710,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(757,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(763,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(760,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(766,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(761,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(767,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(763,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(769,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(821,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(827,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(840,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(846,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(863,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(869,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(884,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(890,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(905,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(911,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(988,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(994,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1009,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1015,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1030,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1036,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1090,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1096,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1142,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1148,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1169,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1175,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1189,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1195,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1190,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1196,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1209,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1215,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1232,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1238,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1253,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1259,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1274,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1280,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1295,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1301,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1412,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1418,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1415,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1421,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1417,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1423,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1427,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1433,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1432,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1438,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1433,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1439,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1453,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1459,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1478,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1484,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1537,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1543,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1558,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1564,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1579,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1585,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1599,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1605,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1600,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1606,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1662,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1668,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1663,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1669,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1744,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1750,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1758,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1764,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1760,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1766,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1781,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1787,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1821,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1827,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1928,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1934,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1946,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1952,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1969,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1975,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1989,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1995,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2012,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2018,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2071,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2077,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2087,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2093,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2129,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2135,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2171,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2177,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2192,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2198,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2213,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2219,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2234,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2240,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2255,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2261,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2276,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2282,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2317,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2323,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2398,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2404,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2414,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2420,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2477,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2483,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2540,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2546,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2561,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2567,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2602,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2608,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2603,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2609,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2622,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2628,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2624,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2630,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(164,28): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(173,28): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(243,260): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(243,246): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(243,175): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(243,97): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(243,86): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(243,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(243,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(253,188): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(253,158): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(253,128): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(253,99): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(258,188): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(258,158): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(258,128): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(258,99): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(273,43): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(357,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(357,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(359,88): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(359,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(363,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(363,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(365,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(365,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(369,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(369,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(371,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(371,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(389,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(389,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(389,30): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(389,21): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(419,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(419,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(422,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(422,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(425,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(425,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(429,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(429,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(432,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(432,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(435,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(435,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(441,148): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(441,130): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(441,112): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(441,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(441,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(441,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(441,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(444,148): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(444,130): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(444,112): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(444,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(444,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(444,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(444,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Graphics.cpp
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(161,17): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(165,9): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(185,369): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(185,344): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(185,318): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(189,401): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(189,374): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(189,346): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(193,449): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(193,419): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(193,388): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(210,337): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(210,314): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(210,290): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(214,369): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(214,344): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(214,318): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(218,417): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(218,389): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(218,360): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(235,337): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(235,314): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(235,290): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(239,369): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(239,344): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(239,318): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(243,417): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(243,389): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(243,360): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(260,353): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(260,329): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(260,304): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(270,385): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(270,359): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(270,332): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(274,385): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(274,359): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(274,332): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(278,433): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(278,404): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(278,374): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(310,22): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(311,32): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(394,12): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(395,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(460,31): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(499,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(500,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(504,31): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(510,47): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(531,42): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(552,44): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(573,47): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(594,42): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(615,45): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(636,49): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(657,46): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(678,44): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(699,46): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(720,50): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(741,45): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(762,47): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(778,32): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(779,32): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(780,32): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(781,27): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(782,27): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(783,27): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(784,29): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(785,29): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(786,29): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(787,32): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(788,32): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(789,32): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(790,27): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(791,27): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(792,27): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(793,29): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(794,29): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(795,29): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(796,33): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(797,33): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(798,33): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(799,30): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(800,30): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(801,30): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(802,28): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(803,28): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(804,28): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(805,30): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(806,30): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(807,30): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(808,34): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(809,34): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(810,34): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(811,29): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(812,29): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(813,29): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(814,31): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(815,31): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(816,31): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(825,23): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Character.cpp(853,10): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Game.cpp
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(114,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(172,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(298,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(319,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(360,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(492,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(521,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(605,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(646,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(647,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(688,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(709,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(710,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(763,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(766,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(767,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(769,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(827,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(846,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(869,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(890,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(911,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(994,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1015,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1036,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1096,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1148,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1175,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1195,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1196,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1215,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1238,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1259,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1280,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1301,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1418,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1421,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1423,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1433,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1438,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1439,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1459,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1484,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1543,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1564,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1585,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1605,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1606,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1668,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1669,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1750,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1764,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1766,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1787,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1827,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1934,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1952,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1975,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1995,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2018,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2077,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2093,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2135,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2177,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2198,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2219,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2240,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2261,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2282,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2323,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2404,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2420,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2483,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2546,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2567,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2608,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2609,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2628,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2630,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(114,45): warning C4805: '!=': unsafe mix of type 'SHORT' and type 'bool' in operation
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(202,28): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(211,28): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(283,260): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(283,246): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(283,175): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(283,97): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(283,86): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(283,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(283,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(293,188): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(293,158): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(293,128): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(293,99): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(298,188): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(298,158): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(298,128): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(298,99): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(313,43): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(400,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(400,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(402,88): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(402,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(406,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(406,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(408,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(408,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(412,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(412,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(414,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(414,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(432,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(432,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(432,30): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(432,21): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(462,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(462,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(465,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(465,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(468,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(468,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(472,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(472,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(475,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(475,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(478,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(478,29): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(484,148): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(484,130): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(484,112): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(484,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(484,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(484,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(484,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(487,148): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(487,130): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(487,112): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(487,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(487,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(487,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.cpp(487,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   main.cpp
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(108,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(114,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(166,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(172,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(292,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(298,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(313,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(319,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(354,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(360,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(486,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(492,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(515,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(521,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(599,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(605,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(640,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(646,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(641,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(647,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(682,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(688,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(703,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(709,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(704,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(710,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(757,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(763,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(760,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(766,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(761,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(767,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(763,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(769,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(821,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(827,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(840,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(846,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(863,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(869,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(884,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(890,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(905,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(911,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(988,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(994,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1009,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1015,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1030,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1036,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1090,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1096,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1142,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1148,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1169,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1175,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1189,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1195,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1190,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1196,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1209,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1215,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1232,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1238,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1253,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1259,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1274,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1280,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1295,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1301,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1412,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1418,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1415,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1421,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1417,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1423,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1427,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1433,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1432,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1438,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1433,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1439,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1453,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1459,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1478,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1484,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1537,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1543,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1558,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1564,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1579,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1585,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1599,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1605,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1600,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1606,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1662,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1668,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1663,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1669,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1744,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1750,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1758,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1764,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1760,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1766,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1781,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1787,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1821,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1827,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1928,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1934,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1946,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1952,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1969,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1975,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1989,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(1995,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2012,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2018,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2071,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2077,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2087,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2093,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2129,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2135,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2171,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2177,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2192,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2198,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2213,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2219,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2234,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2240,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2255,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2261,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2276,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2282,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2317,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2323,5): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2398,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2404,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2414,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2420,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2477,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2483,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2540,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2546,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2561,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2567,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2602,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2608,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2603,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2609,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2622,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2628,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
-C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2624,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
+C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\Game.h(2630,4): warning C4305: 'initializing': truncation from 'double' to '_Ty'
           with
           [
               _Ty=float
           ]
   Generating Code...
-  DirectX.vcxproj -> C:\Users\facts\OneDrive\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\x64\Debug\DirectX.exe
+  DirectX.vcxproj -> C:\Users\facts\Documents\GitHub\Blanchard-Jamie-Project-Result\DirectX\x64\Debug\DirectX.exe
