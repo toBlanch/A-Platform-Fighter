@@ -64,7 +64,7 @@ void Move::CheckStatus(float xReferral, float yReferral, int stageX0, int stageY
 	}
 }
 
-void Move::Activate(int playerWidthReferral, int playerHeightReferral, bool isFacingRight, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float accelerationxReferral, float accelerationyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool isPlayerAttachedToItReferral, bool disappearOnHitReferral, int rReferral, int gReferral, int bReferral, int player2WidthReferral, int player2HeightReferral)
+void Move::Activate(int playerWidthReferral, int playerHeightReferral, bool isFacingRight, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float accelerationxReferral, float accelerationyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool isPlayerAttachedToItReferral, bool disappearOnHitReferral, int rReferral, int gReferral, int bReferral)
 {
 	//Refer variables 
 	hasHit = false;
@@ -99,21 +99,6 @@ void Move::Activate(int playerWidthReferral, int playerHeightReferral, bool isFa
 	r = rReferral;
 	g = gReferral;
 	b = bReferral;
-
-	xCoordinates[0] = 0;
-	xCoordinates[1] = width; //Sets the maximum possible coordinate to every value that can obtain it
-	xCoordinates[2] = width; //Sets the maximum possible coordinate to every value that can obtain it
-	xCoordinates[3] = width; //Sets the maximum possible coordinate to every value that can obtain it
-	for (int i = 1; i * player2WidthReferral < width; i++) { //For every coordinate that fits inside the player's width
-		xCoordinates[i] = i * player2WidthReferral; //Add that coordinate to an array
-	}
-	yCoordinates[0] = 0;
-	yCoordinates[1] = height; //Sets the maximum possible coordinate to every value that can obtain it
-	yCoordinates[2] = height; //Sets the maximum possible coordinate to every value that can obtain it
-	yCoordinates[3] = height; //Sets the maximum possible coordinate to every value that can obtain it
-	for (int i = 1; i * player2HeightReferral < height; i++) { //For every coordinate that fits inside the player's height
-		yCoordinates[i] = i * player2HeightReferral; //Add that coordinate to an array
-	}
 }
 
 bool Move::Draw()
@@ -134,10 +119,10 @@ bool Move::IsMoveColliding(float Player2x, float Player2y, int Player2width, int
 	if (!hasHit && activeDuration >= 0 && startUpDuration < 0) { //If the move has an active hitbox
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				if (x + additionalX + xCoordinates[i] >= Player2x && //If the X coordinate is greater than the player's
-					x + additionalX + xCoordinates[i] <= Player2x + Player2width && //If the x coordinate is less than the player's plus their width
-					y + additionalY + yCoordinates[j] >= Player2y && //If the Y coordniate is greater than the player's
-					y + additionalY + yCoordinates[j] <= Player2y + Player2height //If the y coordinate is les than the player's plus their height
+				if (x + additionalX + width/4*i >= Player2x && //If the X coordinate is greater than the player's
+					x + additionalX + width/4*i <= Player2x + Player2width && //If the x coordinate is less than the player's plus their width
+					y + additionalY + height/4*j >= Player2y && //If the Y coordniate is greater than the player's
+					y + additionalY + height/4*j <= Player2y + Player2height //If the y coordinate is les than the player's plus their height
 					) { //If inside the player's coordinates
 					hasHit = true; //Stop the fucntion from running again
 					if (disappearOnHit) {

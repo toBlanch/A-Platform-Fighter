@@ -56,8 +56,10 @@ private:
 	bool pHeld = false;
 	bool spaceHeld = false;
 	bool tabHeld = false;
+	bool backspaceHeld = false;
 	bool clickHeld = GetKeyState(0x01);
-	bool AISelected = false;
+	bool p1AISelected = false;
+	bool p2AISelected = false;
 	int numbertocall;
 
 	POINT clickPosition;
@@ -382,7 +384,7 @@ private:
 			5, //parameters[265]Down Special Damage
 			10, //parameters[266]Down Special Start Up Duraiton
 			300, //parameters[267]Down Special Active Duration
-			20, //parameters[268]Down Special End Lag Duration
+			0, //parameters[268]Down Special End Lag Duration
 			0, //parameters[269]Down Special Is Attached To Player
 			1, //parameters[270] Is Player Attached To It
 			0, //parameters[271]Down Special Disappear On Hit    

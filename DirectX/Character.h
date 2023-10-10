@@ -4,14 +4,14 @@
 
 class Character {
 public:
-	void UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int player2Width, int player2Height, int stageX0, int stageY0, int stageX1, int stageY1);
+	void UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1);
 	bool IsOnStage(int stageX0, int stageY0, int stageX1, int stageY1);
 	bool ClippingIntoStageFromLeft(int stageX0, int stageY0, int stageX1, int stageY1);
 	bool ClippingIntoStageFromRight(int stageX0, int stageY0, int stageX1, int stageY1);
 	bool ClippingIntoStageFromBottom(int stageX0, int stageY0, int stageX1, int stageY1);
 	bool IsAlive(int screenWidth, int screenHeight, int leniancy);
 	bool MoveDraw(int move);
-	bool IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height);
+	bool IsMoveColliding(float player2x, float player2y, int Player2Width, int Player2Height);
 	int MoveX0(int move);
 	int MoveY0(int move);
 	int MoveX1(int move);

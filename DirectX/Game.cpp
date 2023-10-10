@@ -183,16 +183,22 @@ void Game::StartMenu()
 			player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
 		}
 
-		if (((gfx->ifFocus() && GetKeyState(0x09) & 0x8000) ||
-			(clickPosition.x >= 1750 && clickPosition.x <= 1850 && clickPosition.y >= 100 && clickPosition.y <= 130)) && !tabHeld) {
-			AISelected = !AISelected;
+		if (((gfx->ifFocus() && GetKeyState(0x09) & 0x8000) || //Tab
+			(clickPosition.x >= 70 && clickPosition.x <= 170 && clickPosition.y >= 100 && clickPosition.y <= 130)) && !tabHeld) {
+			p1AISelected = !p1AISelected;
 		}
+		if (((gfx->ifFocus() && GetKeyState(0x08) & 0x8000) || //Backsapce
+			(clickPosition.x >= 1750 && clickPosition.x <= 1850 && clickPosition.y >= 100 && clickPosition.y <= 130)) && !backspaceHeld) {
+			p2AISelected = !p2AISelected;
+		}
+
 
 		qHeld = (gfx->ifFocus() && GetKeyState(0x51) & 0x8000) || (clickPosition.x >= 350 && clickPosition.x <= 440 && clickPosition.y >= 115 && clickPosition.y <= 210); //If q is held or the button is clicked set it to true, otherwise set it to false
 		eHeld = (gfx->ifFocus() && GetKeyState(0x45) & 0x8000) || (clickPosition.x >= 655 && clickPosition.x <= 745 && clickPosition.y >= 115 && clickPosition.y <= 210); //If e is held or the button is clicked set it to true, otherwise set it to false
 		iHeld = (gfx->ifFocus() && GetKeyState(0x49) & 0x8000) || (clickPosition.x >= 1320 && clickPosition.x <= 1410 && clickPosition.y >= 115 && clickPosition.y <= 210); //If i is held or the button is clicked set it to true, otherwise set it to false
 		pHeld = (gfx->ifFocus() && GetKeyState(0x50) & 0x8000) || (clickPosition.x >= 1625 && clickPosition.x <= 1715 && clickPosition.y >= 115 && clickPosition.y <= 210); //If p is held or the button is clicked set it to true, otherwise set it to false
-		tabHeld = (gfx->ifFocus() && GetKeyState(0x09) & 0x8000) || (clickPosition.x >= 1750 && clickPosition.x <= 1850 && clickPosition.y >= 100 && clickPosition.y <= 130); //If tab is held or the button is clicked set it to true, otherwise set it to false
+		tabHeld = (gfx->ifFocus() && GetKeyState(0x09) & 0x8000) || (clickPosition.x >= 70 && clickPosition.x <= 170 && clickPosition.y >= 100 && clickPosition.y <= 130); //If tab is held or the button is clicked set it to true, otherwise set it to false
+		backspaceHeld = (gfx->ifFocus() && GetKeyState(0x08) & 0x8000) || (clickPosition.x >= 1750 && clickPosition.x <= 1850 && clickPosition.y >= 100 && clickPosition.y <= 130); //If backspace is held or the button is clicked set it to true, otherwise set it to false
 
 		if (((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000) && !enterOrEscapeHeld) ||
 			(clickPosition.x >= 760 && clickPosition.x <= 1160 && clickPosition.y >= 490 && clickPosition.y <= 660)) { //If the game is starting
@@ -201,6 +207,8 @@ void Game::StartMenu()
 			if (player1CharacterID == 8) {
 				player1CharacterID = 1 + (float)randomDist(rng) * 6.9f / 39;
 				player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
+				player1Desc -> ~SpriteSheet();
+				player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s description
 			}
 			player1Move = new SpriteSheet(moveParameters[player1CharacterID], gfx); //Set player 1s move animation
 			player1Hit = new SpriteSheet(hitParameters[player1CharacterID], gfx); //Set player 1s hit animation
@@ -210,6 +218,8 @@ void Game::StartMenu()
 			if (player2CharacterID == 8) {
 				player2CharacterID = 1 + (float)randomDist(rng) * 6.9f / 39;
 				player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
+				player2Desc -> ~SpriteSheet();
+				player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
 			}
 			player2Move = new SpriteSheet(moveParameters[player2CharacterID], gfx); //Set player 1s move animation
 			player2Hit = new SpriteSheet(hitParameters[player2CharacterID], gfx); //Set player 1s hit animation
@@ -278,14 +288,22 @@ void Game::GameLoop()
 		}
 
 		//Update models
-		Player1.UpdateCharacter(gfx->ifFocus() && GetKeyState(0x41) & 0x8000, gfx->ifFocus() && GetKeyState(0x44) & 0x8000, gfx->ifFocus() && GetKeyState(0x53) & 0x8000, gfx->ifFocus() && GetKeyState(0x57) & 0x8000, gfx->ifFocus() && GetKeyState(0x47) & 0x8000, gfx->ifFocus() && GetKeyState(0x46) & 0x8000, gfx->ifFocus() && GetKeyState(0x54) & 0x8000, gfx->ifFocus() && GetKeyState(0x48) & 0x8000, gfx->ifFocus() && GetKeyState(0xA0) & 0x8000, Player2.width, Player2.height, stageX0, stageY0, stageX1, stageY1);
-		if (AISelected) {
-			ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.vy, Player2.doubleJump, stageX0, stageY0, stageX1, stageY1, randomDist(rng), Player1.playerPercentage);
-			Player2.UpdateCharacter(ArtifialFriend.left, ArtifialFriend.right, ArtifialFriend.down, ArtifialFriend.up, ArtifialFriend.jump, ArtifialFriend.light, ArtifialFriend.heavy, ArtifialFriend.special, ArtifialFriend.dodge, Player1.width, Player1.height, stageX0, stageY0, stageX1, stageY1);
+		if (p1AISelected) {
+			ArtifialFriend.Update(Player2.x, Player2.y, Player2.width, Player2.height, Player1.x, Player1.y, Player1.vx, Player1.vy, Player1.width, Player1.height, Player1.invincibilityCooldown == 0, Player1.doubleJump, stageX0, stageY0, stageX1, stageY1, randomDist(rng), Player2.playerPercentage);
+			Player1.UpdateCharacter(ArtifialFriend.left, ArtifialFriend.right, ArtifialFriend.down, ArtifialFriend.up, ArtifialFriend.jump, ArtifialFriend.light, ArtifialFriend.heavy, ArtifialFriend.special, ArtifialFriend.dodge, stageX0, stageY0, stageX1, stageY1);
 		}
 		else {
-			Player2.UpdateCharacter(gfx->ifFocus() && GetKeyState(0x25) & 0x8000, gfx->ifFocus() && GetKeyState(0x27) & 0x8000, gfx->ifFocus() && GetKeyState(0x28) & 0x8000, gfx->ifFocus() && GetKeyState(0x26) & 0x8000, gfx->ifFocus() && GetKeyState(0x4C) & 0x8000, gfx->ifFocus() && GetKeyState(0x4B) & 0x8000, gfx->ifFocus() && GetKeyState(0x4F) & 0x8000, gfx->ifFocus() && GetKeyState(0xBA) & 0x8000, gfx->ifFocus() && GetKeyState(0x4E) & 0x8000, Player1.width, Player1.height, stageX0, stageY0, stageX1, stageY1);
+			Player1.UpdateCharacter(gfx->ifFocus() && GetKeyState(0x41) & 0x8000, gfx->ifFocus() && GetKeyState(0x44) & 0x8000, gfx->ifFocus() && GetKeyState(0x53) & 0x8000, gfx->ifFocus() && GetKeyState(0x57) & 0x8000, gfx->ifFocus() && GetKeyState(0x47) & 0x8000, gfx->ifFocus() && GetKeyState(0x46) & 0x8000, gfx->ifFocus() && GetKeyState(0x54) & 0x8000, gfx->ifFocus() && GetKeyState(0x48) & 0x8000, gfx->ifFocus() && GetKeyState(0xA0) & 0x8000, stageX0, stageY0, stageX1, stageY1);
 		}
+		
+		if (p2AISelected) {
+			ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.vx, Player2.vy, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.doubleJump, stageX0, stageY0, stageX1, stageY1, randomDist(rng), Player1.playerPercentage);
+			Player2.UpdateCharacter(ArtifialFriend.left, ArtifialFriend.right, ArtifialFriend.down, ArtifialFriend.up, ArtifialFriend.jump, ArtifialFriend.light, ArtifialFriend.heavy, ArtifialFriend.special, ArtifialFriend.dodge, stageX0, stageY0, stageX1, stageY1);
+		}
+		else {
+			Player2.UpdateCharacter(gfx->ifFocus() && GetKeyState(0x25) & 0x8000, gfx->ifFocus() && GetKeyState(0x27) & 0x8000, gfx->ifFocus() && GetKeyState(0x28) & 0x8000, gfx->ifFocus() && GetKeyState(0x26) & 0x8000, gfx->ifFocus() && GetKeyState(0x4C) & 0x8000, gfx->ifFocus() && GetKeyState(0x4B) & 0x8000, gfx->ifFocus() && GetKeyState(0x4F) & 0x8000, gfx->ifFocus() && GetKeyState(0xBA) & 0x8000, gfx->ifFocus() && GetKeyState(0x4E) & 0x8000, stageX0, stageY0, stageX1, stageY1);
+		}
+
 		if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
 			std::string soundString = "set hit speed " + std::to_string(2100 - 100 * (int)Player1.MoveThatHitDamage());
 			mciSendStringA(soundString.c_str(), NULL, 0, NULL);
@@ -375,7 +393,10 @@ void Game::ComposeFrame()
 	else if (startMenu) {
 		startVisual->Draw(0, 0, false); //Displays the visual for the start menu
 
-		if (AISelected) {
+		if (p1AISelected) {
+			aiWarning->Draw(70, 100, false);
+		}
+		if (p2AISelected) {
 			aiWarning->Draw(1750, 100, false);
 		}
 
@@ -447,7 +468,10 @@ void Game::ComposeFrame()
 		gfx->DrawRectFill(1920 / 4 * 3 + 64, 939, 1920 * 3 / 4 + 66, 941, 255, 255, 255, 1); //Decimal point
 		numbers[(int)(Player2.playerPercentage * 10) % 10]->Draw(1920 / 4 * 3 + 70, 900, false); //Player 2 percent
 
-		if (AISelected) {
+		if (p1AISelected) {
+			aiWarning->Draw(1920 / 4, 980, false);
+		}
+		if (p2AISelected) {
 			aiWarning->Draw(1920 / 4 * 3, 980, false);
 		}
 

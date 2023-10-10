@@ -1,6 +1,6 @@
 #include "AI.h"
 
-void AI::Update(int player2x, int player2y, int player2Width, int player2Height, int x, int y, int width, int height, bool canDodge, int vy, int doubleJump, int stageX0, int stageY0, int stageX1, int stageY1, float moveType, int opponentPercent)
+void AI::Update(int player2x, int player2y, int player2Width, int player2Height, int x, int y, int vx, int vy, int width, int height, bool canDodge, int doubleJump, int stageX0, int stageY0, int stageX1, int stageY1, float moveType, int opponentPercent)
 {
 	//Reset all inputs
 	left = false;
@@ -13,7 +13,7 @@ void AI::Update(int player2x, int player2y, int player2Width, int player2Height,
 	special = false;
 	dodge = false;
 
-	if (!ShouldUseMove(player2x, player2y, player2Width, player2Height, x, y, width, height, doubleJump, moveType, stageX0, stageY0, stageX1, stageY1, opponentPercent) && !(y > stageY0 || x < stageX0 || x > stageX1)) {
+	if (!ShouldUseMove(player2x, player2y, player2Width, player2Height, x, y, vx, width, height, doubleJump, moveType, stageX0, stageY0, stageX1, stageY1, opponentPercent) && !(y > stageY0 || x < stageX0 || x > stageX1)) {
 		GeneralMovement(player2x, player2y, x, y, vy, doubleJump, moveType);
 	}
 	if (y > stageY0 || x < stageX0 || x > stageX1) {
@@ -45,7 +45,7 @@ void AI::Recover(int x, int y, int width, int vy, bool canDodge, int doubleJump,
 			up = true;
 			dodge = true;
 		}
-		else if (y > stageY0 && doubleJump == 0 && vy >= 0) {
+		else if (y > stageY0 && vy >= 0) {
 			up = true;
 			special = true;
 		}
@@ -83,23 +83,9 @@ void AI::Recover(int x, int y, int width, int vy, bool canDodge, int doubleJump,
 	}
 }
 
-bool AI::ShouldUseMove(int player2x, int player2y, int player2Width, int player2Height, int x, int y, int width, int height, int doubleJump, float moveType, int stageX0, int stageY0, int stageX1, int stageY1, int opponentPercent)
+bool AI::ShouldUseMove(int player2x, int player2y, int player2Width, int player2Height, int x, int y, int vx, int width, int height, int doubleJump, float moveType, int stageX0, int stageY0, int stageX1, int stageY1, int opponentPercent)
 {
-	if (((x > stageX0 && x < stageX1) || (y < stageY0 && doubleJump > 0)) && x - 50 < player2x + player2Width && x + width + 50 > player2x && y - 50 < player2y + player2Height && y + height + 50 > player2y) {
-		moveType = moveType * opponentPercent / 50;
-		if (moveType < 1 && x>stageX0 + 200 && x < stageX1 - 200) {
-			dodge = true;
-		}
-		else if (moveType < 20) {
-			light = true;
-		}
-		else if (moveType < 25 && x>stageX0+200 && x<stageX1-200) {
-			special = true;
-		}
-		else {
-			heavy = true;
-		}
-
+	if (x > stageX0 && x < stageX1 && (x > stageX0 + 20 || vx >= 0) && (x < stageX1 - 20 || vx <= 0) && y <= stageY0 && doubleJump > 0 && x - 30 < player2x + player2Width && x + width + 30 > player2x && y - 50 < player2y + player2Height && y + height + 50 > player2y) {
 		if (x - 50 < player2x + width && x > player2x) {
 			left = true;
 		}
@@ -118,6 +104,21 @@ bool AI::ShouldUseMove(int player2x, int player2y, int player2Width, int player2
 		else {
 			down = true;
 		}
+
+		if (moveType < 4 && x>stageX0 + 200 && x < stageX1 - 200) {
+			dodge = true;
+		}
+		moveType = moveType * (opponentPercent+1) / 50;
+		if (moveType < 20) {
+			light = true;
+		}
+		else if (moveType < 25 && ((x>stageX0 + 200 && x < stageX1 - 200)||(!left&&!right))) {
+			special = true;
+		}
+		else {
+			heavy = true;
+		}
+
 		return true;
 	}
 	return false;
