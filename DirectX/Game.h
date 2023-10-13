@@ -361,7 +361,7 @@ private:
 			0, //parameters[243]Acceleration x
 			-0.1, //parameters[244]Acceleration y
 			5, //parameters[245]Up Special Damage
-			10, //parameters[246]Up Special Start Up Duraiton
+			5, //parameters[246]Up Special Start Up Duraiton
 			50, //parameters[247]Up Special Active Duration
 			30, //parameters[248]Up Special End Lag Duration
 			0, //parameters[249]Up Special Is Attached To Player
@@ -689,7 +689,7 @@ private:
 			0, //parameters[243]Acceleration x
 			-0.3, //parameters[244]Acceleration y
 			5, //parameters[245]Up Special Damage
-			10, //parameters[246]Up Special Start Up Duraiton
+			5, //parameters[246]Up Special Start Up Duraiton
 			43, //parameters[247]Up Special Active Duration
 			40, //parameters[248]Up Special End Lag Duration
 			0, //parameters[249]Up Special Is Attached To Player
@@ -1016,7 +1016,7 @@ private:
 			0, //parameters[243]Acceleration x
 			-0.2, //parameters[244]Acceleration y
 			5, //parameters[245]Up Special Damage
-			10, //parameters[246]Up Special Start Up Duraiton
+			5, //parameters[246]Up Special Start Up Duraiton
 			80, //parameters[247]Up Special Active Duration
 			50, //parameters[248]Up Special End Lag Duration
 			0, //parameters[249]Up Special Is Attached To Player
@@ -1343,7 +1343,7 @@ private:
 			0, //parameters[243]Acceleration x
 			0, //parameters[244]Acceleration y
 			5, //parameters[245]Up Special Damage
-			10, //parameters[246]Up Special Start Up Duraiton
+			5, //parameters[246]Up Special Start Up Duraiton
 			10, //parameters[247]Up Special Active Duration
 			10, //parameters[248]Up Special End Lag Duration
 			0, //parameters[249]Up Special Is Attached To Player
@@ -1670,7 +1670,7 @@ private:
 			-0.1, //parameters[243]Acceleration x
 			-0.3, //parameters[244]Acceleration y
 			5, //parameters[245]Up Special Damage
-			10, //parameters[246]Up Special Start Up Duraiton
+			5, //parameters[246]Up Special Start Up Duraiton
 			50, //parameters[247]Up Special Active Duration
 			10, //parameters[248]Up Special End Lag Duration
 			0, //parameters[249]Up Special Is Attached To Player
@@ -1997,7 +1997,7 @@ private:
 			0.02, //parameters[243]Acceleration x
 			2.5, //parameters[244]Acceleration y
 			5, //parameters[245]Up Special Damage
-			10, //parameters[246]Up Special Start Up Duraiton
+			5, //parameters[246]Up Special Start Up Duraiton
 			70, //parameters[247]Up Special Active Duration
 			50, //parameters[248]Up Special End Lag Duration
 			0, //parameters[249]Up Special Is Attached To Player
@@ -2324,7 +2324,7 @@ private:
 			0, //parameters[243]Acceleration x
 			-0.4, //parameters[244]Acceleration y
 			5, //parameters[245]Up Special Damage
-			6, //parameters[246]Up Special Start Up Duraiton
+			3, //parameters[246]Up Special Start Up Duraiton
 			17, //parameters[247]Up Special Active Duration
 			20, //parameters[248]Up Special End Lag Duration
 			0, //parameters[249]Up Special Is Attached To Player
@@ -2651,7 +2651,7 @@ private:
 			0, //parameters[243]Acceleration x
 			0, //parameters[244]Acceleration y
 			0, //parameters[245]Up Special Damage
-			10, //parameters[246]Up Special Start Up Duraiton
+			5, //parameters[246]Up Special Start Up Duraiton
 			50, //parameters[247]Up Special Active Duration
 			20, //parameters[248]Up Special End Lag Duration
 			0, //parameters[249]Up Special Is Attached To Player

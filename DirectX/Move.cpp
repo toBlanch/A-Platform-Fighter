@@ -117,8 +117,8 @@ void Move::EndMove()
 bool Move::IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height)
 {
 	if (!hasHit && activeDuration >= 0 && startUpDuration < 0) { //If the move has an active hitbox
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
+		for (int i = 0; i <= 4; i++) {
+			for (int j = 0; j <= 4; j++) {
 				if (x + additionalX + width/4*i >= Player2x && //If the X coordinate is greater than the player's
 					x + additionalX + width/4*i <= Player2x + Player2width && //If the x coordinate is less than the player's plus their width
 					y + additionalY + height/4*j >= Player2y && //If the Y coordniate is greater than the player's

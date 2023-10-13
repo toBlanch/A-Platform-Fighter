@@ -45,7 +45,7 @@ void AI::Recover(int x, int y, int width, int vy, bool canDodge, int doubleJump,
 			up = true;
 			dodge = true;
 		}
-		else if (y > stageY0 && vy >= 0) {
+		else if (vy >= 0 && y>=stageY0-100) {
 			up = true;
 			special = true;
 		}
