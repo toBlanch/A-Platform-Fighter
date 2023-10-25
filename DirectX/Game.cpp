@@ -10,6 +10,7 @@ Game::Game(Graphics* gfx)
 	this->gfx = gfx;
 
 	//Load menu sprites
+	easyModeWarning = new SpriteSheet(L"Easy Mode Warning.bmp", gfx);
 	aiWarning = new SpriteSheet(L"AI Warning.bmp", gfx);
 	creditsVisual = new SpriteSheet(L"Credits Menu.bmp", gfx);
 	startVisual = new SpriteSheet(L"Start Menu.bmp", gfx);
@@ -117,11 +118,17 @@ void Game::GameState()
 	}
 
 	if (credits) {
-		if ((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000 && !enterOrEscapeHeld) || (gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld) ||
+		if ((gfx->ifFocus() && GetKeyState(0x20) & 0x8000) ||
 			(clickPosition.x >= 0 && clickPosition.x <= 205 && clickPosition.y >= 0 && clickPosition.y <= 65)) {
-			credits = false;
-			mciSendStringA("stop Credits", NULL, 0, NULL);
-			mciSendStringA("play MainMenu from 0 repeat", NULL, 0, NULL);
+			if (!spaceHeld) {
+				credits = false;
+				mciSendStringA("stop Credits", NULL, 0, NULL);
+				mciSendStringA("play MainMenu from 0 repeat", NULL, 0, NULL);
+				spaceHeld = true;
+			}
+		}
+		else {
+			spaceHeld = false;
 		}
 	}
 	else if (startMenu) {
@@ -134,71 +141,134 @@ void Game::GameState()
 		GameLoop();
 	}
 	enterOrEscapeHeld = gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000; //If enter or escape is held set it to true, otherwise set it to false
-	spaceHeld = gfx->ifFocus() && GetKeyState(0x20) & 0x8000;
+	//spaceHeld = gfx->ifFocus() && GetKeyState(0x20) & 0x8000;
+}
+
+void Game::menuTransition()
+{
+	enterOrEscapeHeld = true;
+	qHeld = true;
+	eHeld = true;
+	iHeld = true;
+	pHeld = true;
+	spaceHeld = true;
+	tabHeld = true;
+	backspaceHeld = true;
+	clickHeld = true;
+	shiftHeld = true;
 }
 
 void Game::StartMenu()
 {
 	if ((gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld) ||
 		(clickPosition.x >= 0 && clickPosition.x <= 400 && clickPosition.y >= 980 && clickPosition.y <= 1080)) {
+		spaceHeld = true;
 		gfx->Fullscreen();
 	}
-	else if (((gfx->ifFocus() && GetKeyState(0x20) & 0x8000) ||
-		(clickPosition.x >= 1520 && clickPosition.x <= 1920 && clickPosition.y >= 980 && clickPosition.y <= 1080)) && !spaceHeld) {
-		credits = true;
-		mciSendStringA("stop MainMenu", NULL, 0, NULL);
-		mciSendStringA("play Credits from 0 repeat", NULL, 0, NULL);
+	else if ((gfx->ifFocus() && GetKeyState(0x20) & 0x8000) ||
+		(clickPosition.x >= 1520 && clickPosition.x <= 1920 && clickPosition.y >= 980 && clickPosition.y <= 1080)) {
+		if (!spaceHeld) {
+			spaceHeld = true;
+			credits = true;
+			mciSendStringA("stop MainMenu", NULL, 0, NULL);
+			mciSendStringA("play Credits from 0 repeat", NULL, 0, NULL);
+			menuTransition();
+		}
 	}
 	else {
-		if (((gfx->ifFocus() && GetKeyState(0x45) & 0x8000) ||
-			(clickPosition.x >= 655 && clickPosition.x <= 745 && clickPosition.y >= 115 && clickPosition.y <= 210)) && player1CharacterID < 8 && !eHeld) { //If Player 1 wants to increase their character ID
-			player1CharacterID++; //Increase it
-			player1Idle -> ~SpriteSheet();
-			player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
-			player1Desc -> ~SpriteSheet();
-			player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s description
+		spaceHeld = false;
+		if ((gfx->ifFocus() && GetKeyState(0x45) & 0x8000) ||
+			(clickPosition.x >= 655 && clickPosition.x <= 745 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 1 wants to increase their character ID
+			if (player1CharacterID < 8 && !eHeld) {
+				player1CharacterID++; //Increase it
+				player1Idle -> ~SpriteSheet();
+				player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
+				player1Desc -> ~SpriteSheet();
+				player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s description
+				eHeld = true;
+			}
 		}
-		if (((gfx->ifFocus() && GetKeyState(0x51) & 0x8000) ||
-			(clickPosition.x >= 350 && clickPosition.x <= 440 && clickPosition.y >= 115 && clickPosition.y <= 210)) && player1CharacterID > 0 && !qHeld) { //If Player 1 wants to decrease their character ID
-			player1CharacterID--; //Decrease it
-			player1Idle -> ~SpriteSheet();
-			player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
-			player1Desc -> ~SpriteSheet();
-			player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s description
-		}
-		if (((gfx->ifFocus() && GetKeyState(0x50) & 0x8000) ||
-			(clickPosition.x >= 1485 && clickPosition.x <= 1570 && clickPosition.y >= 115 && clickPosition.y <= 210)) && player2CharacterID < 8 && !pHeld) { //If Player 2 wants to increase their character ID
-			player2CharacterID++; //Incerase it
-			player2Idle -> ~SpriteSheet();
-			player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
-			player2Desc -> ~SpriteSheet();
-			player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
-		}
-		if (((gfx->ifFocus() && GetKeyState(0x49) & 0x8000) ||
-			(clickPosition.x >= 1175 && clickPosition.x <= 1265 && clickPosition.y >= 115 && clickPosition.y <= 210)) && player2CharacterID > 0 && !iHeld) { //If Player 2 wants to decrease their character ID
-			player2CharacterID--; //Decrease it
-			player2Idle -> ~SpriteSheet();
-			player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
-			player2Desc -> ~SpriteSheet();
-			player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
+		else {
+			eHeld = false;
 		}
 
-		if (((gfx->ifFocus() && GetKeyState(0x09) & 0x8000) || //Tab
-			(clickPosition.x >= 70 && clickPosition.x <= 170 && clickPosition.y >= 100 && clickPosition.y <= 130)) && !tabHeld) {
-			p1AISelected = !p1AISelected;
+		if ((gfx->ifFocus() && GetKeyState(0x51) & 0x8000) ||
+			(clickPosition.x >= 350 && clickPosition.x <= 440 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 1 wants to decrease their character ID
+			if (player1CharacterID > 0 && !qHeld) {
+				player1CharacterID--; //Decrease it
+				player1Idle -> ~SpriteSheet();
+				player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
+				player1Desc -> ~SpriteSheet();
+				player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s description
+				qHeld = true;
+			}
 		}
-		if (((gfx->ifFocus() && GetKeyState(0x08) & 0x8000) || //Backsapce
-			(clickPosition.x >= 1750 && clickPosition.x <= 1850 && clickPosition.y >= 100 && clickPosition.y <= 130)) && !backspaceHeld) {
-			p2AISelected = !p2AISelected;
+		else {
+			qHeld = false;
 		}
 
+		if ((gfx->ifFocus() && GetKeyState(0x50) & 0x8000) ||
+			(clickPosition.x >= 1485 && clickPosition.x <= 1570 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 2 wants to increase their character ID
+			if (player2CharacterID < 8 && !pHeld) {
+				player2CharacterID++; //Incerase it
+				player2Idle -> ~SpriteSheet();
+				player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
+				player2Desc -> ~SpriteSheet();
+				player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
+				pHeld = true;
+			}
+		}
+		else {
+			pHeld = false;
+		}
 
-		qHeld = (gfx->ifFocus() && GetKeyState(0x51) & 0x8000) || (clickPosition.x >= 350 && clickPosition.x <= 440 && clickPosition.y >= 115 && clickPosition.y <= 210); //If q is held or the button is clicked set it to true, otherwise set it to false
-		eHeld = (gfx->ifFocus() && GetKeyState(0x45) & 0x8000) || (clickPosition.x >= 655 && clickPosition.x <= 745 && clickPosition.y >= 115 && clickPosition.y <= 210); //If e is held or the button is clicked set it to true, otherwise set it to false
-		iHeld = (gfx->ifFocus() && GetKeyState(0x49) & 0x8000) || (clickPosition.x >= 1320 && clickPosition.x <= 1410 && clickPosition.y >= 115 && clickPosition.y <= 210); //If i is held or the button is clicked set it to true, otherwise set it to false
-		pHeld = (gfx->ifFocus() && GetKeyState(0x50) & 0x8000) || (clickPosition.x >= 1625 && clickPosition.x <= 1715 && clickPosition.y >= 115 && clickPosition.y <= 210); //If p is held or the button is clicked set it to true, otherwise set it to false
-		tabHeld = (gfx->ifFocus() && GetKeyState(0x09) & 0x8000) || (clickPosition.x >= 70 && clickPosition.x <= 170 && clickPosition.y >= 100 && clickPosition.y <= 130); //If tab is held or the button is clicked set it to true, otherwise set it to false
-		backspaceHeld = (gfx->ifFocus() && GetKeyState(0x08) & 0x8000) || (clickPosition.x >= 1750 && clickPosition.x <= 1850 && clickPosition.y >= 100 && clickPosition.y <= 130); //If backspace is held or the button is clicked set it to true, otherwise set it to false
+		if ((gfx->ifFocus() && GetKeyState(0x49) & 0x8000) ||
+			(clickPosition.x >= 1175 && clickPosition.x <= 1265 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 2 wants to decrease their character ID
+			if (player2CharacterID > 0 && !iHeld) {
+				player2CharacterID--; //Decrease it
+				player2Idle -> ~SpriteSheet();
+				player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
+				player2Desc -> ~SpriteSheet();
+				player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
+				iHeld = true;
+			}
+		}
+		else {
+			iHeld = false;
+		}
+
+		if ((gfx->ifFocus() && GetKeyState(0x09) & 0x8000) || //Tab
+			(clickPosition.x >= 70 && clickPosition.x <= 170 && clickPosition.y >= 100 && clickPosition.y <= 130)) {
+			if (!tabHeld) {
+				p1AISelected = !p1AISelected;
+				tabHeld = true;
+			}
+		}
+		else {
+			tabHeld = false;
+		}
+
+		if ((gfx->ifFocus() && GetKeyState(0x08) & 0x8000) || //Backsapce
+			(clickPosition.x >= 1750 && clickPosition.x <= 1850 && clickPosition.y >= 100 && clickPosition.y <= 130)) {
+			if (!backspaceHeld) {
+				p2AISelected = !p2AISelected;
+				backspaceHeld = true;
+			}
+		}
+		else {
+			backspaceHeld = false;
+		}
+
+		if ((gfx->ifFocus() && GetKeyState(0x10) & 0x8000) || //Shift
+			(clickPosition.x >= 860 && clickPosition.x <= 1060 && clickPosition.y >= 0 && clickPosition.y <= 70)) {
+			if (!shiftHeld) {
+				easyMode = !easyMode;
+				shiftHeld = true;
+			}
+		}
+		else {
+			shiftHeld = false;
+		}
 
 		if (((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000) && !enterOrEscapeHeld) ||
 			(clickPosition.x >= 760 && clickPosition.x <= 1160 && clickPosition.y >= 490 && clickPosition.y <= 660)) { //If the game is starting
@@ -323,11 +393,14 @@ void Game::GameLoop()
 
 void Game::GameStart()
 {
+	menuTransition();
 	timer = 10 * 60 * 60 - 1;
 	StartBattleTheme();
+	Player1.easyMode = easyMode;
 	Player1.x = 1920 / 4 + 100; //Set player 1s starting position
 	Player1.facingRight = true;
 	Player1.Restart();
+	Player2.easyMode = easyMode;
 	Player2.x = 1920 / 4 * 3 - Player2.width - 100; //Set player 2s starting position
 	Player2.facingRight = false;
 	Player2.Restart();
@@ -338,6 +411,7 @@ void Game::GameStart()
 
 void Game::GameEnd()
 {
+	menuTransition();
 	startMenu = true; //Enable the start menu
 	mciSendStringA("pause BattleTheme", NULL, 0, NULL);
 	mciSendStringA("close BattleTheme", NULL, 0, NULL);
@@ -400,6 +474,12 @@ void Game::ComposeFrame()
 			aiWarning->Draw(1750, 100, false);
 		}
 
+		if (easyMode) {
+			easyModeWarning->Draw(860, 0, false);
+			gfx->DrawRectFill(130, 730, 410, 760, 0, 0, 0, 1);
+			gfx->DrawRectFill(1400, 730, 1571, 762, 0, 0, 0, 1);
+		}
+
 		if (previousWinner == 1) { //If Player 1 won the last match
 			player1Win->Draw(1920 / 2 - 250, 100, false); //Dislpay a sprite that shows this
 		}
@@ -414,8 +494,14 @@ void Game::ComposeFrame()
 		player2Desc->Draw(1175, 250, false); //Draws an appropriate sprite based on character ID in the start menu
 	}
 	else {
+		if (easyMode) {
+			easyModeWarning->Draw(0, 0, false);
+		}
 		if (paused) {
 			pauseVisual->Draw(0, 0, false); //Display the pause menu
+
+			gfx->DrawRectFill(0, 1050, 270, 1080, 0, 0, 0, 1);
+			gfx->DrawRectFill(1630, 1050, 1920, 1080, 0, 0, 0, 1);
 
 			if (Player1.lives == Player2.lives && Player1.playerPercentage == Player2.playerPercentage) { //If both players are even
 				gfx->DrawRectFill(1920 / 2 - Player1.width - 1, 99, 1920 / 2 + 1, 100 + Player1.height + 1, 255, 199, 0, 1); //Player 1 border

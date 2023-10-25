@@ -22,6 +22,7 @@ private:
 	/********************************/
 	/*  User Functions              */
 	/********************************/
+	void menuTransition();
 	void StartMenu();
 	void StartBattleTheme();
 	void GameLoop();
@@ -58,14 +59,17 @@ private:
 	bool tabHeld = false;
 	bool backspaceHeld = false;
 	bool clickHeld = GetKeyState(0x01);
+	bool shiftHeld = false;
 	bool p1AISelected = false;
 	bool p2AISelected = false;
 	int numbertocall;
 
+	bool easyMode;
+
 	POINT clickPosition;
 
+	SpriteSheet* easyModeWarning;
 	SpriteSheet* aiWarning;
-
 	SpriteSheet* creditsVisual; 
 	SpriteSheet* startVisual;
 	SpriteSheet* player1Win;
@@ -1092,7 +1096,7 @@ private:
 			4, //parameters[4]AerialAcceleration
 			3, //parameters[5]WalkAcceleration
 			25, //parameters[6]GroundedJumpHeight
-			25, //parameters[7]AerialJumpHeight
+			-20, //parameters[7]AerialJumpHeight
 			1, //parameters[8]FallAcceleration
 			7, //parameters[9]FallSpeed
 			1.1, //parameters[10]Weight

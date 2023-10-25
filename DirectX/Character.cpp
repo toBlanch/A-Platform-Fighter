@@ -2,6 +2,16 @@
 #include "Game.h"
 
 void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1) {
+	if (easyMode) {
+		UpdateCharacterEasy(left, right, down, up, jump, light, heavy, special, dodge, stageX0, stageY0, stageX1, stageY1);
+	}
+	else {
+		UpdateCharacterHard(left, right, down, up, jump, light, heavy, special, dodge, stageX0, stageY0, stageX1, stageY1);
+	}
+}
+
+void Character::UpdateCharacterHard(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1)
+{
 	if (stun == 0) { //If not in stun
 		//If on stage
 		if (IsOnStage(stageX0, stageY0, stageX1, stageY1)) {
@@ -296,10 +306,10 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 			}
 			if (!onStage) {
 				if (up) { //If holding up
-					vy = -fallSpeed/weight/weight; //Make the character move u
+					vy = -fallSpeed / weight / weight; //Make the character move u
 				}
 				else if (down) { //If holding down
-					vy = fallSpeed/weight/weight; //Make the character move down
+					vy = fallSpeed / weight / weight; //Make the character move down
 				}
 				else { //If not holding up or down
 					vy = 0; //Reset your vertical momentum
@@ -333,6 +343,230 @@ void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool 
 		OnlyProjectiles(stageX0, stageY0, stageX1, stageY1);
 	}
 	downHeld = down;
+	rightHeld = right;
+}
+
+void Character::UpdateCharacterEasy(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1)
+{
+	if (stun == 0) { //If not in stun
+		//If on stage
+		if (IsOnStage(stageX0, stageY0, stageX1, stageY1)) {
+			doubleJump = maxDoubleJump + 1; //Refresh double jumps
+			onStage = true; //Confirm that you're on stage
+		}
+		else { //If you're not on stage
+			onStage = false; //Confirm you're not on stage
+		}
+		acceleration = walkAcceleration; //Sets acceleration to grounded acceleration
+		speed = walkSpeed; //Sets speed to grounded speed
+
+		if (moveDuration > 0) { //If using a move
+			left = false;
+			right = false;
+			up = false;
+			jump = false;
+			light = false;
+			heavy = false;
+			special = false;
+			dodge = false; //Disable all player inputs apart from down
+			moveDuration--;
+		}
+		else if (freeFallDuration > 0) {
+			if (!onStage) {
+				freeFallDuration = 5;
+			}
+			down = false;
+			jump = false;
+			light = false;
+			heavy = false;
+			special = false;
+			dodge = false;
+			freeFallDuration--;
+			speed = speed / 2;
+			acceleration = acceleration / 4;
+		}
+
+		//Left and Right
+		if (rightPriority) {
+			rightPriority = right && left;
+		}
+		else if (left && right && !rightHeld) {
+			rightPriority = true;
+		}
+		if (left && !rightPriority) { //If you're holding left
+			vx -= acceleration; //Increase left velocity
+			if (vx < -speed) { //If you're over terminal velocity
+				vx = -speed; //Go to terminal velocity
+			}
+			if (onStage) {
+				facingRight = false;
+			}
+		}
+		else if (right) { //If you're holding right
+			vx += acceleration; //Increase right velocity
+			if (vx > speed) { //If you're over terminal velocity
+				vx = speed; //Go to terminal velocity
+			}
+			if (onStage) {
+				facingRight = true;
+			}
+		}
+		if (!left && !right) { //If not moving left or right
+			if (vx > 0) { //If moving right
+				if (vx < acceleration / 2) { //If decreasing speed would make you move left
+					vx = 0; //Set it to 0
+				}
+				else {
+					vx -= acceleration / 2; //Decrease speed
+				}
+			}
+			if (vx < 0) { //If moving left
+				if (vx > -acceleration / 2) { //If decreasing speed would make you move right
+					vx = 0; //Set it to 0
+				}
+				else {
+					vx += acceleration / 2; //Decrease speed
+				}
+			}
+		}
+
+		//Jumping
+		if (jump == false) { //If you're not holding jump
+			jumpKeyHeld = false; //Confirm you're not holding jump
+		}
+		else if (onStage) { //If on stage and jump key is held
+			if (vy >= 0) { //If not already rising
+				vy = -groundJumpHeight; //Start jumping
+				jumpKeyHeld = true; //Jump key is held
+			}
+		}
+		else if (doubleJump > 0 && !jumpKeyHeld) { //If off stage, jumping, you have a double jump and the jump key is held
+			jumpKeyHeld = true; //Set jump key held to true
+			fastFalling = false; //Stop fast falling
+			doubleJump -= 1; //Remove one double jump
+			vy = -aerialJumpHeight; //Start jumping
+		}
+		if (down && !onStage && !downHeld) { //If down key is held
+			fastFalling = true; //Start fast falling
+		}
+		if (vy < fallSpeed) {//If not at terminal velocity
+			vy += fallAcceleration; //Increase falling speed
+			if (vy > fallSpeed) { //If over terminal velocity
+				vy = fallSpeed; //Set to terminal velocity
+			}
+		}
+
+		for (int i = 0; i < 5; i++) { //For every move
+			moveArray[i].CheckStatus(x, y, stageX0, stageY0, stageX1, stageY1); //Run the necesarry functions every frame
+			if (moveArray[i].isPlayerAttachedToIt && moveArray[i].startUpDuration < 0 && moveArray[i].activeDuration >= 0) { //If an active move attaches the player to it
+				vx = moveArray[i].vx;
+				vy = moveArray[i].vy;
+				if (moveArray[i].vy < 0) {
+					freeFallDuration = 30;
+				}
+			}
+		}
+
+		x += vx; //Increase X by speed
+		y += vy; //Increase Y by speed
+
+		if (moveDuration > 0 && onStage) { //If using a grounded move
+			if (x < stageX0 - width) { //If falling out the left side
+				x = stageX0 - width; //Put back on the stage
+				vx = 0;
+			}
+			if (x > stageX1) { //If falling off the right side
+				x = stageX1; //Put back on the stage
+				vx = 0;
+			}
+		}
+
+		onStage = IsOnStage(stageX0, stageY0, stageX1, stageY1);
+		ClippingIntoStageFromLeft(stageX0, stageY0, stageX1, stageY1);
+		ClippingIntoStageFromRight(stageX0, stageY0, stageX1, stageY1);
+		ClippingIntoStageFromBottom(stageX0, stageY0, stageX1, stageY1);
+
+		if (special && (!moveArray[0].isAttachedToPlayer + !moveArray[1].isAttachedToPlayer + !moveArray[2].isAttachedToPlayer + !moveArray[3].isAttachedToPlayer + !moveArray[4].isAttachedToPlayer < 4 || up)) { //If using a special attack
+			for (int i = 0; i < 5; i++) {
+				if (moveArray[i].activeDuration < 0) {
+					if (right) {
+						facingRight = true;
+					}
+					else if (left) {
+						facingRight = false;
+					}
+					moveArray[i].Activate(width, height, facingRight, forwardSpecialAdditionalX, forwardSpecialAdditionalY, forwardSpecialWidth, forwardSpecialHeight, forwardSpecialStunDuration / 1.5, 2 * forwardSpecialScalarX, 2 * forwardSpecialScalarY, 2 * forwardSpecialFixedX, 2 * forwardSpecialFixedY, forwardSpecialVx, forwardSpecialVy, forwardSpecialAccelerationx, forwardSpecialAccelerationy, forwardSpecialDamage, forwardSpecialStartUpDuration, forwardSpecialActiveDuration, forwardSpecialEndLagDuration, forwardSpecialIsAttachedToPlayer, forwardSpecialIsPlayerAttachedToIt, forwardSpecialDisappearOnHit, forwardSpecialR, forwardSpecialG, forwardSpecialB);  //Initialise the move
+					moveDuration = forwardSpecialStartUpDuration + moveArray[i].IsActiveDuration() + forwardSpecialEndLagDuration; //Set the player lag
+					i = 5; //End the loop
+				}
+			}
+		}
+		else if (light && onStage) { //If using a light attack
+			for (int i = 0; i < 5; i++) { //For each move
+				if (moveArray[i].activeDuration < 0) {
+					if (right) {
+						facingRight = true;
+					}
+					else if (left) {
+						facingRight = false;
+					}
+					moveArray[i].Activate(width, height, facingRight, forwardLightAdditionalX, forwardLightAdditionalY, forwardLightWidth, forwardLightHeight, forwardLightStunDuration / 1.5, 2 * forwardLightScalarX, 2 * forwardLightScalarY, 2 * forwardLightFixedX, 2 * forwardLightFixedY, forwardLightVx, forwardLightVy, forwardLightAccelerationx, forwardLightAccelerationy, forwardLightDamage, forwardLightStartUpDuration, forwardLightActiveDuration, forwardLightEndLagDuration, forwardLightIsAttachedToPlayer, forwardLightIsPlayerAttachedToIt, forwardLightDisappearOnHit, forwardLightR, forwardLightG, forwardLightB);  //Initialise the move
+					moveDuration = forwardLightStartUpDuration + moveArray[i].IsActiveDuration() + forwardLightEndLagDuration; //Set the player lag
+					i = 5;
+				}
+			}
+		}
+		else if (heavy && onStage) { //If using a heavy attack
+			for (int i = 0; i < 5; i++) {
+				if (moveArray[i].activeDuration < 0) {
+					if (right) {
+						facingRight = true;
+					}
+					else if (left) {
+						facingRight = false;
+					}
+					moveArray[i].Activate(width, height, facingRight, forwardHeavyAdditionalX, forwardHeavyAdditionalY, forwardHeavyWidth, forwardHeavyHeight, forwardHeavyStunDuration / 1.5, 2 * forwardHeavyScalarX, 2 * forwardHeavyScalarY, 2 * forwardHeavyFixedX, 2 * forwardHeavyFixedY, forwardHeavyVx, forwardHeavyVy, forwardHeavyAccelerationx, forwardHeavyAccelerationy, forwardHeavyDamage, forwardHeavyStartUpDuration, forwardHeavyActiveDuration, forwardHeavyEndLagDuration, forwardHeavyIsAttachedToPlayer, forwardHeavyIsPlayerAttachedToIt, forwardHeavyDisappearOnHit, forwardHeavyR, forwardHeavyG, forwardHeavyB);  //Initialise the move
+					moveDuration = forwardHeavyStartUpDuration + moveArray[i].IsActiveDuration() + forwardHeavyEndLagDuration; //Set the player lag
+					i = 5;
+				}
+			}
+		}
+		else if (light || heavy) { //If using an aerial attack
+			for (int i = 0; i < 5; i++) {
+				if (moveArray[i].activeDuration < 0) {
+					if ((facingRight && left) || (!facingRight && right)) { //If doing a move backwards
+						moveArray[i].Activate(width, height, facingRight, backAerialAdditionalX, backAerialAdditionalY, backAerialWidth, backAerialHeight, backAerialStunDuration / 1.5, 2 * backAerialScalarX, 2 * backAerialScalarY, 2 * backAerialFixedX, 2 * backAerialFixedY, backAerialVx, backAerialVy, backAerialAccelerationx, backAerialAccelerationy, backAerialDamage, backAerialStartUpDuration, backAerialActiveDuration, backAerialEndLagDuration, backAerialIsAttachedToPlayer, backAerialIsPlayerAttachedToIt, backAerialDisappearOnHit, backAerialR, backAerialG, backAerialB);  //Initialise the move
+						moveDuration = forwardAerialStartUpDuration + moveArray[i].IsActiveDuration() + forwardAerialEndLagDuration; //Set the player lag
+					}
+					else { //If doing a move forwards
+						moveArray[i].Activate(width, height, facingRight, forwardAerialAdditionalX, forwardAerialAdditionalY, forwardAerialWidth, forwardAerialHeight, forwardAerialStunDuration / 1.5, 2 * forwardAerialScalarX, 2 * forwardAerialScalarY, 2 * forwardAerialFixedX, 2 * forwardAerialFixedY, forwardAerialVx, forwardAerialVy, forwardAerialAccelerationx, forwardAerialAccelerationy, forwardAerialDamage, forwardAerialStartUpDuration, forwardAerialActiveDuration, forwardAerialEndLagDuration, forwardAerialIsAttachedToPlayer, forwardAerialIsPlayerAttachedToIt, forwardAerialDisappearOnHit, forwardAerialR, forwardAerialG, forwardAerialB);  //Initialise the move
+						moveDuration = forwardAerialStartUpDuration + moveArray[i].IsActiveDuration() + forwardAerialEndLagDuration; //Set the player lag
+					}
+					i = 5;
+				}
+			}
+		}
+	}
+	else {
+		stun--;
+		x += vx;
+		y += vy;
+
+		if (ClippingIntoStageFromLeft(stageX0, stageY0, stageX1, stageY1)) { //If clipping into stage from the left
+			vx *= -1;
+		}
+		else if (ClippingIntoStageFromRight(stageX0, stageY0, stageX1, stageY1)) { //If clipping into stage from right
+			vx *= -1;
+		}
+
+		if (IsOnStage(stageX0, stageY0, stageX1, stageY1)) {
+			vy *= -1;
+		}
+		else if (ClippingIntoStageFromBottom(stageX0, stageY0, stageX1, stageY1)) {
+			vy *= -1;
+		}
+		OnlyProjectiles(stageX0, stageY0, stageX1, stageY1);
+	}
 	rightHeld = right;
 }
 
@@ -394,7 +628,9 @@ bool Character::IsAlive(int screenWidth, int screenHeight, int leniancy)
 		if (lives > 0) {
 			y = 500 - height;
 			x = screenWidth / 2;
-			invincibility = 300;
+			if (!easyMode) {
+				invincibility = 300;
+			}
 		}
 		else {
 			invincibility = 0;
