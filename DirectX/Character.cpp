@@ -1,16 +1,16 @@
 #include "Character.h"
 #include "Game.h"
 
-void Character::UpdateCharacter(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1) {
+void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1) {
 	if (easyMode) {
-		UpdateCharacterEasy(left, right, down, up, jump, light, heavy, special, dodge, stageX0, stageY0, stageX1, stageY1);
+		UpdateCharacterEasy(left, right, up, down, jump, light, heavy, special, dodge, stageX0, stageY0, stageX1, stageY1);
 	}
 	else {
-		UpdateCharacterHard(left, right, down, up, jump, light, heavy, special, dodge, stageX0, stageY0, stageX1, stageY1);
+		UpdateCharacterHard(left, right, up, down, jump, light, heavy, special, dodge, stageX0, stageY0, stageX1, stageY1);
 	}
 }
 
-void Character::UpdateCharacterHard(bool left, bool right, bool down, bool up, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1)
+void Character::UpdateCharacterHard(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1)
 {
 	if (stun == 0) { //If not in stun
 		//If on stage

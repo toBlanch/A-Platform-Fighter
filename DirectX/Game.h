@@ -8,6 +8,7 @@
 #include <vector>
 #include <random>
 #include <string>
+#include <Xinput.h>
 
 class Game
 {
@@ -62,6 +63,10 @@ private:
 	bool shiftHeld = false;
 	bool p1AISelected = false;
 	bool p2AISelected = false;
+	int p1Controller = -1;
+	XINPUT_STATE p1ControllerState;
+	int p2Controller = -1;
+	XINPUT_STATE p2ControllerState;
 	int numbertocall;
 
 	bool easyMode;
