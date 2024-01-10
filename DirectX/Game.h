@@ -65,8 +65,13 @@ private:
 	bool p2AISelected = false;
 	int p1Controller = -1;
 	XINPUT_STATE p1ControllerState;
+	bool p1RightStickPressed = false;
+	bool p1StopOtherInputs = false;
 	int p2Controller = -1;
 	XINPUT_STATE p2ControllerState;
+	bool p2RightStickPressed = false;
+	bool p2StopOtherInputs = false;
+	float controllerStickMaxInput = 32767.0f;
 	int numbertocall;
 
 	bool easyMode;
