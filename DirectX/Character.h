@@ -5,8 +5,6 @@
 class Character {
 public:
 	void UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1);
-	void UpdateCharacterHard(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1);
-	void UpdateCharacterEasy(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1);
 	bool IsOnStage(int stageX0, int stageY0, int stageX1, int stageY1);
 	bool ClippingIntoStageFromLeft(int stageX0, int stageY0, int stageX1, int stageY1);
 	bool ClippingIntoStageFromRight(int stageX0, int stageY0, int stageX1, int stageY1);
@@ -48,6 +46,7 @@ public:
 	float speed = 0;
 	float acceleration = 0;
 	int doubleJump = 0;
+	int moveArrayLength = 0;
 	bool easyMode = false;
 private:
 	float walkSpeed = 0;

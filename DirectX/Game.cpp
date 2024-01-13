@@ -2,6 +2,36 @@
 #include <windows.h>
 #include <Xinput.h>
 
+/*
+Future plans:
+Find a way to stop fast falling if inputting down air
+Add wavedashing
+Make platforms class (consists of isSolid, x0y0x1y1)
+Turn the main stage into a solid platform
+Pass array of platforms into character
+give them exclusively onStage by setting onStage to false and for each platform doing onStage = onStage || IsOnStage(coordinates)
+Add StageClass and CurrentStage to game
+StageClass gets up to 16 platforms and maybe blast zone radius
+Fix 'parameters' in game.h (nah just kidding, I won't be fixing that any time soon)
+
+Tutorial:
+I would need text outputting functionality so do that first
+Put 1 player on screen as Circle
+Introduce different moves
+Add second player (uncontrollable) and output player 2's damage, vx and vy
+After that, make player 2 controllable and output player 2's controls
+Demonstrate different character stats
+After it's over, automatically set the menu to p2=ai as A and p1=human as circle. The player can decide if they wanna do that or not
+
+Power ups:
+Power ups isn't bad, make additionalAcceleration, additionalKnockbackX etc, grab a few different sprites, make an item class (which stats it buffs, duration and colour) and add a line of the respective colour above a player with a power up
+
+Items:
+Bind throw to dodge
+For each item make a light and heavy attack that works similarly to easy mode attacks
+Also add numUses
+Item is held directly infront of the character
+*/
 
 Game::Game(Graphics* gfx)
 	:
@@ -319,6 +349,21 @@ void Game::StartMenu()
 			(clickPosition.x >= 860 && clickPosition.x <= 1060 && clickPosition.y >= 0 && clickPosition.y <= 70)) {
 			if (!shiftHeld) {
 				easyMode = !easyMode;
+				/* easy mode features:
+					+1 double jump
+					Walk acceleration / speed is the same as air acceleration / speed
+					Free fall duration = 5 frames instead of 30 frames when touching the ground
+					No invincibility
+					No dodging
+					No fast falling
+					No directional attacks(pressing light always does forward light etc)
+					Moves deal 2 / 3rds of their original stun
+					All knockback is doubled
+					Grounded jump height = aerial jump height
+
+					Potential future plan:
+					Slow all character speed (falling, vertical, horizontal)
+				*/
 				shiftHeld = true;
 			}
 		}
@@ -438,6 +483,7 @@ void Game::GameLoop()
 			if (!p1RightStickPressed && (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && Player1.stun == 0 && Player1.moveDuration == 0) {
 				p1StopOtherInputs = true;
 			}
+			p1RightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player1.stun == 0 && Player1.moveDuration == 0) || p1RightStickPressed);
 			Player1.UpdateCharacter(
 				gfx->ifFocus() && (GetKeyState(0x41) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) || (p1ControllerState.Gamepad.sThumbLX / controllerStickMaxInput < -0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX < -0.2)), //Left
 				gfx->ifFocus() && (GetKeyState(0x44) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) || (p1ControllerState.Gamepad.sThumbLX / controllerStickMaxInput > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX > 0.2)), //Right
@@ -452,7 +498,6 @@ void Game::GameLoop()
 				stageY0,
 				stageX1,
 				stageY1);
-			p1RightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player1.stun == 0 && Player1.moveDuration == 0) || p1RightStickPressed);
 		}
 		
 		if (p2AISelected) {
@@ -479,22 +524,22 @@ void Game::GameLoop()
 			if (!p2RightStickPressed && (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && Player2.stun == 0 && Player2.moveDuration == 0) {
 				p2StopOtherInputs = true;
 			}
+			p2RightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player2.stun == 0 && Player2.moveDuration == 0) || p2RightStickPressed);
 			
 			Player2.UpdateCharacter(
-				gfx->ifFocus() && (GetKeyState(0x25) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) || (p2ControllerState.Gamepad.sThumbLX / controllerStickMaxInput < -0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX < -0.2)), //Left
-				gfx->ifFocus() && (GetKeyState(0x27) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) || (p2ControllerState.Gamepad.sThumbLX / controllerStickMaxInput > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX > 0.2)), //Right
-				gfx->ifFocus() && (GetKeyState(0x26) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) || (p2ControllerState.Gamepad.sThumbLY / controllerStickMaxInput > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RY > 0.2)), //Up
-				gfx->ifFocus() && (GetKeyState(0x28) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) || (p2ControllerState.Gamepad.sThumbLY / controllerStickMaxInput < -0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RY < -0.2)), //Down
-				gfx->ifFocus() && (GetKeyState(0x4C) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_A) && !p1StopOtherInputs), //Jump
-				gfx->ifFocus() && (GetKeyState(0x4B) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X) || p1StopOtherInputs), //Light
-				gfx->ifFocus() && (GetKeyState(0x4F) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p1StopOtherInputs), //Heavy
-				gfx->ifFocus() && (GetKeyState(0xBA) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p1StopOtherInputs), //Special
-				gfx->ifFocus() && (GetKeyState(0x4E) & 0x8000) || ((p2ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p2ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p1StopOtherInputs), //Dodge
+				gfx->ifFocus() && (GetKeyState(0x25) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) || (p2ControllerState.Gamepad.sThumbLX / controllerStickMaxInput < -0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RX < -0.2)), //Left
+				gfx->ifFocus() && (GetKeyState(0x27) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) || (p2ControllerState.Gamepad.sThumbLX / controllerStickMaxInput > 0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RX > 0.2)), //Right
+				gfx->ifFocus() && (GetKeyState(0x26) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) || (p2ControllerState.Gamepad.sThumbLY / controllerStickMaxInput > 0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RY > 0.2)), //Up
+				gfx->ifFocus() && (GetKeyState(0x28) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) || (p2ControllerState.Gamepad.sThumbLY / controllerStickMaxInput < -0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RY < -0.2)), //Down
+				gfx->ifFocus() && (GetKeyState(0x4C) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_A) && !p2StopOtherInputs), //Jump
+				gfx->ifFocus() && (GetKeyState(0x4B) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X) || p2StopOtherInputs), //Light
+				gfx->ifFocus() && (GetKeyState(0x4F) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p2StopOtherInputs), //Heavy
+				gfx->ifFocus() && (GetKeyState(0xBA) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p2StopOtherInputs), //Special
+				gfx->ifFocus() && (GetKeyState(0x4E) & 0x8000) || ((p2ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p2ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p2StopOtherInputs), //Dodge
 				stageX0,
 				stageY0,
 				stageX1,
 				stageY1);
-			p2RightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player2.stun == 0 && Player2.moveDuration == 0) || p2RightStickPressed);
 		}
 
 		if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
@@ -712,7 +757,7 @@ void Game::ComposeFrame()
 		}
 
 
-		for (int i = 0; i < 5; i++) { //For every move
+		for (int i = 0; i < Player1.moveArrayLength; i++) { //For every move
 			if (Player1.MoveDraw(i)) { //If it can be drawn
 				gfx->DrawRectFill(Player1.MoveX0(i), Player1.MoveY0(i), Player1.MoveX1(i), Player1.MoveY1(i), Player1.MoveR(i), Player1.MoveG(i), Player1.MoveB(i), 1); //Draw it
 			}
