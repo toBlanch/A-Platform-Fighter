@@ -1,27 +1,30 @@
 #include "Character.h"
 #include "Game.h"
 
-void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1) {
+void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, Platform Platforms[10], int numPlatforms) {
 	dodgePressed = dodge;
 	if (stun == 0) { //If not in stun
 		//If on stage
-		if (IsOnStage(stageX0, stageY0, stageX1, stageY1)) {
-			doubleJump = maxDoubleJump + easyMode; //Refresh double jumps
-			fastFalling = false; //Stop fast falling
-			acceleration = walkAcceleration; //Sets acceleration to grounded acceleration
-			speed = walkSpeed; //Sets speed to grounded speed
-			onStage = true; //Confirm that you're on stage
-		}
-		else { //If you're not on stage
-			if (easyMode) {
-				acceleration = walkAcceleration; //Sets acceleration to aerial acceleration
-				speed = walkSpeed; //Sets speed to aerial speed
+		for (int i = 0; i < numPlatforms; i++) {
+			if (IsOnStage(Platforms[i])) {
+				doubleJump = maxDoubleJump + easyMode; //Refresh double jumps
+				fastFalling = false; //Stop fast falling
+				acceleration = walkAcceleration; //Sets acceleration to grounded acceleration
+				speed = walkSpeed; //Sets speed to grounded speed
+				onStage = true; //Confirm that you're on stage
+				break;
 			}
-			else {
-				acceleration = aerialAcceleration; //Sets acceleration to aerial acceleration
-				speed = aerialSpeed; //Sets speed to aerial speed
+			else { //If you're not on stage
+				if (easyMode) {
+					acceleration = walkAcceleration; //Sets acceleration to aerial acceleration
+					speed = walkSpeed; //Sets speed to aerial speed
+				}
+				else {
+					acceleration = aerialAcceleration; //Sets acceleration to aerial acceleration
+					speed = aerialSpeed; //Sets speed to aerial speed
+				}
+				onStage = false; //Confirm you're not on stage
 			}
-			onStage = false; //Confirm you're not on stage
 		}
 
 		if (moveDuration > 0) { //If using a move
@@ -155,7 +158,7 @@ void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool 
 		}
 
 		for (int i = 0; i < moveArrayLength; i++) { //For every move
-			moveArray[i].CheckStatus(x, y, stageX0, stageY0, stageX1, stageY1); //Run the necesarry functions every frame
+			moveArray[i].CheckStatus(x, y, Platforms); //Run the necesarry functions every frame
 			if (moveArray[i].isPlayerAttachedToIt && moveArray[i].startUpDuration < 0 && moveArray[i].activeDuration >= 0) { //If an active move attaches the player to it
 				vx = moveArray[i].vx;
 				vy = moveArray[i].vy;
@@ -168,21 +171,27 @@ void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool 
 		x += vx; //Increase X by speed
 		y += vy; //Increase Y by speed
 
-		if (moveDuration > 0 && onStage) { //If using a grounded move
-			if (x < stageX0 - width) { //If falling out the left side
-				x = stageX0 - width; //Put back on the stage
-				vx = 0;
-			}
-			if (x > stageX1) { //If falling off the right side
-				x = stageX1; //Put back on the stage
-				vx = 0;
+		//if (moveDuration > 0 && onStage) { //If using a grounded move
+		//	if (x < stageX0 - width) { //If falling out the left side
+		//		x = stageX0 - width; //Put back on the stage
+		//		vx = 0;
+		//	}
+		//	if (x > stageX1) { //If falling off the right side
+		//		x = stageX1; //Put back on the stage
+		//		vx = 0;
+		//	}
+		//}
+
+		bool onPlatform = false;
+		for (int i = 0; i < 10; i++) {
+			onPlatform = IsOnStage(Platforms[i]) || onPlatform;
+			if (Platforms[i].isSolid) {
+				ClippingIntoStageFromLeft(Platforms[i]);
+				ClippingIntoStageFromRight(Platforms[i]);
+				ClippingIntoStageFromBottom(Platforms[i]);
 			}
 		}
-
-		onStage = IsOnStage(stageX0, stageY0, stageX1, stageY1);
-		ClippingIntoStageFromLeft(stageX0, stageY0, stageX1, stageY1);
-		ClippingIntoStageFromRight(stageX0, stageY0, stageX1, stageY1);
-		ClippingIntoStageFromBottom(stageX0, stageY0, stageX1, stageY1);
+		onStage = onPlatform;
 
 		if (special && (!moveArray[0].isAttachedToPlayer + !moveArray[1].isAttachedToPlayer + !moveArray[2].isAttachedToPlayer + !moveArray[3].isAttachedToPlayer + !moveArray[4].isAttachedToPlayer < 4 || up)) { //If using a special attack
 			for (int i = 0; i < moveArrayLength; i++) {
@@ -330,32 +339,36 @@ void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool 
 		x += vx;
 		y += vy;
 
-		if (ClippingIntoStageFromLeft(stageX0, stageY0, stageX1, stageY1)) { //If clipping into stage from the left
-			vx *= -1;
-		}
-		else if (ClippingIntoStageFromRight(stageX0, stageY0, stageX1, stageY1)) { //If clipping into stage from right
-			vx *= -1;
-		}
+		for (int i = 0; i < 10; i++) {
+			if (IsOnStage(Platforms[i])) {
+				vy *= -1;
+			}
+			else if (Platforms[i].isSolid && ClippingIntoStageFromBottom(Platforms[i])) {
+				vy *= -1;
+			}
 
-		if (IsOnStage(stageX0, stageY0, stageX1, stageY1)) {
-			vy *= -1;
+			if (Platforms[i].isSolid) {
+				if (ClippingIntoStageFromLeft(Platforms[i])) { //If clipping into stage from the left
+					vx *= -1;
+				}
+				else if (ClippingIntoStageFromRight(Platforms[i])) { //If clipping into stage from right
+					vx *= -1;
+				}
+			}
 		}
-		else if (ClippingIntoStageFromBottom(stageX0, stageY0, stageX1, stageY1)) {
-			vy *= -1;
-		}
-		OnlyProjectiles(stageX0, stageY0, stageX1, stageY1);
+		OnlyProjectiles(Platforms);
 	}
 	downHeld = down;
 	rightHeld = right;
 	dodgeHeld = dodgePressed;
 }
 
-bool Character::IsOnStage(int stageX0, int stageY0, int stageX1, int stageY1)
+bool Character::IsOnStage(Platform platform)
 {
-	if (x + width >= stageX0 && x <= stageX1 && //If X coordinate is over the stage
-		y + height >= stageY0 && y + height <= stageY0 + vy * 2 //If Y coordinate is level with the stage
+	if (x + width >= platform.x0 && x <= platform.x1 && //If X coordinate is over the stage
+		y + height >= platform.y0 && y + height <= platform.y0 + vy * 2 //If Y coordinate is level with the stage
 		&& vy >= 0) {
-		y = (float)stageY0 - height; //Stop clipping
+		y = (float)platform.y0 - height; //Stop clipping
 		if (invincibility != 0 && moveDuration != 0 && !onStage && !hitDuringDodge) { //If dashing into the ground
 			invincibilityCooldown = 0;
 			invincibility = 0;
@@ -366,28 +379,28 @@ bool Character::IsOnStage(int stageX0, int stageY0, int stageX1, int stageY1)
 	return false;
 }
 
-bool Character::ClippingIntoStageFromLeft(int stageX0, int stageY0, int stageX1, int stageY1)
+bool Character::ClippingIntoStageFromLeft(Platform platform)
 {
-	if (y + height > stageY0 && y <= stageY1 && x + width > stageX0 && x + width <= stageX0 + vx) {
-		x = float(stageX0 - width); //Stop clipping
+	if (y + height > platform.y0 && y <= platform.y1 && x + width > platform.x0 && x + width <= platform.x0 + vx) {
+		x = float(platform.x0 - width); //Stop clipping
 		return true;
 	}
 	return false;
 }
 
-bool Character::ClippingIntoStageFromRight(int stageX0, int stageY0, int stageX1, int stageY1)
+bool Character::ClippingIntoStageFromRight(Platform platform)
 {
-	if (y + height > stageY0 && y <= stageY1 && x >= stageX1 + vx && x < stageX1) {
-		x = (float)stageX1; //Stop clipping
+	if (y + height > platform.y0 && y <= platform.y1 && x >= platform.x1 + vx && x < platform.x1) {
+		x = (float)platform.x1; //Stop clipping
 		return true;
 	}
 	return false;
 }
 
-bool Character::ClippingIntoStageFromBottom(int stageX0, int stageY0, int stageX1, int stageY1)
+bool Character::ClippingIntoStageFromBottom(Platform platform)
 {
-	if (x + width > stageX0 && x < stageX1 && y >= stageY1 + vy && y <= stageY1) {
-		y = (float)stageY1; //Stop clipping
+	if (x + width > platform.x0 && x < platform.x1 && y >= platform.y1 + vy && y <= platform.y1) {
+		y = (float)platform.y1; //Stop clipping
 		return true;
 	}
 	return false;
@@ -511,7 +524,7 @@ float Character::MoveThatHitFixedY()
 	return moveArray[moveThatHit].fixedY;
 }
 
-void Character::Initialise(std::vector<float>& parameters, int stageX0Referral, int stageY0Referral, int stageX1Referral, int stageY1Referral) {
+void Character::Initialise(std::vector<float>& parameters) {
 	width = (int)parameters[0];
 	height = (int)parameters[1];
 	walkSpeed = parameters[2];
@@ -879,11 +892,12 @@ void Character::Restart()
 	invincibilityCooldown = 0;
 	freeFallDuration = 0;
 	y = 700 - height;
+	fastFalling = false;
 }
 
-void Character::OnlyProjectiles(int stageX0, int stageY0, int stageX1, int stageY1)
+void Character::OnlyProjectiles(Platform Platforms[10])
 {
 	for (int i = 0; i < moveArrayLength; i++) {
-		moveArray[i].CheckStatus(x, y, stageX0, stageY0, stageX1, stageY1);
+		moveArray[i].CheckStatus(x, y, Platforms);
 	}
 }

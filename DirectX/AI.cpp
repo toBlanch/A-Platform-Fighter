@@ -1,7 +1,11 @@
 #include "AI.h"
 
-void AI::Update(int player2x, int player2y, int player2Width, int player2Height, int x, int y, int vx, int vy, int width, int height, bool canDodge, int doubleJump, int stageX0, int stageY0, int stageX1, int stageY1, float moveType, int opponentPercent)
+void AI::Update(int player2x, int player2y, int player2Width, int player2Height, int x, int y, int vx, int vy, int width, int height, bool canDodge, int doubleJump, Platform Platforms[10], float moveType, int opponentPercent)
 {
+	int stageX0 = Platforms[0].x0;
+	int stageX1 = Platforms[0].x1;
+	int stageY0 = Platforms[0].y0;
+	int stageY1 = Platforms[0].y1;
 	//Reset all inputs
 	left = false;
 	right = false;

@@ -1,14 +1,15 @@
 #pragma once
 #include "Move.h"
 #include <vector>
+#include "Platform.h"
 
 class Character {
 public:
-	void UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1);
-	bool IsOnStage(int stageX0, int stageY0, int stageX1, int stageY1);
-	bool ClippingIntoStageFromLeft(int stageX0, int stageY0, int stageX1, int stageY1);
-	bool ClippingIntoStageFromRight(int stageX0, int stageY0, int stageX1, int stageY1);
-	bool ClippingIntoStageFromBottom(int stageX0, int stageY0, int stageX1, int stageY1);
+	void UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, Platform Platforms[10], int numPlatforms);
+	bool IsOnStage(Platform platform);
+	bool ClippingIntoStageFromLeft(Platform platform);
+	bool ClippingIntoStageFromRight(Platform platform);
+	bool ClippingIntoStageFromBottom(Platform platform);
 	bool IsAlive(int screenWidth, int screenHeight, int leniancy);
 	bool MoveDraw(int move);
 	bool IsMoveColliding(float player2x, float player2y, int Player2Width, int Player2Height);
@@ -25,10 +26,10 @@ public:
 	float MoveThatHitScalarY();
 	float MoveThatHitFixedX();
 	float MoveThatHitFixedY();
-	void Initialise(std::vector<float>& parameters, int stageX0Referral, int stageY0Referral, int stageX1Referral, int stageY1Referral);
+	void Initialise(std::vector<float>& parameters);
 	void IsHit(int stunReferral, float damageReferral, int fixedXReferral, int fixedYReferral, int scalarXReferral, int scalarYReferral);
 	void Restart();
-	void OnlyProjectiles(int stageX0, int stageY0, int stageX1, int stageY1);
+	void OnlyProjectiles(Platform Platforms[10]);
 	int lives = 3;
 	float x = 0;
 	float y = 0;

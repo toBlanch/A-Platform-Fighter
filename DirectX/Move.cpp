@@ -1,6 +1,6 @@
 #include "Move.h"
 
-void Move::CheckStatus(float xReferral, float yReferral, int stageX0, int stageY0, int stageX1, int stageY1)
+void Move::CheckStatus(float xReferral, float yReferral, Platform Platforms[10])
 {
 	startUpDuration--; //Decrease the time until it starts
 	if (startUpDuration < 0) {
@@ -17,21 +17,29 @@ void Move::CheckStatus(float xReferral, float yReferral, int stageX0, int stageY
 				y = yReferral + vy;
 			}
 			else if (!isAttachedToPlayer) {
-				bool xOnStage = x + additionalX + width > stageX0 && x + additionalX < stageX1;
-				bool yOnStage = y + additionalY + height >= stageY0 && y + additionalY <= stageY1;
+				for (int i = 0; i < 10; i++) {
+					if (Platforms[i].isSolid) {
+						int stageX0 = Platforms[i].x0;
+						int stageX1 = Platforms[i].x1;
+						int stageY0 = Platforms[i].y0;
+						int stageY1 = Platforms[i].y1;
+						bool xOnStage = x + additionalX + width > stageX0 && x + additionalX < stageX1;
+						bool yOnStage = y + additionalY + height >= stageY0 && y + additionalY <= stageY1;
 
-				if (yOnStage && x + additionalX + width > stageX0 && x + additionalX + width <= stageX0 + vx) { //If clipping into stage from the left
-					x = float(stageX0) - width - additionalX; //Stop clipping
-				}
-				else if (yOnStage && x + additionalX >= stageX1 + vx && x + additionalX < stageX1) { //If clipping into stage from right
-					x = (float)stageX1 - additionalX; //Stop clipping
-				}
+						if (yOnStage && x + additionalX + width > stageX0 && x + additionalX + width <= stageX0 + vx) { //If clipping into stage from the left
+							x = float(stageX0) - width - additionalX; //Stop clipping
+						}
+						else if (yOnStage && x + additionalX >= stageX1 + vx && x + additionalX < stageX1) { //If clipping into stage from right
+							x = (float)stageX1 - additionalX; //Stop clipping
+						}
 
-				if (xOnStage && y + additionalY + height >= stageY0 && y + additionalY + height <= stageY0 + vy) {
-					y = (float)stageY0 - height - additionalY; //Stop clipping
-				}
-				else if (xOnStage && y + additionalY >= stageY1 - vy && y + additionalY <= stageY1) {
-					y = (float)stageY1 - additionalY; //Stop clipping
+						if (xOnStage && y + additionalY + height >= stageY0 && y + additionalY + height <= stageY0 + vy) {
+							y = (float)stageY0 - height - additionalY; //Stop clipping
+						}
+						else if (xOnStage && y + additionalY >= stageY1 - vy && y + additionalY <= stageY1) {
+							y = (float)stageY1 - additionalY; //Stop clipping
+						}
+					}
 				}
 			}
 		}
@@ -44,23 +52,6 @@ void Move::CheckStatus(float xReferral, float yReferral, int stageX0, int stageY
 	if (isAttachedToPlayer || startUpDuration > 0) { //If the move is activating or if attached to the player
 		x = xReferral; //Set the X coordinate to the player's
 		y = yReferral; //Set the Y coordinate to the player's
-
-		bool xOnStage = x + additionalX + width > stageX0 && x + additionalX < stageX1;
-		bool yOnStage = y + additionalY + height >= stageY0 && y + additionalY <= stageY1;
-
-		if (yOnStage && x + additionalX + width > stageX0 && x + additionalX + width <= stageX0 + additionalX) { //If clipping into stage from the left
-			x = float(stageX0) - width - additionalX; //Stop clipping
-		}
-		else if (yOnStage && x + additionalX >= stageX1 + additionalX && x + additionalX < stageX1) { //If clipping into stage from right
-			x = (float)stageX1 - additionalX; //Stop clipping
-		}
-
-		if (xOnStage && y + additionalY + height >= stageY0 && y + additionalY + height <= stageY0 + additionalY) {
-			y = (float)stageY0 - height - additionalY; //Stop clipping
-		}
-		else if (xOnStage && y + additionalY >= stageY1 - additionalY && y + additionalY <= stageY1) {
-			y = (float)stageY1 - additionalY; //Stop clipping
-		}
 	}
 }
 

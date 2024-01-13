@@ -1,8 +1,9 @@
 #pragma once
+#include "Platform.h"
 
 class AI {
 public:
-	void Update(int player2x, int player2y, int player2Width, int player2Height, int x, int y, int vx, int vy, int width, int height, bool canDodge, int doubleJump, int stageX0, int stageY0, int stageX1, int stageY1, float moveType, int opponentPercent);
+	void Update(int player2x, int player2y, int player2Width, int player2Height, int x, int y, int vx, int vy, int width, int height, bool canDodge, int doubleJump, Platform Platforms[10], float moveType, int opponentPercent);
 	bool left = false;
 	bool right = false;
 	bool down = false;

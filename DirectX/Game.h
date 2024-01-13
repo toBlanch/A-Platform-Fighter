@@ -9,6 +9,7 @@
 #include <random>
 #include <string>
 #include <Xinput.h>
+#include "Platform.h"
 
 class Game
 {
@@ -37,10 +38,8 @@ private:
 	std::mt19937 rng;
 	std::random_device rd;
 	std::uniform_int_distribution<int> randomDist;
-	int stageX0 = 480;
-	int stageY0 = 700;
-	int stageX1 = 1440;
-	int stageY1 = 880;
+	Platform Platforms[10];
+	int numPlatforms = 0;
 	int leniancy = 0;
 	int player1CharacterID = 0;
 	int player2CharacterID = 1;

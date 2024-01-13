@@ -3,14 +3,12 @@
 #include <Xinput.h>
 
 /*
-Future plans:
-Find a way to stop fast falling if inputting down air
-Make platforms class (consists of isSolid, x0y0x1y1)
-Turn the main stage into a solid platform
-Pass array of platforms into character
-give them exclusively onStage by setting onStage to false and for each platform doing onStage = onStage || IsOnStage(coordinates)
+Hold down to fall through platforms
+Add back the code for not falling off the stage during a grounded attack
 Add StageClass and CurrentStage to game
 StageClass gets up to 16 platforms and maybe blast zone radius
+Change the code in Move and AI to not ask for a 10 parameters long array
+Give AI functionality with multiple stages by making them go towards the nearest platform when desperate and jump between platforms to get to the player
 Fix 'parameters' in game.h (nah just kidding, I won't be fixing that any time soon)
 
 Tutorial:
@@ -131,6 +129,25 @@ Game::Game(Graphics* gfx)
 	//Initialise menu description sprites
 	player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s idle animation
 	player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s idle animation
+
+	Platforms[0].x0 = 480;
+	Platforms[0].y0 = 700;
+	Platforms[0].x1 = 1440;
+	Platforms[0].y1 = 880;
+	Platforms[0].isSolid = true;
+
+	Platforms[1].x0 = 500;
+	Platforms[1].y0 = 500;
+	Platforms[1].x1 = 800;
+	Platforms[1].y1 = 600;
+	Platforms[1].isSolid = false;
+
+	Platforms[2].x0 = 800;
+	Platforms[2].y0 = 500;
+	Platforms[2].x1 = 1100;
+	Platforms[2].y1 = 600;
+	Platforms[2].isSolid = true;
+	numPlatforms = sizeof(Platforms) / sizeof(*Platforms);
 }
 
 void Game::Go()
@@ -383,7 +400,7 @@ void Game::StartMenu()
 			player1Move = new SpriteSheet(moveParameters[player1CharacterID], gfx); //Set player 1s move animation
 			player1Hit = new SpriteSheet(hitParameters[player1CharacterID], gfx); //Set player 1s hit animation
 			player1LivesIcon = new SpriteSheet(livesIconParameters[player1CharacterID], gfx); //Set player 2s lives icon
-			Player1.Initialise(parameters[player1CharacterID], stageX0, stageY0, stageX1, stageY1); //Set player 1s variables
+			Player1.Initialise(parameters[player1CharacterID]); //Set player 1s variables
 
 			if (player2CharacterID == 8) {
 				player2CharacterID = 1 + (float)randomDist(rng) * 6.9f / 39;
@@ -394,7 +411,7 @@ void Game::StartMenu()
 			player2Move = new SpriteSheet(moveParameters[player2CharacterID], gfx); //Set player 1s move animation
 			player2Hit = new SpriteSheet(hitParameters[player2CharacterID], gfx); //Set player 1s hit animation
 			player2LivesIcon = new SpriteSheet(livesIconParameters[player2CharacterID], gfx); //Set player 2s lives icon
-			Player2.Initialise(parameters[player2CharacterID], stageX0, stageY0, stageX1, stageY1); //Set player 1s variables
+			Player2.Initialise(parameters[player2CharacterID]); //Set player 1s variables
 		}
 	}
 }
@@ -459,7 +476,7 @@ void Game::GameLoop()
 
 		//Update models
 		if (p1AISelected) {
-			ArtifialFriend.Update(Player2.x, Player2.y, Player2.width, Player2.height, Player1.x, Player1.y, Player1.vx, Player1.vy, Player1.width, Player1.height, Player1.invincibilityCooldown == 0, Player1.doubleJump, stageX0, stageY0, stageX1, stageY1, randomDist(rng), Player2.playerPercentage);
+			ArtifialFriend.Update(Player2.x, Player2.y, Player2.width, Player2.height, Player1.x, Player1.y, Player1.vx, Player1.vy, Player1.width, Player1.height, Player1.invincibilityCooldown == 0, Player1.doubleJump, Platforms, randomDist(rng), Player2.playerPercentage);
 			Player1.UpdateCharacter(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
@@ -470,10 +487,8 @@ void Game::GameLoop()
 				ArtifialFriend.heavy, //Heavy
 				ArtifialFriend.special, //Special
 				ArtifialFriend.dodge, //Dodge
-				stageX0, 
-				stageY0, 
-				stageX1, 
-				stageY1);
+				Platforms,
+				numPlatforms);
 		}
 		else {
 			p1StopOtherInputs = false;
@@ -493,14 +508,12 @@ void Game::GameLoop()
 				gfx->ifFocus() && (GetKeyState(0x54) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p1StopOtherInputs), //Heavy
 				gfx->ifFocus() && (GetKeyState(0x48) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p1StopOtherInputs), //Special
 				gfx->ifFocus() && (GetKeyState(0xA0) & 0x8000) || ((p1ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p1ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p1StopOtherInputs), //Dodge
-				stageX0,
-				stageY0,
-				stageX1,
-				stageY1);
+				Platforms,
+				numPlatforms);
 		}
 		
 		if (p2AISelected) {
-			ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.vx, Player2.vy, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.doubleJump, stageX0, stageY0, stageX1, stageY1, randomDist(rng), Player1.playerPercentage);
+			ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.vx, Player2.vy, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.doubleJump, Platforms, randomDist(rng), Player1.playerPercentage);
 			Player2.UpdateCharacter(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
@@ -511,10 +524,8 @@ void Game::GameLoop()
 				ArtifialFriend.heavy, //Heavy
 				ArtifialFriend.special, //Special
 				ArtifialFriend.dodge, //Dodge
-				stageX0, 
-				stageY0, 
-				stageX1, 
-				stageY1);
+				Platforms,
+				numPlatforms);
 		}
 		else {
 			p2StopOtherInputs = false;
@@ -535,10 +546,8 @@ void Game::GameLoop()
 				gfx->ifFocus() && (GetKeyState(0x4F) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p2StopOtherInputs), //Heavy
 				gfx->ifFocus() && (GetKeyState(0xBA) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p2StopOtherInputs), //Special
 				gfx->ifFocus() && (GetKeyState(0x4E) & 0x8000) || ((p2ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p2ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p2StopOtherInputs), //Dodge
-				stageX0,
-				stageY0,
-				stageX1,
-				stageY1);
+				Platforms,
+				numPlatforms);
 		}
 
 		if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
@@ -703,7 +712,9 @@ void Game::ComposeFrame()
 			go->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display go
 		}
 
-		gfx->DrawRectThin(stageX0, stageY0, stageX1, stageY1, 255, 0, 0, 1); //Stage
+		for (int i = 0; i < numPlatforms; i++) {
+			gfx->DrawRectThin(Platforms[i].x0, Platforms[i].y0, Platforms[i].x1, Platforms[i].y1, 255, 0, 0, 1); //Stage
+		}
 
 		numbers[((int)Player1.playerPercentage - (int)Player1.playerPercentage % 10) / 10]->Draw(1920 / 4, 900, false); //Player 1 percent
 		numbers[(int)Player1.playerPercentage % 10]->Draw(1920 / 4 + 30, 900, false); //Player 1 percent
