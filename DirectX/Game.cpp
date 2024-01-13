@@ -5,7 +5,6 @@
 /*
 Future plans:
 Find a way to stop fast falling if inputting down air
-Add wavedashing
 Make platforms class (consists of isSolid, x0y0x1y1)
 Turn the main stage into a solid platform
 Pass array of platforms into character

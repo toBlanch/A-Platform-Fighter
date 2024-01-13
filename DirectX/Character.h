@@ -67,6 +67,9 @@ private:
 	bool groundTouchedAfterDodging = false;
 	bool rightHeld = false;
 	bool rightPriority = false;
+	bool dodgeHeld = false;
+	bool dodgePressed = false; //Because dodge gets disabled when moveDuration != 0 I need an accurate measure of if dodge is pressed
+	bool hitDuringDodge = false; //Balances wavedashing
 	Move moveArray[5];
 
 	int forwardLightAdditionalX = 0;

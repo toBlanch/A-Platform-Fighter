@@ -2,6 +2,7 @@
 #include "Game.h"
 
 void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, int stageX0, int stageY0, int stageX1, int stageY1) {
+	dodgePressed = dodge;
 	if (stun == 0) { //If not in stun
 		//If on stage
 		if (IsOnStage(stageX0, stageY0, stageX1, stageY1)) {
@@ -293,7 +294,7 @@ void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool 
 				}
 			}
 		}
-		else if (dodge && invincibilityCooldown == 0 && !easyMode) { //If dodging (only in Hard Mode)
+		else if (dodge && invincibilityCooldown == 0 && !dodgeHeld && !easyMode) { //If dodging (only in Hard Mode)
 			if (left) { //If holding left
 				facingRight = false; //Face left
 				vx = -speed; //Make the character move left
@@ -317,6 +318,7 @@ void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool 
 				}
 			}
 
+			hitDuringDodge = false;
 			invincibility = 20;
 			moveDuration = 30 * weight; //The heavier you are, the more lag you have
 			invincibilityCooldown = 120 * weight; //The heavier you are, the longer you have to wait before dodging again
@@ -345,6 +347,7 @@ void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool 
 	}
 	downHeld = down;
 	rightHeld = right;
+	dodgeHeld = dodgePressed;
 }
 
 bool Character::IsOnStage(int stageX0, int stageY0, int stageX1, int stageY1)
@@ -353,6 +356,11 @@ bool Character::IsOnStage(int stageX0, int stageY0, int stageX1, int stageY1)
 		y + height >= stageY0 && y + height <= stageY0 + vy * 2 //If Y coordinate is level with the stage
 		&& vy >= 0) {
 		y = (float)stageY0 - height; //Stop clipping
+		if (invincibility != 0 && moveDuration != 0 && !onStage && !hitDuringDodge) { //If dashing into the ground
+			invincibilityCooldown = 0;
+			invincibility = 0;
+			moveDuration = 0;
+		}
 		return true;
 	}
 	return false;
@@ -848,6 +856,11 @@ void Character::IsHit(int stunReferral, float damageReferral, int fixedXReferral
 		}
 		jumpKeyHeld = false;
 		downHeld = false;
+	}
+	else {
+		if (moveDuration != 0) { //This check does nothing currently but could save me in the future
+			hitDuringDodge = true;
+		}
 	}
 }
 
