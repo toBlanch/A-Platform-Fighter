@@ -1,33 +1,33 @@
 #include "Game.h"
 #include <windows.h>
 #include <Xinput.h>
+#include "Platform.h"
+#include "Stage.h"
 
 /*
-Hold down to fall through platforms
-Add back the code for not falling off the stage during a grounded attack
-Add StageClass and CurrentStage to game
-StageClass gets up to 16 platforms and maybe blast zone radius
-Change the code in Move and AI to not ask for a 10 parameters long array
-Give AI functionality with multiple stages by making them go towards the nearest platform when desperate and jump between platforms to get to the player
-Fix 'parameters' in game.h (nah just kidding, I won't be fixing that any time soon)
+General:
+	Rework the stage selection to show a preview of each stage
+	Allow controllers to navigate the start menu and pause
+	Give AI functionality with multiple stages by making them go towards the nearest platform when desperate and jump between platforms to get to the player
+	Fix 'parameters' in game.h (nah just kidding, I won't be fixing that any time soon)
 
 Tutorial:
-I would need text outputting functionality so do that first
-Put 1 player on screen as Circle
-Introduce different moves
-Add second player (uncontrollable) and output player 2's damage, vx and vy
-After that, make player 2 controllable and output player 2's controls
-Demonstrate different character stats
-After it's over, automatically set the menu to p2=ai as A and p1=human as circle. The player can decide if they wanna do that or not
+	I would need text outputting functionality so do that first
+	Put 1 player on screen as Circle
+	Introduce different moves
+	Add second player (uncontrollable) and output player 2's damage, vx and vy
+	After that, make player 2 controllable and output player 2's controls
+	Demonstrate different character stats
+	After it's over, automatically set the menu to p2=ai as A and p1=human as circle. The player can decide if they wanna do that or not
 
 Power ups:
-Power ups isn't bad, make additionalAcceleration, additionalKnockbackX etc, grab a few different sprites, make an item class (which stats it buffs, duration and colour) and add a line of the respective colour above a player with a power up
+	Power ups isn't bad, make additionalAcceleration, additionalKnockbackX etc, grab a few different sprites, make an item class (which stats it buffs, duration and colour) and add a line of the respective colour above a player with a power up
 
 Items:
-Bind throw to dodge
-For each item make a light and heavy attack that works similarly to easy mode attacks
-Also add numUses
-Item is held directly infront of the character
+	Bind throw to dodge
+	For each item make a light and heavy attack that works similarly to easy mode attacks
+	Also add numUses
+	Item is held directly infront of the character
 */
 
 Game::Game(Graphics* gfx)
@@ -61,6 +61,8 @@ Game::Game(Graphics* gfx)
 	numbers[7] = new SpriteSheet(L"7.bmp", gfx);
 	numbers[8] = new SpriteSheet(L"8.bmp", gfx);
 	numbers[9] = new SpriteSheet(L"9.bmp", gfx);
+
+	WIPStageSelectVisual = new SpriteSheet(L"WIP STAGE SELECT.bmp", gfx);
 
 	//Initialise idle sprites
 	idleParameters[0] = L"CircleIdle.bmp";
@@ -129,25 +131,6 @@ Game::Game(Graphics* gfx)
 	//Initialise menu description sprites
 	player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s idle animation
 	player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s idle animation
-
-	Platforms[0].x0 = 480;
-	Platforms[0].y0 = 700;
-	Platforms[0].x1 = 1440;
-	Platforms[0].y1 = 880;
-	Platforms[0].isSolid = true;
-
-	Platforms[1].x0 = 500;
-	Platforms[1].y0 = 500;
-	Platforms[1].x1 = 800;
-	Platforms[1].y1 = 600;
-	Platforms[1].isSolid = false;
-
-	Platforms[2].x0 = 800;
-	Platforms[2].y0 = 500;
-	Platforms[2].x1 = 1100;
-	Platforms[2].y1 = 600;
-	Platforms[2].isSolid = true;
-	numPlatforms = sizeof(Platforms) / sizeof(*Platforms);
 }
 
 void Game::Go()
@@ -235,6 +218,9 @@ void Game::GameState()
 	}
 	else if (startMenu) {
 		StartMenu();
+	}
+	else if (stageSelect) {
+		StageSelectionMenu();
 	}
 	else if (!paused && timeUntilStart > 0) { //If the game is starting
 		timeUntilStart--; //Reduce time until the game starts
@@ -390,7 +376,7 @@ void Game::StartMenu()
 		if (((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000) && !enterOrEscapeHeld) ||
 			(clickPosition.x >= 760 && clickPosition.x <= 1160 && clickPosition.y >= 490 && clickPosition.y <= 660)) { //If the game is starting
 			startMenu = false; //Disable the start menu
-			GameStart();
+			stageSelect = true;
 			if (player1CharacterID == 8) {
 				player1CharacterID = 1 + (float)randomDist(rng) * 6.9f / 39;
 				player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
@@ -416,24 +402,33 @@ void Game::StartMenu()
 	}
 }
 
+void Game::StageSelectionMenu()
+{
+	if (gfx->ifFocus() && GetKeyState(0x31) & 0x8000) {//1 key
+		stageSelected = 0;
+	}
+	if (gfx->ifFocus() && GetKeyState(0x32) & 0x8000) {//2 key
+		stageSelected = 1;
+	}
+	if (gfx->ifFocus() && GetKeyState(0x33) & 0x8000) {//3 key
+		stageSelected = 2;
+	}
+	if (gfx->ifFocus() && GetKeyState(0x34) & 0x8000) {//4 key
+		stageSelected = 3;
+	}
+	if (stageSelected != -1) {
+		GameStart();
+		menuTransition();
+		stageSelect = false;
+	}
+}
+
 void Game::StartBattleTheme()
 {
 	mciSendStringA("stop MainMenu", NULL, 0, NULL);
 	mciSendStringA("stop BattleTheme", NULL, 0, NULL);
 	mciSendStringA("close BattleTheme", NULL, 0, NULL);
-	int battleMusic = randomDist(rng);
-	if (battleMusic <= 10) {
-		mciSendStringA("open \"Battle Theme 0.wav\" type mpegvideo alias BattleTheme", NULL, 0, NULL);
-	}
-	else if (battleMusic <= 20) {
-		mciSendStringA("open \"Battle Theme 1.wav\" type mpegvideo alias BattleTheme", NULL, 0, NULL);
-	}
-	else if (battleMusic <= 30) {
-		mciSendStringA("open \"Battle Theme 2.wav\" type mpegvideo alias BattleTheme", NULL, 0, NULL);
-	}
-	else {
-		mciSendStringA("open \"Battle Theme 3.wav\" type mpegvideo alias BattleTheme", NULL, 0, NULL);
-	}
+	mciSendStringA(Stages[stageSelected].loadMusic, NULL, 0, NULL);
 	mciSendStringA("play BattleTheme from 0 repeat", NULL, 0, NULL);
 }
 
@@ -476,7 +471,7 @@ void Game::GameLoop()
 
 		//Update models
 		if (p1AISelected) {
-			ArtifialFriend.Update(Player2.x, Player2.y, Player2.width, Player2.height, Player1.x, Player1.y, Player1.vx, Player1.vy, Player1.width, Player1.height, Player1.invincibilityCooldown == 0, Player1.doubleJump, Platforms, randomDist(rng), Player2.playerPercentage);
+			ArtifialFriend.Update(Player2.x, Player2.y, Player2.width, Player2.height, Player1.x, Player1.y, Player1.vx, Player1.vy, Player1.width, Player1.height, Player1.invincibilityCooldown == 0, Player1.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player2.playerPercentage);
 			Player1.UpdateCharacter(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
@@ -487,8 +482,7 @@ void Game::GameLoop()
 				ArtifialFriend.heavy, //Heavy
 				ArtifialFriend.special, //Special
 				ArtifialFriend.dodge, //Dodge
-				Platforms,
-				numPlatforms);
+				Stages[stageSelected].Platforms);
 		}
 		else {
 			p1StopOtherInputs = false;
@@ -508,12 +502,11 @@ void Game::GameLoop()
 				gfx->ifFocus() && (GetKeyState(0x54) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p1StopOtherInputs), //Heavy
 				gfx->ifFocus() && (GetKeyState(0x48) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p1StopOtherInputs), //Special
 				gfx->ifFocus() && (GetKeyState(0xA0) & 0x8000) || ((p1ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p1ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p1StopOtherInputs), //Dodge
-				Platforms,
-				numPlatforms);
+				Stages[stageSelected].Platforms);
 		}
 		
 		if (p2AISelected) {
-			ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.vx, Player2.vy, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.doubleJump, Platforms, randomDist(rng), Player1.playerPercentage);
+			ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.vx, Player2.vy, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player1.playerPercentage);
 			Player2.UpdateCharacter(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
@@ -524,8 +517,7 @@ void Game::GameLoop()
 				ArtifialFriend.heavy, //Heavy
 				ArtifialFriend.special, //Special
 				ArtifialFriend.dodge, //Dodge
-				Platforms,
-				numPlatforms);
+				Stages[stageSelected].Platforms);
 		}
 		else {
 			p2StopOtherInputs = false;
@@ -546,8 +538,7 @@ void Game::GameLoop()
 				gfx->ifFocus() && (GetKeyState(0x4F) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p2StopOtherInputs), //Heavy
 				gfx->ifFocus() && (GetKeyState(0xBA) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p2StopOtherInputs), //Special
 				gfx->ifFocus() && (GetKeyState(0x4E) & 0x8000) || ((p2ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p2ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p2StopOtherInputs), //Dodge
-				Platforms,
-				numPlatforms);
+				Stages[stageSelected].Platforms);
 		}
 
 		if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
@@ -589,6 +580,7 @@ void Game::GameEnd()
 {
 	menuTransition();
 	startMenu = true; //Enable the start menu
+	stageSelected = -1; //Delects the current stage
 	mciSendStringA("pause BattleTheme", NULL, 0, NULL);
 	mciSendStringA("close BattleTheme", NULL, 0, NULL);
 	mciSendStringA("play MainMenu from 0 repeat", NULL, 0, NULL);
@@ -669,6 +661,9 @@ void Game::ComposeFrame()
 		player1Desc->Draw(345, 250, false); //Draws an appropriate sprite based on character ID in the start menu
 		player2Desc->Draw(1175, 250, false); //Draws an appropriate sprite based on character ID in the start menu
 	}
+	else if (stageSelect) {
+		WIPStageSelectVisual->Draw(0, 0, false);
+	}
 	else {
 		if (easyMode) {
 			easyModeWarning->Draw(0, 0, false);
@@ -712,8 +707,13 @@ void Game::ComposeFrame()
 			go->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display go
 		}
 
-		for (int i = 0; i < numPlatforms; i++) {
-			gfx->DrawRectThin(Platforms[i].x0, Platforms[i].y0, Platforms[i].x1, Platforms[i].y1, 255, 0, 0, 1); //Stage
+		for (int i = 0; i < 10; i++) { //For each platform
+			if (Stages[stageSelected].Platforms[i].isFilled) {
+				gfx->DrawRectFill(Stages[stageSelected].Platforms[i].x0, Stages[stageSelected].Platforms[i].y0, Stages[stageSelected].Platforms[i].x1, Stages[stageSelected].Platforms[i].y1, Stages[stageSelected].Platforms[i].r, Stages[stageSelected].Platforms[i].g, Stages[stageSelected].Platforms[i].b, 1); //Draw the platform
+			}
+			else {
+				gfx->DrawRectThin(Stages[stageSelected].Platforms[i].x0, Stages[stageSelected].Platforms[i].y0, Stages[stageSelected].Platforms[i].x1, Stages[stageSelected].Platforms[i].y1, Stages[stageSelected].Platforms[i].r, Stages[stageSelected].Platforms[i].g, Stages[stageSelected].Platforms[i].b, 1); //Draw the platform
+			}
 		}
 
 		numbers[((int)Player1.playerPercentage - (int)Player1.playerPercentage % 10) / 10]->Draw(1920 / 4, 900, false); //Player 1 percent

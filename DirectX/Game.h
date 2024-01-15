@@ -10,6 +10,7 @@
 #include <string>
 #include <Xinput.h>
 #include "Platform.h"
+#include "Stage.h"
 
 class Game
 {
@@ -26,6 +27,7 @@ private:
 	/********************************/
 	void menuTransition();
 	void StartMenu();
+	void StageSelectionMenu();
 	void StartBattleTheme();
 	void GameLoop();
 	void GameStart();
@@ -38,7 +40,7 @@ private:
 	std::mt19937 rng;
 	std::random_device rd;
 	std::uniform_int_distribution<int> randomDist;
-	Platform Platforms[10];
+	int stageSelected = -1;
 	int numPlatforms = 0;
 	int leniancy = 0;
 	int player1CharacterID = 0;
@@ -49,6 +51,7 @@ private:
 	int timer = 0;
 	bool credits = false;
 	bool startMenu = true;
+	bool stageSelect = false;
 	bool paused = false;
 	bool enterOrEscapeHeld = false;
 	bool qHeld = false;
@@ -103,6 +106,8 @@ private:
 	SpriteSheet* player2LivesIcon;
 	SpriteSheet* player2Desc;
 
+	SpriteSheet* WIPStageSelectVisual;
+
 	LPCWSTR idleParameters[9]; //The 9th is Random
 	LPCWSTR moveParameters[8];
 	LPCWSTR hitParameters[8];
@@ -112,7 +117,140 @@ private:
 	Character Player1;
 	Character Player2;
 	AI ArtifialFriend;
-	/********************************/
+
+	Platform Platforms0[10] = {
+		Platform(480,700,1440,880,true,false,255,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0)
+	};
+	Platform Platforms1[10] = {
+		Platform(480,700,1440,880,true,false,255,0,0),
+		Platform(500,500,800,600,false,false,255,255,0),
+		Platform(800,500,1100,600,true,false,255,255,255),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0)
+	};
+	Platform Platforms2[10] = {
+		Platform(480,700,1440,880,true,false,255,0,0),
+		Platform(500,200,600,590,true,true,255,255,0),
+		Platform(800,200,900,590,true,true,255,255,255),
+		Platform(500,590,900,620,false,false,0,255,0),
+		Platform(500,150,900,200,true,true,0,0,255),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0)
+	};
+	Platform Platforms3[10] = {
+		Platform(480,700,1440,880,true,false,255,0,0),
+		Platform(500,500,800,600,false,false,255,255,0),
+		Platform(800,500,1100,600,true,false,255,255,255),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0)
+	};
+	Platform Platforms4[10] = {
+		Platform(480,700,1440,880,true,false,255,0,0),
+		Platform(500,500,800,600,false,false,255,255,0),
+		Platform(800,500,1100,600,true,false,255,255,255),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0)
+	};
+	Platform Platforms5[10] = {
+		Platform(480,700,1440,880,true,false,255,0,0),
+		Platform(500,500,800,600,false,false,255,255,0),
+		Platform(800,500,1100,600,true,false,255,255,255),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0)
+	};
+	Platform Platforms6[10] = {
+		Platform(480,700,1440,880,true,false,255,0,0),
+		Platform(500,500,800,600,false,false,255,255,0),
+		Platform(800,500,1100,600,true,false,255,255,255),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0)
+	};
+	Platform Platforms7[10] = {
+		Platform(480,700,1440,880,true,false,255,0,0),
+		Platform(500,500,800,600,false,false,255,255,0),
+		Platform(800,500,1100,600,true,false,255,255,255),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0)
+	};
+	Platform Platforms8[10] = {
+		Platform(480,700,1440,880,true,false,255,0,0),
+		Platform(500,500,800,600,false,false,255,255,0),
+		Platform(800,500,1100,600,true,false,255,255,255),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0)
+	};
+	Platform Platforms9[10] = {
+		Platform(480,700,1440,880,true,false,255,0,0),
+		Platform(500,500,800,600,false,false,255,255,0),
+		Platform(800,500,1100,600,true,false,255,255,255),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0),
+		Platform(0,0,0,0,false,false,0,0,0)
+	};
+	Stage Stages[10] = {
+		Stage(Platforms0, "open \"Battle Theme 0.wav\" type mpegvideo alias BattleTheme"),
+		Stage(Platforms1, "open \"Battle Theme 1.wav\" type mpegvideo alias BattleTheme"),
+		Stage(Platforms2, "open \"Battle Theme 2.wav\" type mpegvideo alias BattleTheme"),
+		Stage(Platforms3, "open \"Battle Theme 3.wav\" type mpegvideo alias BattleTheme"),
+		Stage(Platforms4, "open \"Battle Theme 4.wav\" type mpegvideo alias BattleTheme"),
+		Stage(Platforms5, "open \"Battle Theme 5.wav\" type mpegvideo alias BattleTheme"),
+		Stage(Platforms6, "open \"Battle Theme 6.wav\" type mpegvideo alias BattleTheme"),
+		Stage(Platforms7, "open \"Battle Theme 7.wav\" type mpegvideo alias BattleTheme"),
+		Stage(Platforms8, "open \"Battle Theme 8.wav\" type mpegvideo alias BattleTheme"),
+		Stage(Platforms9, "open \"Battle Theme 9.wav\" type mpegvideo alias BattleTheme")
+	};
+
 	std::vector<std::vector<float>> parameters = {
 		//Circle
 		{

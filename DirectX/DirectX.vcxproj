@@ -145,6 +145,7 @@
     <ClInclude Include="Move.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="Stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

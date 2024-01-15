@@ -1,12 +1,12 @@
 #include "Character.h"
 #include "Game.h"
 
-void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, Platform Platforms[10], int numPlatforms) {
+void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, Platform Platforms[10]) {
 	dodgePressed = dodge;
 	if (stun == 0) { //If not in stun
 		//If on stage
-		for (int i = 0; i < numPlatforms; i++) {
-			if (IsOnStage(Platforms[i])) {
+		for (int i = 0; i < 10; i++) {
+			if (IsOnStage(Platforms[i], fallSpeed, down, i)) {
 				doubleJump = maxDoubleJump + easyMode; //Refresh double jumps
 				fastFalling = false; //Stop fast falling
 				acceleration = walkAcceleration; //Sets acceleration to grounded acceleration
@@ -171,27 +171,18 @@ void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool 
 		x += vx; //Increase X by speed
 		y += vy; //Increase Y by speed
 
-		//if (moveDuration > 0 && onStage) { //If using a grounded move
-		//	if (x < stageX0 - width) { //If falling out the left side
-		//		x = stageX0 - width; //Put back on the stage
-		//		vx = 0;
-		//	}
-		//	if (x > stageX1) { //If falling off the right side
-		//		x = stageX1; //Put back on the stage
-		//		vx = 0;
-		//	}
-		//}
-
-		bool onPlatform = false;
-		for (int i = 0; i < 10; i++) {
-			onPlatform = IsOnStage(Platforms[i]) || onPlatform;
-			if (Platforms[i].isSolid) {
-				ClippingIntoStageFromLeft(Platforms[i]);
-				ClippingIntoStageFromRight(Platforms[i]);
-				ClippingIntoStageFromBottom(Platforms[i]);
+		if (moveDuration > 0 && onStage) { //If using a grounded move
+			if (x < Platforms[platformOn].x0 - width) { //If falling out the left side
+				x = Platforms[platformOn].x0 - width; //Put back on the stage
+				vx = 0;
+			}
+			if (x > Platforms[platformOn].x1) { //If falling off the right side
+				x = Platforms[platformOn].x1; //Put back on the stage
+				vx = 0;
 			}
 		}
-		onStage = onPlatform;
+
+		isCollidingWithStage(Platforms, speed, fallSpeed, down);
 
 		if (special && (!moveArray[0].isAttachedToPlayer + !moveArray[1].isAttachedToPlayer + !moveArray[2].isAttachedToPlayer + !moveArray[3].isAttachedToPlayer + !moveArray[4].isAttachedToPlayer < 4 || up)) { //If using a special attack
 			for (int i = 0; i < moveArrayLength; i++) {
@@ -339,23 +330,7 @@ void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool 
 		x += vx;
 		y += vy;
 
-		for (int i = 0; i < 10; i++) {
-			if (IsOnStage(Platforms[i])) {
-				vy *= -1;
-			}
-			else if (Platforms[i].isSolid && ClippingIntoStageFromBottom(Platforms[i])) {
-				vy *= -1;
-			}
-
-			if (Platforms[i].isSolid) {
-				if (ClippingIntoStageFromLeft(Platforms[i])) { //If clipping into stage from the left
-					vx *= -1;
-				}
-				else if (ClippingIntoStageFromRight(Platforms[i])) { //If clipping into stage from right
-					vx *= -1;
-				}
-			}
-		}
+		isCollidingWithStage(Platforms, aerialSpeed, fallSpeed, down);
 		OnlyProjectiles(Platforms);
 	}
 	downHeld = down;
@@ -363,44 +338,72 @@ void Character::UpdateCharacter(bool left, bool right, bool up, bool down, bool 
 	dodgeHeld = dodgePressed;
 }
 
-bool Character::IsOnStage(Platform platform)
+void Character::isCollidingWithStage(Platform Platforms[10], float horizontalSpeed, float verticalSpeed, bool down)
+{
+	bool onPlatform = false;
+	for (int i = 0; i < 10; i++) {
+		onPlatform = IsOnStage(Platforms[i],verticalSpeed, down, i) || onPlatform;
+		if (Platforms[i].isSolid) {
+			ClippingIntoStageFromLeft(Platforms[i], horizontalSpeed);
+			ClippingIntoStageFromRight(Platforms[i], horizontalSpeed);
+			ClippingIntoStageFromBottom(Platforms[i], verticalSpeed);
+		}
+	}
+	onStage = onPlatform;
+}
+
+bool Character::IsOnStage(Platform platform, float speed, bool down, int i)
 {
 	if (x + width >= platform.x0 && x <= platform.x1 && //If X coordinate is over the stage
 		y + height >= platform.y0 && y + height <= platform.y0 + vy * 2 //If Y coordinate is level with the stage
-		&& vy >= 0) {
+		&& vy >= 0
+		&& !(!platform.isSolid && down)) {
 		y = (float)platform.y0 - height; //Stop clipping
 		if (invincibility != 0 && moveDuration != 0 && !onStage && !hitDuringDodge) { //If dashing into the ground
 			invincibilityCooldown = 0;
 			invincibility = 0;
 			moveDuration = 0;
 		}
+		if (stun > 0 || vy > fallSpeed * 2) {
+			vy *= -1;
+		}
+		platformOn = i;
 		return true;
 	}
 	return false;
 }
 
-bool Character::ClippingIntoStageFromLeft(Platform platform)
+bool Character::ClippingIntoStageFromLeft(Platform platform, float speed)
 {
 	if (y + height > platform.y0 && y <= platform.y1 && x + width > platform.x0 && x + width <= platform.x0 + vx) {
 		x = float(platform.x0 - width); //Stop clipping
+		if (stun > 0 || vx > speed * 2) {
+			vx *= -1;
+		}
 		return true;
 	}
 	return false;
 }
 
-bool Character::ClippingIntoStageFromRight(Platform platform)
+bool Character::ClippingIntoStageFromRight(Platform platform, float speed)
 {
 	if (y + height > platform.y0 && y <= platform.y1 && x >= platform.x1 + vx && x < platform.x1) {
 		x = (float)platform.x1; //Stop clipping
+		if (stun > 0 || -vx > speed * 2) {
+			vx *= -1;
+		}
 		return true;
 	}
 	return false;
 }
 
-bool Character::ClippingIntoStageFromBottom(Platform platform)
+bool Character::ClippingIntoStageFromBottom(Platform platform, float speed)
 {
 	if (x + width > platform.x0 && x < platform.x1 && y >= platform.y1 + vy && y <= platform.y1) {
 		y = (float)platform.y1; //Stop clipping
+		if (stun > 0 || -vy > speed * 2) {
+			vy *= -1;
+		}
 		return true;
 	}
 	return false;

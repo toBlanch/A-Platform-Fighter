@@ -5,11 +5,12 @@
 
 class Character {
 public:
-	void UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, Platform Platforms[10], int numPlatforms);
-	bool IsOnStage(Platform platform);
-	bool ClippingIntoStageFromLeft(Platform platform);
-	bool ClippingIntoStageFromRight(Platform platform);
-	bool ClippingIntoStageFromBottom(Platform platform);
+	void UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, Platform Platforms[10]);
+	void isCollidingWithStage(Platform Platforms[10], float horizontalSpeed, float verticalSpeed, bool down);
+	bool IsOnStage(Platform platform, float speed, bool down, int i);
+	bool ClippingIntoStageFromLeft(Platform platform, float speed);
+	bool ClippingIntoStageFromRight(Platform platform, float speed);
+	bool ClippingIntoStageFromBottom(Platform platform, float speed);
 	bool IsAlive(int screenWidth, int screenHeight, int leniancy);
 	bool MoveDraw(int move);
 	bool IsMoveColliding(float player2x, float player2y, int Player2Width, int Player2Height);
@@ -71,6 +72,7 @@ private:
 	bool dodgeHeld = false;
 	bool dodgePressed = false; //Because dodge gets disabled when moveDuration != 0 I need an accurate measure of if dodge is pressed
 	bool hitDuringDodge = false; //Balances wavedashing
+	int platformOn = -1;
 	Move moveArray[5];
 
 	int forwardLightAdditionalX = 0;
