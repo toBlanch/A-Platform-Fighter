@@ -6,7 +6,6 @@
 
 /*
 General:
-	Rework the stage selection to show a preview of each stage
 	Allow controllers to navigate the start menu and pause
 	Give AI functionality with multiple stages by making them go towards the nearest platform when desperate and jump between platforms to get to the player
 	Fix 'parameters' in game.h (nah just kidding, I won't be fixing that any time soon)
@@ -416,6 +415,21 @@ void Game::StageSelectionMenu()
 	if (gfx->ifFocus() && GetKeyState(0x34) & 0x8000) {//4 key
 		stageSelected = 3;
 	}
+	if (gfx->ifFocus() && GetKeyState(0x35) & 0x8000) {//5 key
+		stageSelected = 4;
+	}
+	if (gfx->ifFocus() && GetKeyState(0x36) & 0x8000) {//6 key
+		stageSelected = 5;
+	}
+	if (gfx->ifFocus() && GetKeyState(0x37) & 0x8000) {//7 key
+		stageSelected = 6;
+	}
+	if (gfx->ifFocus() && GetKeyState(0x38) & 0x8000) {//8 key
+		stageSelected = 7;
+	}
+	if (gfx->ifFocus() && GetKeyState(0x39) & 0x8000) {//9 key
+		stageSelected = 8;
+	}
 	if (stageSelected != -1) {
 		GameStart();
 		menuTransition();
@@ -564,11 +578,13 @@ void Game::GameStart()
 	timer = 10 * 60 * 60 - 1;
 	StartBattleTheme();
 	Player1.easyMode = easyMode;
-	Player1.x = 1920 / 4 + 100; //Set player 1s starting position
+	Player1.x = Stages[stageSelected].spawnx; //Set player 1s starting position
+	Player1.y = Stages[stageSelected].spawny - Player1.height; //Set player 1s starting position
 	Player1.facingRight = true;
 	Player1.Restart();
 	Player2.easyMode = easyMode;
-	Player2.x = 1920 / 4 * 3 - Player2.width - 100; //Set player 2s starting position
+	Player2.x = 1920 - Stages[stageSelected].spawnx - Player2.width; //Set player 2s starting position
+	Player2.y = Stages[stageSelected].spawny - Player2.height; //Set player 2s starting position
 	Player2.facingRight = false;
 	Player2.Restart();
 	timeUntilStart = 180;
@@ -599,6 +615,20 @@ void Game::GameEnd()
 	else {
 		previousWinner = 0;
 	}
+}
+
+int* Game::ShrinkToCoordinates(float x0, float y0, float x1, float y1, int screenx0, int screeny0, int screenx1, int screeny1) {
+	float refactorx = (screenx1 - screenx0) / 1920.0f;
+	float refactory = (screeny1 - screeny0) / 1080.0f;
+
+	int a[4];
+
+	a[0] = screenx0 + x0 * refactorx;
+	a[1] = screeny0 + y0 * refactory;
+	a[2] = screenx0 + x1 * refactorx;
+	a[3] = screeny0 + y1 * refactory;
+
+	return a;
 }
 
 void Game::ComposeFrame()
@@ -663,6 +693,26 @@ void Game::ComposeFrame()
 	}
 	else if (stageSelect) {
 		WIPStageSelectVisual->Draw(0, 0, false);
+		for (int i = 0; i < 9; i++) {
+			int boxx0 = 1920 / 4 * (1 + i % 3) - 192/2;
+			int boxy0 = 1080 / 4 * (1 + i / 3 - i % 3 / 3) - 108 / 2;
+			int boxx1 = 1920 / 4 * (1 + i % 3) + 192 / 2;
+			int boxy1 = 1080 / 4 * (1 + i / 3 - i % 3 / 3) + 108 / 2;
+			gfx->DrawRectThin(boxx0, boxy0, boxx1, boxy1, 255, 255, 255, 1);
+			for (int j = 0; j < 10; j++) {
+				//Assume 192 * 108 boxes
+				int* shrunkCoordinates;
+					
+				shrunkCoordinates = ShrinkToCoordinates(Stages[i].Platforms[j].x0, Stages[i].Platforms[j].y0, Stages[i].Platforms[j].x1, Stages[i].Platforms[j].y1,boxx0, boxy0, boxx1, boxy1);
+
+				if (Stages[i].Platforms[j].isFilled) {
+					gfx->DrawRectFill(shrunkCoordinates[0], shrunkCoordinates[1], shrunkCoordinates[2], shrunkCoordinates[3], Stages[i].Platforms[j].r, Stages[i].Platforms[j].g, Stages[i].Platforms[j].b, 1); //Draw the platform
+				}
+				else {
+					gfx->DrawRectThin(shrunkCoordinates[0], shrunkCoordinates[1], shrunkCoordinates[2], shrunkCoordinates[3], Stages[i].Platforms[j].r, Stages[i].Platforms[j].g, Stages[i].Platforms[j].b, 1); //Draw the platform
+				}
+			}
+		}
 	}
 	else {
 		if (easyMode) {
@@ -707,7 +757,7 @@ void Game::ComposeFrame()
 			go->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display go
 		}
 
-		for (int i = 0; i < 10; i++) { //For each platform
+		for (int i = 0; i < 9; i++) { //For each platform
 			if (Stages[stageSelected].Platforms[i].isFilled) {
 				gfx->DrawRectFill(Stages[stageSelected].Platforms[i].x0, Stages[stageSelected].Platforms[i].y0, Stages[stageSelected].Platforms[i].x1, Stages[stageSelected].Platforms[i].y1, Stages[stageSelected].Platforms[i].r, Stages[stageSelected].Platforms[i].g, Stages[stageSelected].Platforms[i].b, 1); //Draw the platform
 			}

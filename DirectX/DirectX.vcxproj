@@ -135,6 +135,7 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Move.cpp" />
+    <ClCompile Include="Platform.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
   </ItemGroup>
   <ItemGroup>

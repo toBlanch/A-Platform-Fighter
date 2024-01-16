@@ -36,6 +36,9 @@
     <ClCompile Include="SpriteSheet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Platform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">

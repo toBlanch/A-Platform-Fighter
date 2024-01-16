@@ -894,7 +894,6 @@ void Character::Restart()
 	invincibility = 0;
 	invincibilityCooldown = 0;
 	freeFallDuration = 0;
-	y = 700 - height;
 	fastFalling = false;
 }
 
