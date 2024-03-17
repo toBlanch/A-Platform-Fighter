@@ -2,12 +2,14 @@
 
 #include <Windows.h>
 #include <d2d1.h>
+#include <dwrite.h>
 #include <wincodec.h>
 
 class Graphics {
 	ID2D1Factory* factory;
 	ID2D1HwndRenderTarget* renderTarget;
 	ID2D1SolidColorBrush* brush;
+	IDWriteFactory* pDWriteFactory_;
 	HWND hwnd;
 	RECT clientRect;
 	bool fullscreen = false;
@@ -29,4 +31,6 @@ public:
 	void Fullscreen();
 	bool ifFocus();
 	void GetClickPosition(POINT* clickPosition);
+	IDWriteTextFormat* CreateTextFormat(LPCWSTR fontFamily, float fontSize);
+	void DrawText(LPCWSTR text, IDWriteTextFormat* pTextFormat_, int x0, int y0, int r, int g, int b, int a);
 };

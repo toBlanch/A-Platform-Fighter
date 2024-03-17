@@ -36,6 +36,8 @@ Game::Game(Graphics* gfx)
 {
 	this->gfx = gfx;
 
+	menuText = gfx->CreateTextFormat(L"Gabriola", 32.0f);
+
 	//Load menu sprites
 	easyModeWarning = new SpriteSheet(L"Easy Mode Warning.bmp", gfx);
 	aiWarning = new SpriteSheet(L"AI Warning.bmp", gfx);
@@ -663,7 +665,9 @@ void Game::ComposeFrame()
 		creditsVisual->Draw(0, 0, false);
 	}
 	else if (startMenu) {
-		startVisual->Draw(0, 0, false); //Displays the visual for the start menu
+		//startVisual->Draw(0, 0, false); //Displays the visual for the start menu
+		gfx->DrawText(L"Player 1 \n Move with WASD \n Jump with G \n Light attack with F \n Heavy attack with T \n Special attack with H \n Dodge with Left Shift \n Pause with ESC", menuText, 140, 500, 0, 0, 255, 1);
+		gfx->DrawText(L"Player 2 \n Move with arrow keys \n Jump with L \n Light attack with K \n Heavy attack with O \n Special attack with ; \n Dodge with N \n Pause with Enter", menuText, 1400, 500, 255, 0, 0, 1);
 
 		if (p1AISelected) {
 			aiWarning->Draw(70, 100, false);

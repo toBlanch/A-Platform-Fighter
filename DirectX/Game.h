@@ -81,6 +81,8 @@ private:
 
 	POINT clickPosition;
 
+	IDWriteTextFormat* menuText;
+
 	SpriteSheet* easyModeWarning;
 	SpriteSheet* aiWarning;
 	SpriteSheet* creditsVisual; 
