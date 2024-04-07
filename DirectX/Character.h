@@ -2,10 +2,15 @@
 #include "Move.h"
 #include <vector>
 #include "Platform.h"
+#include "Inputs.h"
 
 class Character {
 public:
-	void UpdateCharacter(bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, Platform Platforms[10]);
+	//bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, Platform Platforms[10]
+	void ReduceTimer(int& cooldown);
+	void UpdateCharacter(Inputs inputs, Platform platforms[10]);
+	void UpdateCharacterMoves(Platform platforms[10], bool onlyProjectiles);
+	void UpdateCharacterPosition(Inputs inputs, Platform Platforms[10]);
 	void isCollidingWithStage(Platform Platforms[10], float horizontalSpeed, float verticalSpeed, bool down);
 	bool IsOnStage(Platform platform, float speed, bool down, int i);
 	bool ClippingIntoStageFromLeft(Platform platform, float speed);
@@ -30,7 +35,6 @@ public:
 	void Initialise(std::vector<float>& parameters);
 	void IsHit(int stunReferral, float damageReferral, int fixedXReferral, int fixedYReferral, int scalarXReferral, int scalarYReferral);
 	void Restart();
-	void OnlyProjectiles(Platform Platforms[10]);
 	int lives = 3;
 	float x = 0;
 	float y = 0;
@@ -63,15 +67,14 @@ private:
 	int maxDoubleJump = 0;
 	int moveThatHit = 0;
 	bool onStage = false;
-	bool jumpKeyHeld = false;
 	bool fastFalling = false;
-	bool downHeld = false;
 	bool groundTouchedAfterDodging = false;
-	bool rightHeld = false;
 	bool rightPriority = false;
-	bool dodgeHeld = false;
-	bool dodgePressed = false; //Because dodge gets disabled when moveDuration != 0 I need an accurate measure of if dodge is pressed
 	bool hitDuringDodge = false; //Balances wavedashing
+	int moveCharacterIsAttachedTo = -1;
+
+	Inputs inputsHeld = Inputs(false, false, false, false, false, false, false, false, false);
+
 	int platformOn = -1;
 	Move moveArray[5];
 

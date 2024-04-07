@@ -143,6 +143,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Inputs.h" />
     <ClInclude Include="Move.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="SpriteSheet.h" />

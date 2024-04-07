@@ -3,15 +3,24 @@
 #include <Xinput.h>
 #include "Platform.h"
 #include "Stage.h"
+#include "Inputs.h"
 
 /*
+Urgent:
+	Fix speed changing after colliding while in stun
+
 General:
 	Allow controllers to navigate the start menu and pause
+	Refactor Character.cpp with the new Inputs.h
 	Give AI functionality with multiple stages by making them go towards the nearest platform when desperate and jump between platforms to get to the player
-	Fix 'parameters' in game.h (nah just kidding, I won't be fixing that any time soon)
+	
+Fix 'parameters' in game.h:
+	Make a moveTemplate class
+	Make a CharacterStats class
+	Clean UpdateCharacter's move creation with the new move templates
+	
 
 Tutorial:
-	I would need text outputting functionality so do that first
 	Put 1 player on screen as Circle
 	Introduce different moves
 	Add second player (uncontrollable) and output player 2's damage, vx and vy
@@ -255,7 +264,7 @@ void Game::StartMenu()
 		gfx->Fullscreen();
 	}
 	else if ((gfx->ifFocus() && GetKeyState(0x20) & 0x8000) ||
-		(clickPosition.x >= 1520 && clickPosition.x <= 1920 && clickPosition.y >= 980 && clickPosition.y <= 1080)) {
+	(clickPosition.x >= 1520 && clickPosition.x <= 1920 && clickPosition.y >= 980 && clickPosition.y <= 1080)) {
 		if (!spaceHeld) {
 			spaceHeld = true;
 			credits = true;
@@ -488,7 +497,7 @@ void Game::GameLoop()
 		//Update models
 		if (p1AISelected) {
 			ArtifialFriend.Update(Player2.x, Player2.y, Player2.width, Player2.height, Player1.x, Player1.y, Player1.vx, Player1.vy, Player1.width, Player1.height, Player1.invincibilityCooldown == 0, Player1.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player2.playerPercentage);
-			Player1.UpdateCharacter(
+			Player1.UpdateCharacter(Inputs(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
 				ArtifialFriend.up, //Up
@@ -497,7 +506,8 @@ void Game::GameLoop()
 				ArtifialFriend.light, //Light
 				ArtifialFriend.heavy, //Heavy
 				ArtifialFriend.special, //Special
-				ArtifialFriend.dodge, //Dodge
+				ArtifialFriend.dodge //Dodge
+				),
 				Stages[stageSelected].Platforms);
 		}
 		else {
@@ -508,7 +518,7 @@ void Game::GameLoop()
 				p1StopOtherInputs = true;
 			}
 			p1RightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player1.stun == 0 && Player1.moveDuration == 0) || p1RightStickPressed);
-			Player1.UpdateCharacter(
+			Player1.UpdateCharacter(Inputs(
 				gfx->ifFocus() && (GetKeyState(0x41) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) || (p1ControllerState.Gamepad.sThumbLX / controllerStickMaxInput < -0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX < -0.2)), //Left
 				gfx->ifFocus() && (GetKeyState(0x44) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) || (p1ControllerState.Gamepad.sThumbLX / controllerStickMaxInput > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX > 0.2)), //Right
 				gfx->ifFocus() && (GetKeyState(0x57) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) || (p1ControllerState.Gamepad.sThumbLY / controllerStickMaxInput > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RY > 0.2)), //Up
@@ -517,13 +527,14 @@ void Game::GameLoop()
 				gfx->ifFocus() && (GetKeyState(0x46) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X) || p1StopOtherInputs), //Light
 				gfx->ifFocus() && (GetKeyState(0x54) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p1StopOtherInputs), //Heavy
 				gfx->ifFocus() && (GetKeyState(0x48) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p1StopOtherInputs), //Special
-				gfx->ifFocus() && (GetKeyState(0xA0) & 0x8000) || ((p1ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p1ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p1StopOtherInputs), //Dodge
+				gfx->ifFocus() && (GetKeyState(0xA0) & 0x8000) || ((p1ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p1ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p1StopOtherInputs) //Dodge
+				),
 				Stages[stageSelected].Platforms);
 		}
 		
 		if (p2AISelected) {
 			ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.vx, Player2.vy, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player1.playerPercentage);
-			Player2.UpdateCharacter(
+			Player2.UpdateCharacter(Inputs(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
 				ArtifialFriend.up, //Up
@@ -532,7 +543,8 @@ void Game::GameLoop()
 				ArtifialFriend.light, //Light
 				ArtifialFriend.heavy, //Heavy
 				ArtifialFriend.special, //Special
-				ArtifialFriend.dodge, //Dodge
+				ArtifialFriend.dodge //Dodge
+				),
 				Stages[stageSelected].Platforms);
 		}
 		else {
@@ -544,7 +556,7 @@ void Game::GameLoop()
 			}
 			p2RightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player2.stun == 0 && Player2.moveDuration == 0) || p2RightStickPressed);
 			
-			Player2.UpdateCharacter(
+			Player2.UpdateCharacter(Inputs(
 				gfx->ifFocus() && (GetKeyState(0x25) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) || (p2ControllerState.Gamepad.sThumbLX / controllerStickMaxInput < -0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RX < -0.2)), //Left
 				gfx->ifFocus() && (GetKeyState(0x27) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) || (p2ControllerState.Gamepad.sThumbLX / controllerStickMaxInput > 0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RX > 0.2)), //Right
 				gfx->ifFocus() && (GetKeyState(0x26) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) || (p2ControllerState.Gamepad.sThumbLY / controllerStickMaxInput > 0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RY > 0.2)), //Up
@@ -553,7 +565,8 @@ void Game::GameLoop()
 				gfx->ifFocus() && (GetKeyState(0x4B) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X) || p2StopOtherInputs), //Light
 				gfx->ifFocus() && (GetKeyState(0x4F) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p2StopOtherInputs), //Heavy
 				gfx->ifFocus() && (GetKeyState(0xBA) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p2StopOtherInputs), //Special
-				gfx->ifFocus() && (GetKeyState(0x4E) & 0x8000) || ((p2ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p2ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p2StopOtherInputs), //Dodge
+				gfx->ifFocus() && (GetKeyState(0x4E) & 0x8000) || ((p2ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p2ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p2StopOtherInputs) //Dodge
+				),
 				Stages[stageSelected].Platforms);
 		}
 
