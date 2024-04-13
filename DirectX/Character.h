@@ -69,7 +69,6 @@ private:
 	bool onStage = false;
 	bool fastFalling = false;
 	bool groundTouchedAfterDodging = false;
-	bool rightPriority = false;
 	bool hitDuringDodge = false; //Balances wavedashing
 	int moveCharacterIsAttachedTo = -1;
 

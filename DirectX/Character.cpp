@@ -198,7 +198,7 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 	ReduceTimer(stun);
 	ReduceTimer(invincibility);
 	ReduceTimer(invincibilityCooldown);
-	inputsHeld = Inputs(inputsHeld.left, inputs.right, inputsHeld.up, inputs.down, inputs.jump, inputsHeld.light, inputsHeld.heavy, inputsHeld.special, dodgePressed);
+	inputsHeld = Inputs(inputsHeld.left, inputsHeld.right, inputsHeld.up, inputs.down, inputs.jump, inputsHeld.light, inputsHeld.heavy, inputsHeld.special, dodgePressed);
 }
 
 void Character::UpdateCharacterMoves(Platform platforms[10], bool onlyProjectiles)
@@ -224,18 +224,22 @@ void Character::UpdateCharacterPosition(Inputs inputs, Platform Platforms[10])
 	else if (stun == 0) {
 		//Left and Right
 		if (inputs.left && inputs.right) {
-			//a
+			if (inputsHeld.left) { //If left was previously held, press right
+				inputs.left = false;
+				inputsHeld.left = true; //Ensure this happens if left is still held
+				inputsHeld.right = false;
+			}
+			else { //If right or nothing was previously held, go left
+				inputs.right = false;
+				inputsHeld.right = true; //Ensure this happens if left is still held
+				inputsHeld.left = false;
+			}
 		}
-		else if (inputs.left) {
-
+		else {
+			inputsHeld.left = inputs.left;
+			inputsHeld.right = inputs.right;
 		}
-		if (rightPriority) {
-			rightPriority = inputs.right && inputs.left;
-		}
-		else if (inputs.left && inputs.right && !inputsHeld.right) {
-			rightPriority = true;
-		}
-		if (inputs.left && !rightPriority) { //If you're holding left
+		if (inputs.left) { //If you're holding left
 			vx -= acceleration; //Increase left velocity
 			if (vx < -speed) { //If you're over terminal velocity
 				vx = -speed; //Go to terminal velocity
@@ -253,7 +257,7 @@ void Character::UpdateCharacterPosition(Inputs inputs, Platform Platforms[10])
 				facingRight = true;
 			}
 		}
-		if (!inputs.left && !inputs.right) { //If not moving left or right
+		else { //If not moving left or right
 			if (abs(vx) < acceleration / 2) { //If decreasing speed would make you move right
 				vx = 0; //Set it to 0
 			}
