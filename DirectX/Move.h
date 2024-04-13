@@ -5,7 +5,6 @@ class Move {
 public:
 	void CheckStatus(float xReferral, float yReferral, Platform Platforms[10]);
 	void Activate(int playerWidthReferral, int playerHeightReferral, bool isFacingRight, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float accelerationxReferral, float accelerationyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool isPlayerAttachedToItReferral, bool disappearOnHitReferral, int rReferral, int gReferral, int bReferral);
-	bool Draw();
 	void EndMove();
 	bool IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height);
 	void PlayerIsHit();

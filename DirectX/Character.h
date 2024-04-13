@@ -5,10 +5,7 @@
 #include "Inputs.h"
 
 class Character {
-public:
-	//bool left, bool right, bool up, bool down, bool jump, bool light, bool heavy, bool special, bool dodge, Platform Platforms[10]
 	void ReduceTimer(int& cooldown);
-	void UpdateCharacter(Inputs inputs, Platform platforms[10]);
 	void UpdateCharacterMoves(Platform platforms[10], bool onlyProjectiles);
 	void UpdateCharacterPosition(Inputs inputs, Platform Platforms[10]);
 	void isCollidingWithStage(Platform Platforms[10], float horizontalSpeed, float verticalSpeed, bool down);
@@ -16,16 +13,10 @@ public:
 	bool ClippingIntoStageFromLeft(Platform platform, float speed);
 	bool ClippingIntoStageFromRight(Platform platform, float speed);
 	bool ClippingIntoStageFromBottom(Platform platform, float speed);
+public:
+	void UpdateCharacter(Inputs inputs, Platform platforms[10]);
 	bool IsAlive(int screenWidth, int screenHeight, int leniancy);
-	bool MoveDraw(int move);
 	bool IsMoveColliding(float player2x, float player2y, int Player2Width, int Player2Height);
-	int MoveX0(int move);
-	int MoveY0(int move);
-	int MoveX1(int move);
-	int MoveY1(int move);
-	int MoveR(int move);
-	int MoveG(int move);
-	int MoveB(int move);
 	int MoveThatHitStun();
 	float MoveThatHitDamage();
 	float MoveThatHitScalarX();
@@ -33,8 +24,9 @@ public:
 	float MoveThatHitFixedX();
 	float MoveThatHitFixedY();
 	void Initialise(std::vector<float>& parameters);
-	void IsHit(int stunReferral, float damageReferral, int fixedXReferral, int fixedYReferral, int scalarXReferral, int scalarYReferral);
+	void IsHit(Move moveHitWith);
 	void Restart();
+	Move GetMove(int moveID);
 	int lives = 3;
 	float x = 0;
 	float y = 0;
@@ -54,6 +46,7 @@ public:
 	int doubleJump = 0;
 	int moveArrayLength = 0;
 	bool easyMode = false;
+	int moveThatHit = 0;
 private:
 	float walkSpeed = 0;
 	float aerialSpeed = 0;
@@ -65,7 +58,6 @@ private:
 	float fallSpeed = 0;
 	float weight = 0;
 	int maxDoubleJump = 0;
-	int moveThatHit = 0;
 	bool onStage = false;
 	bool fastFalling = false;
 	bool groundTouchedAfterDodging = false;

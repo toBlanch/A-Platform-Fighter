@@ -92,11 +92,6 @@ void Move::Activate(int playerWidthReferral, int playerHeightReferral, bool isFa
 	b = bReferral;
 }
 
-bool Move::Draw()
-{
-	return activeDuration >= 0 && startUpDuration < 0; //If the move is active and not starting up
-}
-
 void Move::EndMove()
 {
 	activeDuration = -1; //Disable the move

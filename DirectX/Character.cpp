@@ -9,10 +9,234 @@ void Character::ReduceTimer(int& cooldown)
 	}
 }
 
+void Character::UpdateCharacterMoves(Platform platforms[10], bool onlyProjectiles)
+{
+	for (int i = 0; i < moveArrayLength; i++) { //For every move
+		moveArray[i].CheckStatus(x, y, platforms); //Run the necesarry functions every frame
+		if (moveArray[i].isPlayerAttachedToIt && moveArray[i].startUpDuration < 0 && moveArray[i].activeDuration >= 0) { //If an active move attaches the player to it
+			moveCharacterIsAttachedTo = i;
+		}
+	}
+}
+
+void Character::UpdateCharacterPosition(Inputs inputs, Platform Platforms[10])
+{
+	if (moveCharacterIsAttachedTo != -1) { //If the character is attached to a move
+		vx = moveArray[moveCharacterIsAttachedTo].vx;
+		vy = moveArray[moveCharacterIsAttachedTo].vy;
+
+		if (moveArray[moveCharacterIsAttachedTo].vy < 0) {
+			freeFallDuration = 30 / (5 * easyMode + 1);
+		}
+	}
+	else if (stun == 0) {
+		//Left and Right
+		if (inputs.left && inputs.right) {
+			if (inputsHeld.left) { //If left was previously held, press right
+				inputs.left = false;
+				inputsHeld.left = true; //Ensure this happens if left is still held
+				inputsHeld.right = false;
+			}
+			else { //If right or nothing was previously held, go left
+				inputs.right = false;
+				inputsHeld.right = true; //Ensure this happens if left is still held
+				inputsHeld.left = false;
+			}
+		}
+		else {
+			inputsHeld.left = inputs.left;
+			inputsHeld.right = inputs.right;
+		}
+		if (inputs.left) { //If you're holding left
+			vx -= acceleration; //Increase left velocity
+			if (vx < -speed) { //If you're over terminal velocity
+				vx = -speed; //Go to terminal velocity
+			}
+			if (onStage) {
+				facingRight = false;
+			}
+		}
+		else if (inputs.right) { //If you're holding right
+			vx += acceleration; //Increase right velocity
+			if (vx > speed) { //If you're over terminal velocity
+				vx = speed; //Go to terminal velocity
+			}
+			if (onStage) {
+				facingRight = true;
+			}
+		}
+		else { //If not moving left or right
+			if (abs(vx) < acceleration / 2) { //If decreasing speed would make you move right
+				vx = 0; //Set it to 0
+			}
+			else {
+				if (vx > 0) { //If moving right
+					vx -= acceleration / 2; //Decrease speed
+				}
+				if (vx < 0) { //If moving left
+					vx += acceleration / 2; //Decrease speed
+				}
+			}
+		}
+
+		//Jumping
+		if (inputs.jump) { //If you're not holding jump
+			if (onStage) { //If on stage and jump key is held
+				if (vy >= 0) { //If not already rising
+					vy = -groundJumpHeight; //Start jumping
+					inputsHeld.jump = true; //Jump key is held
+				}
+			}
+			else if (doubleJump > 0 && !inputsHeld.jump) { //If off stage, jumping, you have a double jump and the jump key is held
+				inputsHeld.jump = true; //Set jump key held to true
+				fastFalling = false; //Stop fast falling
+				doubleJump -= 1; //Remove one double jump
+				if (easyMode) {
+					vy = -groundJumpHeight; //Start jumping (easy mode)
+				}
+				else {
+					vy = -aerialJumpHeight; //Start jumping (Hard Mode)
+				}
+			}
+		}
+
+		if (!(invincibilityCooldown > 0 && invincibility > 0)) { //If not currently dodging
+			if (inputs.down && !onStage && !inputsHeld.down && !easyMode) { //If down key is held (only in Hard Mode)
+				fastFalling = true; //Start fast falling
+			}
+			if (fastFalling) {
+				if (vy < fallSpeed * 2) { //If not at terminal velocity
+					vy += fallAcceleration * 2; //Increase falling speed
+					if (vy > fallSpeed * 2) { //If over terminal velocity
+						vy = fallSpeed * 2; //Set to terminal velocity
+					}
+				}
+			}
+			else {
+				if (vy < fallSpeed) {//If not at terminal velocity
+					vy += fallAcceleration; //Increase falling speed
+					if (vy > fallSpeed) { //If over terminal velocity
+						vy = fallSpeed; //Set to terminal velocity
+					}
+				}
+			}
+		}
+	}
+
+	if (moveDuration > 0 && onStage) { //If using a grounded move
+		if (x + vx < Platforms[platformOn].x0 - width) { //If falling out the left side
+			vx = Platforms[platformOn].x0 - width - x; //Put back on the stage
+		}
+		if (x > Platforms[platformOn].x1) { //If falling off the right side
+			vx = Platforms[platformOn].x1 - x; //Put back on the stage
+		}
+	}
+	isCollidingWithStage(Platforms, speed, fallSpeed, inputs.down);
+
+	x += vx; //Increase X by speed
+	y += vy; //Increase Y by speed
+}
+
+void Character::isCollidingWithStage(Platform Platforms[10], float horizontalSpeed, float verticalSpeed, bool down)
+{
+	bool onPlatform = false;
+	for (int i = 0; i < 10; i++) {
+		onPlatform = IsOnStage(Platforms[i],verticalSpeed, down, i) || onPlatform;
+		if (Platforms[i].isSolid) {
+			ClippingIntoStageFromLeft(Platforms[i], horizontalSpeed);
+			ClippingIntoStageFromRight(Platforms[i], horizontalSpeed);
+			ClippingIntoStageFromBottom(Platforms[i], verticalSpeed);
+		}
+	}
+	onStage = onPlatform;
+}
+
+bool Character::IsOnStage(Platform platform, float speed, bool down, int i)
+{
+	float predictedx = x + vx;
+	float predictedy = y + vy;
+
+	if (predictedx + width >= platform.x0 && predictedx <= platform.x1 && //If X coordinate is over the stage
+		predictedy + height >= platform.y0 && predictedy + height <= platform.y0 + vy * 2 //If Y coordinate is level with the stage
+		&& vy >= 0
+		&& !(!platform.isSolid && down)) {
+
+		if (stun > 0 || vy > fallSpeed * 2) {
+			vy = -1 * vy - ((float)platform.y0 - height - y); //Stop clipping
+		}
+		else {
+			vy = (float)platform.y0 - height - y; //Stop clipping
+		}
+		if (invincibility != 0 && moveDuration != 0 && !onStage && !hitDuringDodge) { //If dashing into the ground
+			invincibilityCooldown = 0;
+			invincibility = 0;
+			moveDuration = 0;
+		}
+		platformOn = i;
+		return true;
+	}
+	return false;
+}
+
+bool Character::ClippingIntoStageFromLeft(Platform platform, float speed)
+{
+	float predictedx = x + vx;
+	float predictedy = y + vy;
+
+	if (predictedy + height > platform.y0 && predictedy <= platform.y1 && predictedx + width > platform.x0 && predictedx + width <= platform.x0 + vx) {
+		if (stun > 0 || vx > speed * 2) {
+			vx = -1 * vx - (vx = float(platform.x0 - width) - x);
+		}
+		else {
+			vx = float(platform.x0 - width) - x; //Stop clipping
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Character::ClippingIntoStageFromRight(Platform platform, float speed)
+{
+	float predictedx = x + vx;
+	float predictedy = y + vy;
+
+	if (predictedy + height > platform.y0 && predictedy <= platform.y1 && predictedx >= platform.x1 + vx && predictedx < platform.x1) {
+		if (stun > 0 || -vx > speed * 2) {
+			vx = -1 * vx - (float)platform.x1 - x;
+		}
+		else {
+			vx = (float)platform.x1 - x; //Stop clipping
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Character::ClippingIntoStageFromBottom(Platform platform, float speed)
+{
+	float predictedx = x + vx;
+	float predictedy = y + vy;
+
+	if (predictedx + width > platform.x0 && predictedx < platform.x1 && predictedy >= platform.y1 + vy && predictedy <= platform.y1) {
+		if (stun > 0 || -vy > speed * 2) {
+			vy = -1 * vy - ((float)platform.y1 - y);
+		}
+		else{
+			vy = (float)platform.y1 - y; //Stop clipping
+		}
+		return true;
+	}
+	return false;
+}
+
 void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 	bool dodgePressed = inputs.dodge; //Because dodge gets disabled when moveDuration != 0 I need an accurate measure of if dodge is pressed
 	moveCharacterIsAttachedTo = -1;
 	UpdateCharacterMoves(platforms, false);
+
+	if (inputs.down && inputs.left) {
+		int a = 0;
+	}
 
 	if (stun == 0) { //If not in stun
 		//If on stage
@@ -164,7 +388,7 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 			break;
 		}
 	}
-	if (inputs.dodge && invincibilityCooldown == 0 && !inputsHeld.dodge && moveDuration < 0 && groundTouchedAfterDodging && !easyMode) { //If dodging (only in Hard Mode)
+	if (inputs.dodge && invincibilityCooldown == 0 && !inputsHeld.dodge && moveDuration == 0 && groundTouchedAfterDodging && !easyMode) { //If dodging (only in Hard Mode)
 		if (inputs.left) { //If holding left
 			facingRight = false; //Face left
 			vx = -speed; //Make the character move left
@@ -194,233 +418,10 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 		invincibilityCooldown = 120 * weight + invincibility; //The heavier you are, the longer you have to wait before dodging again
 		groundTouchedAfterDodging = false; //You have to touch the ground before dodging again
 	}
-	//inputsHeld = Inputs(inputs.left,inputs.right,inputs.up,inputs.down,inputs.jump,inputs.light,inputs.heavy,inputs.special,inputs.dodge)
 	ReduceTimer(stun);
 	ReduceTimer(invincibility);
 	ReduceTimer(invincibilityCooldown);
 	inputsHeld = Inputs(inputsHeld.left, inputsHeld.right, inputsHeld.up, inputs.down, inputs.jump, inputsHeld.light, inputsHeld.heavy, inputsHeld.special, dodgePressed);
-}
-
-void Character::UpdateCharacterMoves(Platform platforms[10], bool onlyProjectiles)
-{
-	for (int i = 0; i < moveArrayLength; i++) { //For every move
-		moveArray[i].CheckStatus(x, y, platforms); //Run the necesarry functions every frame
-		if (moveArray[i].isPlayerAttachedToIt && moveArray[i].startUpDuration < 0 && moveArray[i].activeDuration >= 0) { //If an active move attaches the player to it
-			moveCharacterIsAttachedTo = i;
-		}
-	}
-}
-
-void Character::UpdateCharacterPosition(Inputs inputs, Platform Platforms[10])
-{
-	if (moveCharacterIsAttachedTo != -1) { //If the character is attached to a move
-		vx = moveArray[moveCharacterIsAttachedTo].vx;
-		vy = moveArray[moveCharacterIsAttachedTo].vy;
-
-		if (moveArray[moveCharacterIsAttachedTo].vy < 0) {
-			freeFallDuration = 30 / (5 * easyMode + 1);
-		}
-	}
-	else if (stun == 0) {
-		//Left and Right
-		if (inputs.left && inputs.right) {
-			if (inputsHeld.left) { //If left was previously held, press right
-				inputs.left = false;
-				inputsHeld.left = true; //Ensure this happens if left is still held
-				inputsHeld.right = false;
-			}
-			else { //If right or nothing was previously held, go left
-				inputs.right = false;
-				inputsHeld.right = true; //Ensure this happens if left is still held
-				inputsHeld.left = false;
-			}
-		}
-		else {
-			inputsHeld.left = inputs.left;
-			inputsHeld.right = inputs.right;
-		}
-		if (inputs.left) { //If you're holding left
-			vx -= acceleration; //Increase left velocity
-			if (vx < -speed) { //If you're over terminal velocity
-				vx = -speed; //Go to terminal velocity
-			}
-			if (onStage) {
-				facingRight = false;
-			}
-		}
-		else if (inputs.right) { //If you're holding right
-			vx += acceleration; //Increase right velocity
-			if (vx > speed) { //If you're over terminal velocity
-				vx = speed; //Go to terminal velocity
-			}
-			if (onStage) {
-				facingRight = true;
-			}
-		}
-		else { //If not moving left or right
-			if (abs(vx) < acceleration / 2) { //If decreasing speed would make you move right
-				vx = 0; //Set it to 0
-			}
-			else {
-				if (vx > 0) { //If moving right
-					vx -= acceleration / 2; //Decrease speed
-				}
-				if (vx < 0) { //If moving left
-					vx += acceleration / 2; //Decrease speed
-				}
-			}
-		}
-
-		//Jumping
-		if (inputs.jump) { //If you're not holding jump
-			if (onStage) { //If on stage and jump key is held
-				if (vy >= 0) { //If not already rising
-					vy = -groundJumpHeight; //Start jumping
-					inputsHeld.jump = true; //Jump key is held
-				}
-			}
-			else if (doubleJump > 0 && !inputsHeld.jump) { //If off stage, jumping, you have a double jump and the jump key is held
-				inputsHeld.jump = true; //Set jump key held to true
-				fastFalling = false; //Stop fast falling
-				doubleJump -= 1; //Remove one double jump
-				if (easyMode) {
-					vy = -groundJumpHeight; //Start jumping (easy mode)
-				}
-				else {
-					vy = -aerialJumpHeight; //Start jumping (Hard Mode)
-				}
-			}
-		}
-
-		if (!(invincibilityCooldown > 0 && invincibility > 0)) { //If not currently dodging
-			if (inputs.down && !onStage && !inputsHeld.down && !easyMode) { //If down key is held (only in Hard Mode)
-				fastFalling = true; //Start fast falling
-			}
-			if (fastFalling) {
-				if (vy < fallSpeed * 2) { //If not at terminal velocity
-					vy += fallAcceleration * 2; //Increase falling speed
-					if (vy > fallSpeed * 2) { //If over terminal velocity
-						vy = fallSpeed * 2; //Set to terminal velocity
-					}
-				}
-			}
-			else {
-				if (vy < fallSpeed) {//If not at terminal velocity
-					vy += fallAcceleration; //Increase falling speed
-					if (vy > fallSpeed) { //If over terminal velocity
-						vy = fallSpeed; //Set to terminal velocity
-					}
-				}
-			}
-		}
-	}
-
-
-
-	if (moveDuration > 0 && onStage) { //If using a grounded move
-		if (x + vx < Platforms[platformOn].x0 - width) { //If falling out the left side
-			vx = Platforms[platformOn].x0 - width - x; //Put back on the stage
-		}
-		if (x > Platforms[platformOn].x1) { //If falling off the right side
-			vx = Platforms[platformOn].x1 - x; //Put back on the stage
-		}
-	}
-	isCollidingWithStage(Platforms, speed, fallSpeed, inputs.down);
-
-	x += vx; //Increase X by speed
-	y += vy; //Increase Y by speed
-}
-
-void Character::isCollidingWithStage(Platform Platforms[10], float horizontalSpeed, float verticalSpeed, bool down)
-{
-	bool onPlatform = false;
-	for (int i = 0; i < 10; i++) {
-		onPlatform = IsOnStage(Platforms[i],verticalSpeed, down, i) || onPlatform;
-		if (Platforms[i].isSolid) {
-			ClippingIntoStageFromLeft(Platforms[i], horizontalSpeed);
-			ClippingIntoStageFromRight(Platforms[i], horizontalSpeed);
-			ClippingIntoStageFromBottom(Platforms[i], verticalSpeed);
-		}
-	}
-	onStage = onPlatform;
-}
-
-bool Character::IsOnStage(Platform platform, float speed, bool down, int i)
-{
-	float predictedx = x + vx;
-	float predictedy = y + vy;
-
-	if (predictedx + width >= platform.x0 && predictedx <= platform.x1 && //If X coordinate is over the stage
-		predictedy + height >= platform.y0 && predictedy + height <= platform.y0 + vy * 2 //If Y coordinate is level with the stage
-		&& vy >= 0
-		&& !(!platform.isSolid && down)) {
-
-		if (stun > 0 || vy > fallSpeed * 2) {
-			vy = -1 * vy - ((float)platform.y0 - height - y); //Stop clipping
-		}
-		else {
-			vy = (float)platform.y0 - height - y; //Stop clipping
-		}
-		if (invincibility != 0 && moveDuration != 0 && !onStage && !hitDuringDodge) { //If dashing into the ground
-			invincibilityCooldown = 0;
-			invincibility = 0;
-			moveDuration = 0;
-		}
-		platformOn = i;
-		return true;
-	}
-	return false;
-}
-
-bool Character::ClippingIntoStageFromLeft(Platform platform, float speed)
-{
-	float predictedx = x + vx;
-	float predictedy = y + vy;
-
-	if (predictedy + height > platform.y0 && predictedy <= platform.y1 && predictedx + width > platform.x0 && predictedx + width <= platform.x0 + vx) {
-		if (stun > 0 || vx > speed * 2) {
-			vx = -1 * vx - (vx = float(platform.x0 - width) - x);
-		}
-		else {
-			vx = float(platform.x0 - width) - x; //Stop clipping
-		}
-		return true;
-	}
-	return false;
-}
-
-bool Character::ClippingIntoStageFromRight(Platform platform, float speed)
-{
-	float predictedx = x + vx;
-	float predictedy = y + vy;
-
-	if (predictedy + height > platform.y0 && predictedy <= platform.y1 && predictedx >= platform.x1 + vx && predictedx < platform.x1) {
-		if (stun > 0 || -vx > speed * 2) {
-			vx = -1 * vx - (float)platform.x1 - x;
-		}
-		else {
-			vx = (float)platform.x1 - x; //Stop clipping
-		}
-		return true;
-	}
-	return false;
-}
-
-bool Character::ClippingIntoStageFromBottom(Platform platform, float speed)
-{
-	float predictedx = x + vx;
-	float predictedy = y + vy;
-
-	if (predictedx + width > platform.x0 && predictedx < platform.x1 && predictedy >= platform.y1 + vy && predictedy <= platform.y1) {
-		if (stun > 0 || -vy > speed * 2) {
-			vy = -1 * vy - ((float)platform.y1 - y);
-		}
-		else{
-			vy = (float)platform.y1 - y; //Stop clipping
-		}
-		return true;
-	}
-	return false;
 }
 
 bool Character::IsAlive(int screenWidth, int screenHeight, int leniancy)
@@ -455,11 +456,6 @@ bool Character::IsAlive(int screenWidth, int screenHeight, int leniancy)
 	return true;
 }
 
-bool Character::MoveDraw(int move)
-{
-	return moveArray[move].Draw();
-}
-
 bool Character::IsMoveColliding(float player2x, float player2y, int player2Width, int player2Height)
 {
 	for (int i = 0; i < moveArrayLength; i++) {
@@ -469,42 +465,6 @@ bool Character::IsMoveColliding(float player2x, float player2y, int player2Width
 		}
 	}
 	return false;
-}
-
-int Character::MoveX0(int move)
-{
-	return moveArray[move].x + moveArray[move].additionalX;
-}
-
-int Character::MoveY0(int move)
-{
-	return moveArray[move].y + moveArray[move].additionalY;
-
-}
-
-int Character::MoveX1(int move)
-{
-	return moveArray[move].x + moveArray[move].additionalX + moveArray[move].width;
-}
-
-int Character::MoveY1(int move)
-{
-	return moveArray[move].y + moveArray[move].height + moveArray[move].additionalY;
-}
-
-int Character::MoveR(int move)
-{
-	return moveArray[move].r;
-}
-
-int Character::MoveG(int move)
-{
-	return moveArray[move].g;
-}
-
-int Character::MoveB(int move)
-{
-	return moveArray[move].b;
 }
 
 int Character::MoveThatHitStun()
@@ -870,15 +830,15 @@ void Character::Initialise(std::vector<float>& parameters) {
 	Restart();
 }
 
-void Character::IsHit(int stunReferral, float damageReferral, int fixedXReferral, int fixedYReferral, int scalarXReferral, int scalarYReferral) {
+void Character::IsHit(Move moveHitWith) {
 	if (invincibility == 0) {
-		stun = stunReferral * 2 / (2 + easyMode); //2/3rds of the original value in easy mode
-		playerPercentage += damageReferral;
+		stun = moveHitWith.stunDuration * 2 / (2 + easyMode); //2/3rds of the original value in easy mode
+		playerPercentage += moveHitWith.damage;
 		if (playerPercentage >= 100) {
 			playerPercentage = 99.9;
 		}
-		vx = (fixedXReferral + scalarXReferral * playerPercentage / 100) / weight * (1 + easyMode); //Doubled in easy mode
-		vy = (fixedYReferral + scalarYReferral * playerPercentage / 100) / weight * (1 + easyMode); //Doubled in easy mode
+		vx = (moveHitWith.fixedX + moveHitWith.scalarX * playerPercentage / 100) / weight * (1 + easyMode); //Doubled in easy mode
+		vy = (moveHitWith.fixedY + moveHitWith.scalarY * playerPercentage / 100) / weight * (1 + easyMode); //Doubled in easy mode
 		moveDuration = 0;
 		freeFallDuration = 0;
 		for (int i = 0; i < moveArrayLength; i++) {
@@ -909,4 +869,9 @@ void Character::Restart()
 	invincibilityCooldown = 0;
 	freeFallDuration = 0;
 	fastFalling = false;
+}
+
+Move Character::GetMove(int moveID)
+{
+	return moveArray[moveID];
 }

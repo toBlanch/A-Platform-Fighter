@@ -4,6 +4,7 @@
 #include "Platform.h"
 #include "Stage.h"
 #include "Inputs.h"
+using namespace std;
 
 /*
 Urgent:
@@ -59,18 +60,6 @@ Game::Game(Graphics* gfx)
 	startTwo = new SpriteSheet(L"StartTwo.bmp", gfx);
 	startOne = new SpriteSheet(L"StartOne.bmp", gfx);
 	go = new SpriteSheet(L"Go.bmp", gfx);
-
-	//Initialise numbers
-	numbers[0] = new SpriteSheet(L"0.bmp", gfx);
-	numbers[1] = new SpriteSheet(L"1.bmp", gfx);
-	numbers[2] = new SpriteSheet(L"2.bmp", gfx);
-	numbers[3] = new SpriteSheet(L"3.bmp", gfx);
-	numbers[4] = new SpriteSheet(L"4.bmp", gfx);
-	numbers[5] = new SpriteSheet(L"5.bmp", gfx);
-	numbers[6] = new SpriteSheet(L"6.bmp", gfx);
-	numbers[7] = new SpriteSheet(L"7.bmp", gfx);
-	numbers[8] = new SpriteSheet(L"8.bmp", gfx);
-	numbers[9] = new SpriteSheet(L"9.bmp", gfx);
 
 	WIPStageSelectVisual = new SpriteSheet(L"WIP STAGE SELECT.bmp", gfx);
 
@@ -259,12 +248,12 @@ void Game::menuTransition()
 void Game::StartMenu()
 {
 	if ((gfx->ifFocus() && GetKeyState(0xA2) & 0x8000 && gfx->ifFocus() && GetKeyState(0x20) & 0x8000 && !spaceHeld) ||
-		(clickPosition.x >= 0 && clickPosition.x <= 400 && clickPosition.y >= 980 && clickPosition.y <= 1080)) {
+		(clickPosition.x >= 0 && clickPosition.x <= 400 && clickPosition.y >= 980 && clickPosition.y <= 1080)) { //If Fullscreen pressed
 		spaceHeld = true;
 		gfx->Fullscreen();
 	}
 	else if ((gfx->ifFocus() && GetKeyState(0x20) & 0x8000) ||
-	(clickPosition.x >= 1520 && clickPosition.x <= 1920 && clickPosition.y >= 980 && clickPosition.y <= 1080)) {
+	(clickPosition.x >= 1520 && clickPosition.x <= 1920 && clickPosition.y >= 980 && clickPosition.y <= 1080)) { //If credits pressed
 		if (!spaceHeld) {
 			spaceHeld = true;
 			credits = true;
@@ -571,15 +560,15 @@ void Game::GameLoop()
 		}
 
 		if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
-			std::string soundString = "set hit speed " + std::to_string(2100 - 100 * (int)Player1.MoveThatHitDamage());
+			std::string soundString = "set hit speed " + std::to_string(2100 - 100 * (int)Player1.GetMove(Player2.moveThatHit).damage);
 			mciSendStringA(soundString.c_str(), NULL, 0, NULL);
 			mciSendStringA("play hit from 0", NULL, 0, NULL);
-			Player2.IsHit(Player1.MoveThatHitStun(), Player1.MoveThatHitDamage(), Player1.MoveThatHitFixedX(), Player1.MoveThatHitFixedY(), Player1.MoveThatHitScalarX(), Player1.MoveThatHitScalarY()); //Register that player 2 has been hit
+			Player2.IsHit(Player1.GetMove(Player1.moveThatHit)); //Register that player 2 has been hit
 		}
 		if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) { //Is player 2 hitting any move
-			std::string soundString = "set hit speed " + std::to_string(2100 - 100 * (int)Player2.MoveThatHitDamage());
+			std::string soundString = "set hit speed " + std::to_string(2100 - 100 * (int)Player2.GetMove(Player2.moveThatHit).damage);
 			mciSendStringA(soundString.c_str(), NULL, 0, NULL);
-			Player1.IsHit(Player2.MoveThatHitStun(), Player2.MoveThatHitDamage(), Player2.MoveThatHitFixedX(), Player2.MoveThatHitFixedY(), Player2.MoveThatHitScalarX(), Player2.MoveThatHitScalarY()); //Register that player 1 has been hit
+			Player1.IsHit(Player2.GetMove(Player2.moveThatHit)); //Register that player 1 has been hit
 		}
 	}
 	else {
@@ -644,6 +633,22 @@ int* Game::ShrinkToCoordinates(float x0, float y0, float x1, float y1, int scree
 	a[3] = screeny0 + y1 * refactory;
 
 	return a;
+}
+
+wstring Game::DamageToWString(float damage)
+{
+	string intToString = to_string((int)(damage * 10));
+	while (intToString.length() < 3) {
+		intToString = "0" + intToString;
+	}
+	intToString = intToString.substr(0, 2) + "." + intToString.substr(2, 1);
+	return wstring(intToString.begin(), intToString.end());
+}
+
+wstring Game::TimeToWString(int time)
+{
+	string intToString = to_string((int)(timer / 60 / 60)) + ":" + to_string((int)(timer / 60 % 60));
+	return wstring(intToString.begin(), intToString.end());
 }
 
 void Game::ComposeFrame()
@@ -738,8 +743,10 @@ void Game::ComposeFrame()
 		if (paused) {
 			pauseVisual->Draw(0, 0, false); //Display the pause menu
 
-			gfx->DrawRectFill(0, 1050, 270, 1080, 0, 0, 0, 1);
-			gfx->DrawRectFill(1630, 1050, 1920, 1080, 0, 0, 0, 1);
+			if (easyMode) {
+				gfx->DrawRectFill(0, 1050, 270, 1080, 0, 0, 0, 1);
+				gfx->DrawRectFill(1630, 1050, 1920, 1080, 0, 0, 0, 1);
+			}
 
 			if (Player1.lives == Player2.lives && Player1.playerPercentage == Player2.playerPercentage) { //If both players are even
 				gfx->DrawRectFill(1920 / 2 - Player1.width - 1, 99, 1920 / 2 + 1, 100 + Player1.height + 1, 255, 199, 0, 1); //Player 1 border
@@ -775,18 +782,17 @@ void Game::ComposeFrame()
 		}
 
 		for (int i = 0; i < 9; i++) { //For each platform
-			if (Stages[stageSelected].Platforms[i].isFilled) {
-				gfx->DrawRectFill(Stages[stageSelected].Platforms[i].x0, Stages[stageSelected].Platforms[i].y0, Stages[stageSelected].Platforms[i].x1, Stages[stageSelected].Platforms[i].y1, Stages[stageSelected].Platforms[i].r, Stages[stageSelected].Platforms[i].g, Stages[stageSelected].Platforms[i].b, 1); //Draw the platform
+			Platform platformToDraw = Stages[stageSelected].Platforms[i];
+			if (platformToDraw.isFilled) {
+				gfx->DrawRectFill(platformToDraw.x0, platformToDraw.y0, platformToDraw.x1, platformToDraw.y1, platformToDraw.r, platformToDraw.g, platformToDraw.b, 1); //Draw the platform
 			}
 			else {
-				gfx->DrawRectThin(Stages[stageSelected].Platforms[i].x0, Stages[stageSelected].Platforms[i].y0, Stages[stageSelected].Platforms[i].x1, Stages[stageSelected].Platforms[i].y1, Stages[stageSelected].Platforms[i].r, Stages[stageSelected].Platforms[i].g, Stages[stageSelected].Platforms[i].b, 1); //Draw the platform
+				gfx->DrawRectThin(platformToDraw.x0, platformToDraw.y0, platformToDraw.x1, platformToDraw.y1, platformToDraw.r, platformToDraw.g, platformToDraw.b, 1); //Draw the platform
 			}
 		}
 
-		numbers[((int)Player1.playerPercentage - (int)Player1.playerPercentage % 10) / 10]->Draw(1920 / 4, 900, false); //Player 1 percent
-		numbers[(int)Player1.playerPercentage % 10]->Draw(1920 / 4 + 30, 900, false); //Player 1 percent
-		gfx->DrawRectFill(1920 / 4 + 64, 939, 1920 / 4 + 66, 941, 255, 255, 255, 1); //Decimal point
-		numbers[(int)(Player1.playerPercentage * 10) % 10]->Draw(1920 / 4 + 70, 900, false); //Player 1 percent
+		gfx->DrawTextW(DamageToWString(Player1.playerPercentage).c_str(), menuText, 1920 / 4, 900, 0, 0, 255, 1);
+
 		for (int i = 0; i < Player1.lives; i++) {
 			player1LivesIcon->Draw(1920 / 4 + i * 30, 950, false); //Player 1 lives icon
 		}
@@ -794,10 +800,7 @@ void Game::ComposeFrame()
 			player2LivesIcon->Draw(1920 / 4 * 3 + i * 30, 950, false); //Player 2 lives icon
 		}
 
-		numbers[((int)Player2.playerPercentage - (int)Player2.playerPercentage % 10) / 10]->Draw(1920 / 4 * 3, 900, false); //Player 2 percent
-		numbers[(int)Player2.playerPercentage % 10]->Draw(1920 / 4 * 3 + 30, 900, false); //Player 2 percent
-		gfx->DrawRectFill(1920 / 4 * 3 + 64, 939, 1920 * 3 / 4 + 66, 941, 255, 255, 255, 1); //Decimal point
-		numbers[(int)(Player2.playerPercentage * 10) % 10]->Draw(1920 / 4 * 3 + 70, 900, false); //Player 2 percent
+		gfx->DrawTextW(DamageToWString(Player2.playerPercentage).c_str(), menuText, 1920 / 4 * 3, 900, 0, 0, 255, 1);
 
 		if (p1AISelected) {
 			aiWarning->Draw(1920 / 4, 980, false);
@@ -833,21 +836,19 @@ void Game::ComposeFrame()
 			player2Idle->Draw(Player2.x, Player2.y, !Player2.facingRight); //Display normal animation
 		}
 
-
+		Move moveToDraw;
 		for (int i = 0; i < Player1.moveArrayLength; i++) { //For every move
-			if (Player1.MoveDraw(i)) { //If it can be drawn
-				gfx->DrawRectFill(Player1.MoveX0(i), Player1.MoveY0(i), Player1.MoveX1(i), Player1.MoveY1(i), Player1.MoveR(i), Player1.MoveG(i), Player1.MoveB(i), 1); //Draw it
+			moveToDraw = Player1.GetMove(i);
+			if (moveToDraw.activeDuration >= 0 && moveToDraw.startUpDuration < 0) {
+				gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.width, moveToDraw.y + moveToDraw.additionalY + moveToDraw.height, moveToDraw.r, moveToDraw.g, moveToDraw.b, 1); //Draw it
 			}
-			if (Player2.MoveDraw(i)) { //If it can be drawn
-				gfx->DrawRectFill(Player2.MoveX0(i), Player2.MoveY0(i), Player2.MoveX1(i), Player2.MoveY1(i), Player2.MoveR(i), Player2.MoveG(i), Player2.MoveB(i), 1); //Draw it
+			moveToDraw = Player2.GetMove(i);
+			if (moveToDraw.activeDuration >= 0 && moveToDraw.startUpDuration < 0) {
+				gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.width, moveToDraw.y + moveToDraw.additionalY + moveToDraw.height, moveToDraw.r, moveToDraw.g, moveToDraw.b, 1); //Draw it
 			}
 		}
 
-		numbers[(int)(timer / 60 / 60)]->Draw(1920 / 2 - 50, 50, false); //Time in minutes
-		gfx->DrawRectFill(1920 / 2 - 20, 70, 1920 / 2 - 15, 75, 255, 255, 255, 1); //Colon
-		gfx->DrawRectFill(1920 / 2 - 20, 95, 1920 / 2 - 15, 100, 255, 255, 255, 1); //Colon
-		numbers[(int)((timer / 60 % 60 - timer / 60 % 10) / 10)]->Draw(1920 / 2, 50, false); //Time in tens
-		numbers[(int)(timer / 60 % 10)]->Draw(1920 / 2 + 50, 50, false); //Time in seconds
+		gfx->DrawTextW(TimeToWString(timer).c_str(), menuText, 1920 / 2 - 50, 50, 255, 255, 255, 1);
 	}
 
 	gfx->EndDraw();

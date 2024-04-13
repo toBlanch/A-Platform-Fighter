@@ -3,6 +3,7 @@
 #include "SpriteSheet.h"
 #include <Winuser.h>
 #include <dwrite.h>
+using namespace std;
 
 Graphics::Graphics()
 {

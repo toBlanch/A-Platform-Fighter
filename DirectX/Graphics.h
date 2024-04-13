@@ -4,6 +4,7 @@
 #include <d2d1.h>
 #include <dwrite.h>
 #include <wincodec.h>
+using namespace std;
 
 class Graphics {
 	ID2D1Factory* factory;

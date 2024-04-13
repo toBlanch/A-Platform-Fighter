@@ -33,6 +33,8 @@ private:
 	void GameStart();
 	void GameEnd();
 	int* ShrinkToCoordinates(float x0, float y0, float x1, float y1, int screenx0, int screeny0, int screenx1, int screeny1);
+	wstring DamageToWString(float damage);
+	wstring TimeToWString(int time);
 
 private:
 	/********************************/
@@ -94,8 +96,6 @@ private:
 	SpriteSheet* startTwo;
 	SpriteSheet* startOne;
 	SpriteSheet* go;
-
-	SpriteSheet* numbers[10];
 
 	SpriteSheet* player1Idle;
 	SpriteSheet* player1Move;
