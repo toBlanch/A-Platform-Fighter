@@ -201,31 +201,35 @@ void Game::GameState()
 		gfx->GetClickPosition(&clickPosition);
 	}
 
-	if (credits) {
-		if ((gfx->ifFocus() && GetKeyState(0x20) & 0x8000) ||
-			(clickPosition.x >= 0 && clickPosition.x <= 205 && clickPosition.y >= 0 && clickPosition.y <= 65)) {
-			if (!spaceHeld) {
-				credits = false;
-				mciSendStringA("stop Credits", NULL, 0, NULL);
-				mciSendStringA("play MainMenu from 0 repeat", NULL, 0, NULL);
-				spaceHeld = true;
+	switch (menuState) {
+		case (credits):
+			if ((gfx->ifFocus() && GetKeyState(0x20) & 0x8000) ||
+				(clickPosition.x >= 0 && clickPosition.x <= 205 && clickPosition.y >= 0 && clickPosition.y <= 65)) {
+				if (!spaceHeld) {
+					menuState = mainMenu;
+					mciSendStringA("stop Credits", NULL, 0, NULL);
+					mciSendStringA("play MainMenu from 0 repeat", NULL, 0, NULL);
+					spaceHeld = true;
+				}
 			}
-		}
-		else {
-			spaceHeld = false;
-		}
-	}
-	else if (startMenu) {
-		StartMenu();
-	}
-	else if (stageSelect) {
-		StageSelectionMenu();
-	}
-	else if (!paused && timeUntilStart > 0) { //If the game is starting
-		timeUntilStart--; //Reduce time until the game starts
-	}
-	else {
-		GameLoop();
+			else {
+				spaceHeld = false;
+			}
+			break;
+		case (mainMenu):
+			StartMenu();
+			break;
+		case(stageSelect):
+			StageSelectionMenu();
+			break;
+		case(game):
+			if (!paused && timeUntilStart > 0) { //If the game is starting
+				timeUntilStart--; //Reduce time until the game starts
+			}
+			else {
+				GameLoop();
+			}
+			break;
 	}
 	enterOrEscapeHeld = gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000; //If enter or escape is held set it to true, otherwise set it to false
 	//spaceHeld = gfx->ifFocus() && GetKeyState(0x20) & 0x8000;
@@ -256,7 +260,7 @@ void Game::StartMenu()
 	(clickPosition.x >= 1520 && clickPosition.x <= 1920 && clickPosition.y >= 980 && clickPosition.y <= 1080)) { //If credits pressed
 		if (!spaceHeld) {
 			spaceHeld = true;
-			credits = true;
+			menuState = credits;
 			mciSendStringA("stop MainMenu", NULL, 0, NULL);
 			mciSendStringA("play Credits from 0 repeat", NULL, 0, NULL);
 			menuTransition();
@@ -374,8 +378,7 @@ void Game::StartMenu()
 
 		if (((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000) && !enterOrEscapeHeld) ||
 			(clickPosition.x >= 760 && clickPosition.x <= 1160 && clickPosition.y >= 490 && clickPosition.y <= 660)) { //If the game is starting
-			startMenu = false; //Disable the start menu
-			stageSelect = true;
+			menuState = stageSelect;
 			if (player1CharacterID == 8) {
 				player1CharacterID = 1 + (float)randomDist(rng) * 6.9f / 39;
 				player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
@@ -433,7 +436,7 @@ void Game::StageSelectionMenu()
 	if (stageSelected != -1) {
 		GameStart();
 		menuTransition();
-		stageSelect = false;
+		menuState = game;
 	}
 }
 
@@ -599,7 +602,7 @@ void Game::GameStart()
 void Game::GameEnd()
 {
 	menuTransition();
-	startMenu = true; //Enable the start menu
+	menuState = mainMenu;
 	stageSelected = -1; //Delects the current stage
 	mciSendStringA("pause BattleTheme", NULL, 0, NULL);
 	mciSendStringA("close BattleTheme", NULL, 0, NULL);
@@ -655,200 +658,202 @@ void Game::ComposeFrame()
 {
 	gfx->BeginDraw();
 	gfx->ClearScreen(0, 0, 0);
-	if (credits) {
-		/*
-		Song credits:
-		Post-Adventure Tea Party, Zane Little, Free Music Archive, CC BY-NC
-		Terrible song in 100 bpm, Lundstroem, Free Music Archive ,CC BY-NC
-		All Star, Beat Mekanik, Free Music Archive, CC BY-NC
-		Sinister Abode, Zane Little, Free Music Archive, CC BY-NC
-		The March Of The Dragon Hunters, Kathrin Klimek, Free Music Archive, CC BY-NC
-		Regeneration, Audioezout, Free Music Archive, CC BY-NC
+	switch (menuState) {
+		case(credits):
+			/*
+			Song credits:
+			Post-Adventure Tea Party, Zane Little, Free Music Archive, CC BY-NC
+			Terrible song in 100 bpm, Lundstroem, Free Music Archive ,CC BY-NC
+			All Star, Beat Mekanik, Free Music Archive, CC BY-NC
+			Sinister Abode, Zane Little, Free Music Archive, CC BY-NC
+			The March Of The Dragon Hunters, Kathrin Klimek, Free Music Archive, CC BY-NC
+			Regeneration, Audioezout, Free Music Archive, CC BY-NC
 
-		Character Credits:
-		Slot 1 (Circle), Original
-		Slot 2 (a), Sprites designed and drawn by Henry Exworthy
-		Slot 3 (Sigma Monkey of Doom), Sprites designed and drawn by anonymous
-		Slot 4 (Dog), Visual concept by Max Sullivan
-		Slot 5 (Chicken), Visual concept by Elliot Ody, Moveset design by anonymous
-		Slot 6 (Rock), Concept by Joshua Thorpe
-		Slot 7 (Troll), Sprites designed and drawn by Arthur
-		Slot 8 (Big B), Sprites designed and drawn by Elliot Ody, Moveset design by Elliot Ody
+			Character Credits:
+			Slot 1 (Circle), Original
+			Slot 2 (a), Sprites designed and drawn by Henry Exworthy
+			Slot 3 (Sigma Monkey of Doom), Sprites designed and drawn by anonymous
+			Slot 4 (Dog), Visual concept by Max Sullivan
+			Slot 5 (Chicken), Visual concept by Elliot Ody, Moveset design by anonymous
+			Slot 6 (Rock), Concept by Joshua Thorpe
+			Slot 7 (Troll), Sprites designed and drawn by Arthur
+			Slot 8 (Big B), Sprites designed and drawn by Elliot Ody, Moveset design by Elliot Ody
 
-		Coding:
-		Original framework - https://github.com/planetchili/chili_framework
-		GDI+ model - https://learn.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-gdi-start
-		DirectX model - https://youtube.com/playlist?list=PLKK11Ligqitij8r6hd6tfqqesh3T_xWJA&si=0ODR_FpQVGcQTN7k
-		*/
-		creditsVisual->Draw(0, 0, false);
-	}
-	else if (startMenu) {
-		//startVisual->Draw(0, 0, false); //Displays the visual for the start menu
-		gfx->DrawText(L"Player 1 \n Move with WASD \n Jump with G \n Light attack with F \n Heavy attack with T \n Special attack with H \n Dodge with Left Shift \n Pause with ESC", menuText, 140, 500, 0, 0, 255, 1);
-		gfx->DrawText(L"Player 2 \n Move with arrow keys \n Jump with L \n Light attack with K \n Heavy attack with O \n Special attack with ; \n Dodge with N \n Pause with Enter", menuText, 1400, 500, 255, 0, 0, 1);
+			Coding:
+			Original framework - https://github.com/planetchili/chili_framework
+			GDI+ model - https://learn.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-gdi-start
+			DirectX model - https://youtube.com/playlist?list=PLKK11Ligqitij8r6hd6tfqqesh3T_xWJA&si=0ODR_FpQVGcQTN7k
+			*/
+			creditsVisual->Draw(0, 0, false);
+			break;
+		case(mainMenu):
+			//startVisual->Draw(0, 0, false); //Displays the visual for the start menu
+			gfx->DrawText(L"Player 1 \n Move with WASD \n Jump with G \n Light attack with F \n Heavy attack with T \n Special attack with H \n Dodge with Left Shift \n Pause with ESC", menuText, 140, 500, 0, 0, 255, 1);
+			gfx->DrawText(L"Player 2 \n Move with arrow keys \n Jump with L \n Light attack with K \n Heavy attack with O \n Special attack with ; \n Dodge with N \n Pause with Enter", menuText, 1400, 500, 255, 0, 0, 1);
 
-		if (p1AISelected) {
-			aiWarning->Draw(70, 100, false);
-		}
-		if (p2AISelected) {
-			aiWarning->Draw(1750, 100, false);
-		}
-
-		if (easyMode) {
-			easyModeWarning->Draw(860, 0, false);
-			gfx->DrawRectFill(130, 730, 410, 760, 0, 0, 0, 1);
-			gfx->DrawRectFill(1400, 730, 1571, 762, 0, 0, 0, 1);
-		}
-
-		if (previousWinner == 1) { //If Player 1 won the last match
-			player1Win->Draw(1920 / 2 - 250, 100, false); //Dislpay a sprite that shows this
-		}
-		else if (previousWinner == 2) { //If player 2 won the last match
-			player2Win->Draw(1920 / 2 - 250, 100, false); //Dislpay a sprite that shows this
-		}
-
-		player1Idle->Draw(550-parameters[player1CharacterID][0]/2, 100, false); //Draws an appropriate sprite based on character ID in the start menu
-		player2Idle->Draw(1370 - parameters[player2CharacterID][0] / 2, 100, player2CharacterID != 8); //Draws an appropriate sprite based on character ID in the start menu
-
-		player1Desc->Draw(345, 250, false); //Draws an appropriate sprite based on character ID in the start menu
-		player2Desc->Draw(1175, 250, false); //Draws an appropriate sprite based on character ID in the start menu
-	}
-	else if (stageSelect) {
-		WIPStageSelectVisual->Draw(0, 0, false);
-		for (int i = 0; i < 9; i++) {
-			int boxx0 = 1920 / 4 * (1 + i % 3) - 192/2;
-			int boxy0 = 1080 / 4 * (1 + i / 3 - i % 3 / 3) - 108 / 2;
-			int boxx1 = 1920 / 4 * (1 + i % 3) + 192 / 2;
-			int boxy1 = 1080 / 4 * (1 + i / 3 - i % 3 / 3) + 108 / 2;
-			gfx->DrawRectThin(boxx0, boxy0, boxx1, boxy1, 255, 255, 255, 1);
-			for (int j = 0; j < 10; j++) {
-				//Assume 192 * 108 boxes
-				int* shrunkCoordinates;
-					
-				shrunkCoordinates = ShrinkToCoordinates(Stages[i].Platforms[j].x0, Stages[i].Platforms[j].y0, Stages[i].Platforms[j].x1, Stages[i].Platforms[j].y1,boxx0, boxy0, boxx1, boxy1);
-
-				if (Stages[i].Platforms[j].isFilled) {
-					gfx->DrawRectFill(shrunkCoordinates[0], shrunkCoordinates[1], shrunkCoordinates[2], shrunkCoordinates[3], Stages[i].Platforms[j].r, Stages[i].Platforms[j].g, Stages[i].Platforms[j].b, 1); //Draw the platform
-				}
-				else {
-					gfx->DrawRectThin(shrunkCoordinates[0], shrunkCoordinates[1], shrunkCoordinates[2], shrunkCoordinates[3], Stages[i].Platforms[j].r, Stages[i].Platforms[j].g, Stages[i].Platforms[j].b, 1); //Draw the platform
-				}
+			if (p1AISelected) {
+				aiWarning->Draw(70, 100, false);
 			}
-		}
-	}
-	else {
-		if (easyMode) {
-			easyModeWarning->Draw(0, 0, false);
-		}
-		if (paused) {
-			pauseVisual->Draw(0, 0, false); //Display the pause menu
+			if (p2AISelected) {
+				aiWarning->Draw(1750, 100, false);
+			}
 
 			if (easyMode) {
-				gfx->DrawRectFill(0, 1050, 270, 1080, 0, 0, 0, 1);
-				gfx->DrawRectFill(1630, 1050, 1920, 1080, 0, 0, 0, 1);
+				easyModeWarning->Draw(860, 0, false);
+				gfx->DrawRectFill(130, 730, 410, 760, 0, 0, 0, 1);
+				gfx->DrawRectFill(1400, 730, 1571, 762, 0, 0, 0, 1);
 			}
 
-			if (Player1.lives == Player2.lives && Player1.playerPercentage == Player2.playerPercentage) { //If both players are even
-				gfx->DrawRectFill(1920 / 2 - Player1.width - 1, 99, 1920 / 2 + 1, 100 + Player1.height + 1, 255, 199, 0, 1); //Player 1 border
-				player1Idle->Draw(1920 / 2 - Player1.width, 100, false); //Display player 1 at the top of the screen
-				gfx->DrawRectFill(1920 / 2, 99, 1920 / 2 + Player2.width + 1, 100 + Player2.height + 1, 255, 199, 0, 1); //Player 2 border
-				player2Idle->Draw(1920 / 2, 100, false); //Display player 2 at the top of the screen
+			if (previousWinner == 1) { //If Player 1 won the last match
+				player1Win->Draw(1920 / 2 - 250, 100, false); //Dislpay a sprite that shows this
 			}
-			else if (Player1.lives > Player2.lives || (Player1.lives == Player2.lives && Player1.playerPercentage < Player2.playerPercentage)) {
-				gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player1.width + 1, 351 + Player1.height, 255, 199, 0, 1); //Player 1 border
-				player1Idle->Draw(1920 / 4, 350, false); //Display player 1 on the left side
-				gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player2.width + 1, 351 + Player2.height, 255, 199, 0, 1); //Player 2 border
-				player2Hit->Draw(1920 / 4 * 3, 350, false); //Display player 2 on the right side
+			else if (previousWinner == 2) { //If player 2 won the last match
+				player2Win->Draw(1920 / 2 - 250, 100, false); //Dislpay a sprite that shows this
+			}
+
+			player1Idle->Draw(550 - parameters[player1CharacterID][0] / 2, 100, false); //Draws an appropriate sprite based on character ID in the start menu
+			player2Idle->Draw(1370 - parameters[player2CharacterID][0] / 2, 100, player2CharacterID != 8); //Draws an appropriate sprite based on character ID in the start menu
+
+			player1Desc->Draw(345, 250, false); //Draws an appropriate sprite based on character ID in the start menu
+			player2Desc->Draw(1175, 250, false); //Draws an appropriate sprite based on character ID in the start menu
+			break;
+		case (stageSelect):
+			WIPStageSelectVisual->Draw(0, 0, false);
+			for (int i = 0; i < 9; i++) {
+				int boxx0 = 1920 / 4 * (1 + i % 3) - 192 / 2;
+				int boxy0 = 1080 / 4 * (1 + i / 3 - i % 3 / 3) - 108 / 2;
+				int boxx1 = 1920 / 4 * (1 + i % 3) + 192 / 2;
+				int boxy1 = 1080 / 4 * (1 + i / 3 - i % 3 / 3) + 108 / 2;
+				gfx->DrawRectThin(boxx0, boxy0, boxx1, boxy1, 255, 255, 255, 1);
+				for (int j = 0; j < 10; j++) {
+					//Assume 192 * 108 boxes
+					int* shrunkCoordinates;
+
+					shrunkCoordinates = ShrinkToCoordinates(Stages[i].Platforms[j].x0, Stages[i].Platforms[j].y0, Stages[i].Platforms[j].x1, Stages[i].Platforms[j].y1, boxx0, boxy0, boxx1, boxy1);
+
+					if (Stages[i].Platforms[j].isFilled) {
+						gfx->DrawRectFill(shrunkCoordinates[0], shrunkCoordinates[1], shrunkCoordinates[2], shrunkCoordinates[3], Stages[i].Platforms[j].r, Stages[i].Platforms[j].g, Stages[i].Platforms[j].b, 1); //Draw the platform
+					}
+					else {
+						gfx->DrawRectThin(shrunkCoordinates[0], shrunkCoordinates[1], shrunkCoordinates[2], shrunkCoordinates[3], Stages[i].Platforms[j].r, Stages[i].Platforms[j].g, Stages[i].Platforms[j].b, 1); //Draw the platform
+					}
+				}
+			}
+			break;
+		case(game):
+			if (easyMode) {
+				easyModeWarning->Draw(0, 0, false);
+			}
+			if (paused) {
+				pauseVisual->Draw(0, 0, false); //Display the pause menu
+
+				if (easyMode) {
+					gfx->DrawRectFill(0, 1050, 270, 1080, 0, 0, 0, 1);
+					gfx->DrawRectFill(1630, 1050, 1920, 1080, 0, 0, 0, 1);
+				}
+
+				if (Player1.lives == Player2.lives && Player1.playerPercentage == Player2.playerPercentage) { //If both players are even
+					gfx->DrawRectFill(1920 / 2 - Player1.width - 1, 99, 1920 / 2 + 1, 100 + Player1.height + 1, 255, 199, 0, 1); //Player 1 border
+					player1Idle->Draw(1920 / 2 - Player1.width, 100, false); //Display player 1 at the top of the screen
+					gfx->DrawRectFill(1920 / 2, 99, 1920 / 2 + Player2.width + 1, 100 + Player2.height + 1, 255, 199, 0, 1); //Player 2 border
+					player2Idle->Draw(1920 / 2, 100, false); //Display player 2 at the top of the screen
+				}
+				else if (Player1.lives > Player2.lives || (Player1.lives == Player2.lives && Player1.playerPercentage < Player2.playerPercentage)) {
+					gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player1.width + 1, 351 + Player1.height, 255, 199, 0, 1); //Player 1 border
+					player1Idle->Draw(1920 / 4, 350, false); //Display player 1 on the left side
+					gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player2.width + 1, 351 + Player2.height, 255, 199, 0, 1); //Player 2 border
+					player2Hit->Draw(1920 / 4 * 3, 350, false); //Display player 2 on the right side
+				}
+				else {
+					gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player2.width + 1, 351 + Player2.height, 255, 199, 0, 1); //Player 1 border
+					player2Idle->Draw(1920 / 4, 350, false); //Display player 2 on the left side
+					gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player1.width + 1, 351 + Player1.height, 255, 199, 0, 1); //Player 2 border
+					player1Hit->Draw(1920 / 4 * 3, 350, false); //Display player 1 on the right side
+				}
+			}
+
+			else if (timeUntilStart > 120) { //If you should display 3
+				startThree->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display 3
+			}
+			else if (timeUntilStart > 60) { //If you should display 2
+				startTwo->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display 2
+			}
+			else if (timeUntilStart > 0) { //If you should display 1
+				startOne->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display 1
+			}
+			else if (timeGoIsDisplayed > 0) { //If you should display go
+				go->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display go
+			}
+
+			for (int i = 0; i < 9; i++) { //For each platform
+				Platform platformToDraw = Stages[stageSelected].Platforms[i];
+				if (platformToDraw.isFilled) {
+					gfx->DrawRectFill(platformToDraw.x0, platformToDraw.y0, platformToDraw.x1, platformToDraw.y1, platformToDraw.r, platformToDraw.g, platformToDraw.b, 1); //Draw the platform
+				}
+				else {
+					gfx->DrawRectThin(platformToDraw.x0, platformToDraw.y0, platformToDraw.x1, platformToDraw.y1, platformToDraw.r, platformToDraw.g, platformToDraw.b, 1); //Draw the platform
+				}
+			}
+
+			gfx->DrawTextW(DamageToWString(Player1.playerPercentage).c_str(), menuText, 1920 / 4, 900, 0, 0, 255, 1);
+
+			for (int i = 0; i < Player1.lives; i++) {
+				player1LivesIcon->Draw(1920 / 4 + i * 30, 950, false); //Player 1 lives icon
+			}
+			for (int i = 0; i < Player2.lives; i++) {
+				player2LivesIcon->Draw(1920 / 4 * 3 + i * 30, 950, false); //Player 2 lives icon
+			}
+
+			gfx->DrawTextW(DamageToWString(Player2.playerPercentage).c_str(), menuText, 1920 / 4 * 3, 900, 0, 0, 255, 1);
+
+			if (p1AISelected) {
+				aiWarning->Draw(1920 / 4, 980, false);
+			}
+			if (p2AISelected) {
+				aiWarning->Draw(1920 / 4 * 3, 980, false);
+			}
+
+			if (Player1.invincibility > 0) { //If player 1 has invincibility
+				gfx->DrawRectThin(Player1.x - 1, Player1.y - 1, Player1.x + Player1.width + 1, Player1.y + Player1.height + 1, 0, 237, 255, 1); //Give them a border
+			}
+			if (Player2.invincibility > 0) { //If player 2 has invincibility
+				gfx->DrawRectThin(Player2.x - 1, Player2.y - 1, Player2.x + Player2.width + 1, Player2.y + Player2.height + 1, 0, 237, 255, 1); //Give them a border
+			}
+
+			if (Player1.moveDuration > 0 || Player1.freeFallDuration > 0) { //If Player 1 is using a move
+				player1Move->Draw(Player1.x, Player1.y, !Player1.facingRight); //Display normal animation
+			}
+			else if (Player1.stun > 0) { //If player 1 is in stun
+				player1Hit->Draw(Player1.x, Player1.y, !Player1.facingRight); //Display normal animation
 			}
 			else {
-				gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player2.width + 1, 351 + Player2.height, 255, 199, 0, 1); //Player 1 border
-				player2Idle->Draw(1920 / 4, 350, false); //Display player 2 on the left side
-				gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player1.width + 1, 351 + Player1.height, 255, 199, 0, 1); //Player 2 border
-				player1Hit->Draw(1920 / 4 * 3, 350, false); //Display player 1 on the right side
+				player1Idle->Draw(Player1.x, Player1.y, !Player1.facingRight); //Display normal animation
 			}
-		}
 
-		else if (timeUntilStart > 120) { //If you should display 3
-			startThree->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display 3
-		}
-		else if (timeUntilStart > 60) { //If you should display 2
-			startTwo->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display 2
-		}
-		else if (timeUntilStart > 0) { //If you should display 1
-			startOne->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display 1
-		}
-		else if (timeGoIsDisplayed > 0) { //If you should display go
-			go->Draw(1920 / 2 - 150, 1080 / 4 - 150, false); //Display go
-		}
-
-		for (int i = 0; i < 9; i++) { //For each platform
-			Platform platformToDraw = Stages[stageSelected].Platforms[i];
-			if (platformToDraw.isFilled) {
-				gfx->DrawRectFill(platformToDraw.x0, platformToDraw.y0, platformToDraw.x1, platformToDraw.y1, platformToDraw.r, platformToDraw.g, platformToDraw.b, 1); //Draw the platform
+			if (Player2.moveDuration > 0 || Player2.freeFallDuration > 0) { //If Player 2 is using a move
+				player2Move->Draw(Player2.x, Player2.y, !Player2.facingRight); //Display normal animation
+			}
+			else if (Player2.stun > 0) { //If player 2 is in stun
+				player2Hit->Draw(Player2.x, Player2.y, !Player2.facingRight); //Display normal animation
 			}
 			else {
-				gfx->DrawRectThin(platformToDraw.x0, platformToDraw.y0, platformToDraw.x1, platformToDraw.y1, platformToDraw.r, platformToDraw.g, platformToDraw.b, 1); //Draw the platform
+				player2Idle->Draw(Player2.x, Player2.y, !Player2.facingRight); //Display normal animation
 			}
-		}
 
-		gfx->DrawTextW(DamageToWString(Player1.playerPercentage).c_str(), menuText, 1920 / 4, 900, 0, 0, 255, 1);
-
-		for (int i = 0; i < Player1.lives; i++) {
-			player1LivesIcon->Draw(1920 / 4 + i * 30, 950, false); //Player 1 lives icon
-		}
-		for (int i = 0; i < Player2.lives; i++) {
-			player2LivesIcon->Draw(1920 / 4 * 3 + i * 30, 950, false); //Player 2 lives icon
-		}
-
-		gfx->DrawTextW(DamageToWString(Player2.playerPercentage).c_str(), menuText, 1920 / 4 * 3, 900, 0, 0, 255, 1);
-
-		if (p1AISelected) {
-			aiWarning->Draw(1920 / 4, 980, false);
-		}
-		if (p2AISelected) {
-			aiWarning->Draw(1920 / 4 * 3, 980, false);
-		}
-
-		if (Player1.invincibility > 0) { //If player 1 has invincibility
-			gfx->DrawRectThin(Player1.x - 1, Player1.y - 1, Player1.x + Player1.width + 1, Player1.y + Player1.height + 1, 0, 237, 255, 1); //Give them a border
-		}
-		if (Player2.invincibility > 0) { //If player 2 has invincibility
-			gfx->DrawRectThin(Player2.x - 1, Player2.y - 1, Player2.x + Player2.width + 1, Player2.y + Player2.height + 1, 0, 237, 255, 1); //Give them a border
-		}
-
-		if (Player1.moveDuration > 0 || Player1.freeFallDuration > 0) { //If Player 1 is using a move
-			player1Move->Draw(Player1.x, Player1.y, !Player1.facingRight); //Display normal animation
-		}
-		else if (Player1.stun > 0) { //If player 1 is in stun
-			player1Hit->Draw(Player1.x, Player1.y, !Player1.facingRight); //Display normal animation
-		}
-		else {
-			player1Idle->Draw(Player1.x, Player1.y, !Player1.facingRight); //Display normal animation
-		}
-
-		if (Player2.moveDuration > 0 || Player2.freeFallDuration > 0) { //If Player 2 is using a move
-			player2Move->Draw(Player2.x, Player2.y, !Player2.facingRight); //Display normal animation
-		}
-		else if (Player2.stun > 0) { //If player 2 is in stun
-			player2Hit->Draw(Player2.x, Player2.y, !Player2.facingRight); //Display normal animation
-		}
-		else {
-			player2Idle->Draw(Player2.x, Player2.y, !Player2.facingRight); //Display normal animation
-		}
-
-		Move moveToDraw;
-		for (int i = 0; i < Player1.moveArrayLength; i++) { //For every move
-			moveToDraw = Player1.GetMove(i);
-			if (moveToDraw.activeDuration >= 0 && moveToDraw.startUpDuration < 0) {
-				gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.width, moveToDraw.y + moveToDraw.additionalY + moveToDraw.height, moveToDraw.r, moveToDraw.g, moveToDraw.b, 1); //Draw it
+			Move moveToDraw;
+			for (int i = 0; i < Player1.moveArrayLength; i++) { //For every move
+				moveToDraw = Player1.GetMove(i);
+				if (moveToDraw.activeDuration >= 0 && moveToDraw.startUpDuration < 0) {
+					gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.width, moveToDraw.y + moveToDraw.additionalY + moveToDraw.height, moveToDraw.r, moveToDraw.g, moveToDraw.b, 1); //Draw it
+				}
+				moveToDraw = Player2.GetMove(i);
+				if (moveToDraw.activeDuration >= 0 && moveToDraw.startUpDuration < 0) {
+					gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.width, moveToDraw.y + moveToDraw.additionalY + moveToDraw.height, moveToDraw.r, moveToDraw.g, moveToDraw.b, 1); //Draw it
+				}
 			}
-			moveToDraw = Player2.GetMove(i);
-			if (moveToDraw.activeDuration >= 0 && moveToDraw.startUpDuration < 0) {
-				gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.width, moveToDraw.y + moveToDraw.additionalY + moveToDraw.height, moveToDraw.r, moveToDraw.g, moveToDraw.b, 1); //Draw it
-			}
-		}
 
-		gfx->DrawTextW(TimeToWString(timer).c_str(), menuText, 1920 / 2 - 50, 50, 255, 255, 255, 1);
+			gfx->DrawTextW(TimeToWString(timer).c_str(), menuText, 1920 / 2 - 50, 50, 255, 255, 255, 1);
+			break;
 	}
 
 	gfx->EndDraw();

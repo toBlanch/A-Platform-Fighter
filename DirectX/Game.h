@@ -43,8 +43,8 @@ private:
 	std::mt19937 rng;
 	std::random_device rd;
 	std::uniform_int_distribution<int> randomDist;
+
 	int stageSelected = -1;
-	int numPlatforms = 0;
 	int leniancy = 0;
 	int player1CharacterID = 0;
 	int player2CharacterID = 1;
@@ -52,10 +52,11 @@ private:
 	int timeUntilStart = 0;
 	int timeGoIsDisplayed = 0;
 	int timer = 0;
-	bool credits = false;
-	bool startMenu = true;
-	bool stageSelect = false;
+
+	enum menuStateEnum {mainMenu, credits, stageSelect, game};
+	menuStateEnum menuState = mainMenu;
 	bool paused = false;
+
 	bool enterOrEscapeHeld = false;
 	bool qHeld = false;
 	bool eHeld = false;
@@ -68,16 +69,18 @@ private:
 	bool shiftHeld = false;
 	bool p1AISelected = false;
 	bool p2AISelected = false;
+
 	int p1Controller = -1;
 	XINPUT_STATE p1ControllerState;
 	bool p1RightStickPressed = false;
 	bool p1StopOtherInputs = false;
+
 	int p2Controller = -1;
 	XINPUT_STATE p2ControllerState;
 	bool p2RightStickPressed = false;
 	bool p2StopOtherInputs = false;
+
 	float controllerStickMaxInput = 32767.0f;
-	int numbertocall;
 
 	bool easyMode;
 
