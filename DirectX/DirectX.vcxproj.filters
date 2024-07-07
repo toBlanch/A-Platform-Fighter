@@ -68,5 +68,8 @@
     <ClInclude Include="Inputs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StatsTemplates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,10 +7,18 @@
 using namespace std;
 
 /*
+Potential problems with the move changes:
+	Move knockback changing direction with direction facing
+	AdditionalX changing with direction
+	durations decreasing independantly of stats
+	Colours
+	EndMove change
+ 
 Urgent:
 	Fix speed changing after colliding while in stun
 
 General:
+	Readd sounds to hit
 	Allow controllers to navigate the start menu and pause
 	Refactor Character.cpp with the new Inputs.h
 	Give AI functionality with multiple stages by making them go towards the nearest platform when desperate and jump between platforms to get to the player
@@ -47,6 +55,10 @@ Game::Game(Graphics* gfx)
 	this->gfx = gfx;
 
 	menuText = gfx->CreateTextFormat(L"Gabriola", 32.0f);
+
+	//Load inputs
+	p1Inputs = new Inputs(false, false, false, false, false, false, false, false, false);
+	p2Inputs = new Inputs(false, false, false, false, false, false, false, false, false);
 
 	//Load menu sprites
 	easyModeWarning = new SpriteSheet(L"Easy Mode Warning.bmp", gfx);
@@ -331,8 +343,8 @@ void Game::StartMenu()
 		if ((gfx->ifFocus() && GetKeyState(0x09) & 0x8000) || //Tab
 			(clickPosition.x >= 70 && clickPosition.x <= 170 && clickPosition.y >= 100 && clickPosition.y <= 130)) {
 			if (!tabHeld) {
-				p1AISelected = !p1AISelected;
-				tabHeld = true;
+				Player1.aiSelected = !Player1.aiSelected;
+				tabHeld = true;;
 			}
 		}
 		else {
@@ -342,7 +354,7 @@ void Game::StartMenu()
 		if ((gfx->ifFocus() && GetKeyState(0x08) & 0x8000) || //Backsapce
 			(clickPosition.x >= 1750 && clickPosition.x <= 1850 && clickPosition.y >= 100 && clickPosition.y <= 130)) {
 			if (!backspaceHeld) {
-				p2AISelected = !p2AISelected;
+				Player2.aiSelected = !Player2.aiSelected;
 				backspaceHeld = true;
 			}
 		}
@@ -487,9 +499,9 @@ void Game::GameLoop()
 		}
 
 		//Update models
-		if (p1AISelected) {
+		if (Player1.aiSelected) {
 			ArtifialFriend.Update(Player2.x, Player2.y, Player2.width, Player2.height, Player1.x, Player1.y, Player1.vx, Player1.vy, Player1.width, Player1.height, Player1.invincibilityCooldown == 0, Player1.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player2.playerPercentage);
-			Player1.UpdateCharacter(Inputs(
+			p1Inputs = new Inputs(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
 				ArtifialFriend.up, //Up
@@ -499,8 +511,7 @@ void Game::GameLoop()
 				ArtifialFriend.heavy, //Heavy
 				ArtifialFriend.special, //Special
 				ArtifialFriend.dodge //Dodge
-				),
-				Stages[stageSelected].Platforms);
+			);
 		}
 		else {
 			p1StopOtherInputs = false;
@@ -510,7 +521,7 @@ void Game::GameLoop()
 				p1StopOtherInputs = true;
 			}
 			p1RightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player1.stun == 0 && Player1.moveDuration == 0) || p1RightStickPressed);
-			Player1.UpdateCharacter(Inputs(
+			p1Inputs = new Inputs(
 				gfx->ifFocus() && (GetKeyState(0x41) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) || (p1ControllerState.Gamepad.sThumbLX / controllerStickMaxInput < -0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX < -0.2)), //Left
 				gfx->ifFocus() && (GetKeyState(0x44) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) || (p1ControllerState.Gamepad.sThumbLX / controllerStickMaxInput > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX > 0.2)), //Right
 				gfx->ifFocus() && (GetKeyState(0x57) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) || (p1ControllerState.Gamepad.sThumbLY / controllerStickMaxInput > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RY > 0.2)), //Up
@@ -520,13 +531,12 @@ void Game::GameLoop()
 				gfx->ifFocus() && (GetKeyState(0x54) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p1StopOtherInputs), //Heavy
 				gfx->ifFocus() && (GetKeyState(0x48) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p1StopOtherInputs), //Special
 				gfx->ifFocus() && (GetKeyState(0xA0) & 0x8000) || ((p1ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p1ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p1StopOtherInputs) //Dodge
-				),
-				Stages[stageSelected].Platforms);
+			);
 		}
 		
-		if (p2AISelected) {
+		if (Player2.aiSelected) {
 			ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.vx, Player2.vy, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player1.playerPercentage);
-			Player2.UpdateCharacter(Inputs(
+			p2Inputs = new Inputs(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
 				ArtifialFriend.up, //Up
@@ -536,8 +546,7 @@ void Game::GameLoop()
 				ArtifialFriend.heavy, //Heavy
 				ArtifialFriend.special, //Special
 				ArtifialFriend.dodge //Dodge
-				),
-				Stages[stageSelected].Platforms);
+			);
 		}
 		else {
 			p2StopOtherInputs = false;
@@ -548,7 +557,7 @@ void Game::GameLoop()
 			}
 			p2RightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player2.stun == 0 && Player2.moveDuration == 0) || p2RightStickPressed);
 			
-			Player2.UpdateCharacter(Inputs(
+			p2Inputs = new Inputs(
 				gfx->ifFocus() && (GetKeyState(0x25) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) || (p2ControllerState.Gamepad.sThumbLX / controllerStickMaxInput < -0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RX < -0.2)), //Left
 				gfx->ifFocus() && (GetKeyState(0x27) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) || (p2ControllerState.Gamepad.sThumbLX / controllerStickMaxInput > 0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RX > 0.2)), //Right
 				gfx->ifFocus() && (GetKeyState(0x26) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) || (p2ControllerState.Gamepad.sThumbLY / controllerStickMaxInput > 0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RY > 0.2)), //Up
@@ -558,21 +567,17 @@ void Game::GameLoop()
 				gfx->ifFocus() && (GetKeyState(0x4F) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p2StopOtherInputs), //Heavy
 				gfx->ifFocus() && (GetKeyState(0xBA) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p2StopOtherInputs), //Special
 				gfx->ifFocus() && (GetKeyState(0x4E) & 0x8000) || ((p2ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p2ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p2StopOtherInputs) //Dodge
-				),
-				Stages[stageSelected].Platforms);
+			);
 		}
 
-		if (Player1.IsMoveColliding(Player2.x, Player2.y, Player2.width, Player2.height)) { //Is player 1 hitting any move
-			std::string soundString = "set hit speed " + std::to_string(2100 - 100 * (int)Player1.GetMove(Player2.moveThatHit).damage);
-			mciSendStringA(soundString.c_str(), NULL, 0, NULL);
-			mciSendStringA("play hit from 0", NULL, 0, NULL);
-			Player2.IsHit(Player1.GetMove(Player1.moveThatHit)); //Register that player 2 has been hit
-		}
-		if (Player2.IsMoveColliding(Player1.x, Player1.y, Player1.width, Player1.height)) { //Is player 2 hitting any move
-			std::string soundString = "set hit speed " + std::to_string(2100 - 100 * (int)Player2.GetMove(Player2.moveThatHit).damage);
-			mciSendStringA(soundString.c_str(), NULL, 0, NULL);
-			Player1.IsHit(Player2.GetMove(Player2.moveThatHit)); //Register that player 1 has been hit
-		}
+		Player1.UpdateCharacter(*p1Inputs, Stages[stageSelected].Platforms);
+		Player2.UpdateCharacter(*p2Inputs, Stages[stageSelected].Platforms);
+		Player1.UpdateMoveCollision(Player2);
+		Player2.UpdateMoveCollision(Player1);
+
+		//std::string soundString = "set hit speed " + std::to_string(2100 - 100 * (int)Player1.GetMove(Player2.moveThatHit).damage);
+		//mciSendStringA(soundString.c_str(), NULL, 0, NULL);
+		//mciSendStringA("play hit from 0", NULL, 0, NULL);
 	}
 	else {
 		GameEnd();
@@ -691,10 +696,10 @@ void Game::ComposeFrame()
 			gfx->DrawText(L"Player 1 \n Move with WASD \n Jump with G \n Light attack with F \n Heavy attack with T \n Special attack with H \n Dodge with Left Shift \n Pause with ESC", menuText, 140, 500, 0, 0, 255, 1);
 			gfx->DrawText(L"Player 2 \n Move with arrow keys \n Jump with L \n Light attack with K \n Heavy attack with O \n Special attack with ; \n Dodge with N \n Pause with Enter", menuText, 1400, 500, 255, 0, 0, 1);
 
-			if (p1AISelected) {
+			if (Player1.aiSelected) {
 				aiWarning->Draw(70, 100, false);
 			}
-			if (p2AISelected) {
+			if (Player2.aiSelected) {
 				aiWarning->Draw(1750, 100, false);
 			}
 
@@ -806,10 +811,10 @@ void Game::ComposeFrame()
 
 			gfx->DrawTextW(DamageToWString(Player2.playerPercentage).c_str(), menuText, 1920 / 4 * 3, 900, 0, 0, 255, 1);
 
-			if (p1AISelected) {
+			if (Player1.aiSelected) {
 				aiWarning->Draw(1920 / 4, 980, false);
 			}
-			if (p2AISelected) {
+			if (Player2.aiSelected) {
 				aiWarning->Draw(1920 / 4 * 3, 980, false);
 			}
 
@@ -844,11 +849,11 @@ void Game::ComposeFrame()
 			for (int i = 0; i < Player1.moveArrayLength; i++) { //For every move
 				moveToDraw = Player1.GetMove(i);
 				if (moveToDraw.activeDuration >= 0 && moveToDraw.startUpDuration < 0) {
-					gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.width, moveToDraw.y + moveToDraw.additionalY + moveToDraw.height, moveToDraw.r, moveToDraw.g, moveToDraw.b, 1); //Draw it
+					gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.stats.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.stats.width, moveToDraw.y + moveToDraw.stats.additionalY + moveToDraw.stats.height, moveToDraw.stats.r, moveToDraw.stats.g, moveToDraw.stats.b, 1); //Draw it
 				}
 				moveToDraw = Player2.GetMove(i);
 				if (moveToDraw.activeDuration >= 0 && moveToDraw.startUpDuration < 0) {
-					gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.width, moveToDraw.y + moveToDraw.additionalY + moveToDraw.height, moveToDraw.r, moveToDraw.g, moveToDraw.b, 1); //Draw it
+					gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.stats.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.stats.width, moveToDraw.y + moveToDraw.stats.additionalY + moveToDraw.stats.height, moveToDraw.stats.r, moveToDraw.stats.g, moveToDraw.stats.b, 1); //Draw it
 				}
 			}
 

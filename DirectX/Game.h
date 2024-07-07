@@ -11,6 +11,7 @@
 #include <Xinput.h>
 #include "Platform.h"
 #include "Stage.h"
+#include <list>
 
 class Game
 {
@@ -67,8 +68,6 @@ private:
 	bool backspaceHeld = false;
 	bool clickHeld = GetKeyState(0x01);
 	bool shiftHeld = false;
-	bool p1AISelected = false;
-	bool p2AISelected = false;
 
 	int p1Controller = -1;
 	XINPUT_STATE p1ControllerState;
@@ -87,6 +86,14 @@ private:
 	POINT clickPosition;
 
 	IDWriteTextFormat* menuText;
+
+	Inputs p1PreviousInputs;
+	Inputs p2PreviousInputs;
+	int gameFrame = 0;
+	Inputs* p1Inputs;
+	list<InputChange> p1InputChanges;
+	Inputs* p2Inputs;
+	list<InputChange> p2InputChanges;
 
 	SpriteSheet* easyModeWarning;
 	SpriteSheet* aiWarning;

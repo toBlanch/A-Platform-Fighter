@@ -1,40 +1,25 @@
 #pragma once
 #include "Platform.h"
+#include "StatsTemplates.h"
 
 class Move {
 public:
 	void CheckStatus(float xReferral, float yReferral, Platform Platforms[10]);
-	void Activate(int playerWidthReferral, int playerHeightReferral, bool isFacingRight, int additionalXReferral, int additionalYReferral, int widthReferral, int heightReferral, float stunDurationReferral, float scalarXReferral, float scalarYReferral, float fixedXReferral, float fixedYReferral, float vxReferral, float vyReferral, float accelerationxReferral, float accelerationyReferral, float damageReferral, float startUpDurationReferral, float activeDurationReferral, float endLagDurationReferral, bool isAttachedToPlayerReferral, bool isPlayerAttachedToItReferral, bool disappearOnHitReferral, int rReferral, int gReferral, int bReferral);
+	void Activate(int playerWidthReferral, bool isFacingRight, MoveTemplate rStats);
 	void EndMove();
-	bool IsMoveColliding(float Player2x, float Player2y, int Player2width, int Player2height);
 	void PlayerIsHit();
 	int IsActiveDuration();
+
 	int x = 0;
 	int y = 0;
-	int additionalX = 0;
-	int additionalY = 0;
-	int width = 0;
-	int height = 0;
-	int startUpDuration = 0;
-	int endLagDuration = 0;
-	float stunDuration = 0;
-	float scalarX = 0;
-	float scalarY = 0;
-	float fixedX = 0;
-	float fixedY = 0;
-	float vx = 0;
-	float vy = 0;
-	float accelerationx = 0;
-	float accelerationy = 0;
-	float damage = 0;
-
-	int activeDuration = 0;
+	bool isFacingRight = false;
 	bool hasHit = false;
-	bool isAttachedToPlayer = true;
-	bool isPlayerAttachedToIt = false;
-	bool disappearOnHit = false;
 
-	int r = 0;
-	int g = 0;
-	int b = 0;
+	MoveTemplate stats;
+	int additionalX = 0;
+	int vx = 0;
+	int vy = 0;
+	int startUpDuration = 0;
+	int activeDuration = 0;
+	int endLagDuration = 0;
 };
