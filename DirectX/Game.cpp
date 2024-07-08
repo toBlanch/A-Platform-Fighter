@@ -13,6 +13,9 @@ Potential problems with the move changes:
 	durations decreasing independantly of stats
 	Colours
 	EndMove change
+Character changes:
+	Aerial and walk acceleration being in the wrong order in game.h
+	Keep an eye on line 405 and 408 (Make the character move up/down)
  
 Urgent:
 	Fix speed changing after colliding while in stun
@@ -400,7 +403,7 @@ void Game::StartMenu()
 			player1Move = new SpriteSheet(moveParameters[player1CharacterID], gfx); //Set player 1s move animation
 			player1Hit = new SpriteSheet(hitParameters[player1CharacterID], gfx); //Set player 1s hit animation
 			player1LivesIcon = new SpriteSheet(livesIconParameters[player1CharacterID], gfx); //Set player 2s lives icon
-			Player1.Initialise(parameters[player1CharacterID]); //Set player 1s variables
+			Player1.Initialise(characterTemplates[player1CharacterID]); //Set player 1s variables
 
 			if (player2CharacterID == 8) {
 				player2CharacterID = 1 + (float)randomDist(rng) * 6.9f / 39;
@@ -411,7 +414,7 @@ void Game::StartMenu()
 			player2Move = new SpriteSheet(moveParameters[player2CharacterID], gfx); //Set player 1s move animation
 			player2Hit = new SpriteSheet(hitParameters[player2CharacterID], gfx); //Set player 1s hit animation
 			player2LivesIcon = new SpriteSheet(livesIconParameters[player2CharacterID], gfx); //Set player 2s lives icon
-			Player2.Initialise(parameters[player2CharacterID]); //Set player 1s variables
+			Player2.Initialise(characterTemplates[player2CharacterID]); //Set player 1s variables
 		}
 	}
 }
@@ -500,7 +503,7 @@ void Game::GameLoop()
 
 		//Update models
 		if (Player1.aiSelected) {
-			ArtifialFriend.Update(Player2.x, Player2.y, Player2.width, Player2.height, Player1.x, Player1.y, Player1.vx, Player1.vy, Player1.width, Player1.height, Player1.invincibilityCooldown == 0, Player1.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player2.playerPercentage);
+			ArtifialFriend.Update(Player2.x, Player2.y, Player2.stats.width, Player2.stats.height, Player1.x, Player1.y, Player1.vx, Player1.vy, Player1.stats.width, Player1.stats.height, Player1.invincibilityCooldown == 0, Player1.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player2.playerPercentage);
 			p1Inputs = new Inputs(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
@@ -535,7 +538,7 @@ void Game::GameLoop()
 		}
 		
 		if (Player2.aiSelected) {
-			ArtifialFriend.Update(Player1.x, Player1.y, Player1.width, Player1.height, Player2.x, Player2.y, Player2.vx, Player2.vy, Player2.width, Player2.height, Player2.invincibilityCooldown == 0, Player2.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player1.playerPercentage);
+			ArtifialFriend.Update(Player1.x, Player1.y, Player1.stats.width, Player1.stats.height, Player2.x, Player2.y, Player2.vx, Player2.vy, Player2.stats.width, Player2.stats.height, Player2.invincibilityCooldown == 0, Player2.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player1.playerPercentage);
 			p2Inputs = new Inputs(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
@@ -591,12 +594,12 @@ void Game::GameStart()
 	StartBattleTheme();
 	Player1.easyMode = easyMode;
 	Player1.x = Stages[stageSelected].spawnx; //Set player 1s starting position
-	Player1.y = Stages[stageSelected].spawny - Player1.height; //Set player 1s starting position
+	Player1.y = Stages[stageSelected].spawny - Player1.stats.height; //Set player 1s starting position
 	Player1.facingRight = true;
 	Player1.Restart();
 	Player2.easyMode = easyMode;
-	Player2.x = 1920 - Stages[stageSelected].spawnx - Player2.width; //Set player 2s starting position
-	Player2.y = Stages[stageSelected].spawny - Player2.height; //Set player 2s starting position
+	Player2.x = 1920 - Stages[stageSelected].spawnx - Player2.stats.width; //Set player 2s starting position
+	Player2.y = Stages[stageSelected].spawny - Player2.stats.height; //Set player 2s starting position
 	Player2.facingRight = false;
 	Player2.Restart();
 	timeUntilStart = 180;
@@ -716,8 +719,8 @@ void Game::ComposeFrame()
 				player2Win->Draw(1920 / 2 - 250, 100, false); //Dislpay a sprite that shows this
 			}
 
-			player1Idle->Draw(550 - parameters[player1CharacterID][0] / 2, 100, false); //Draws an appropriate sprite based on character ID in the start menu
-			player2Idle->Draw(1370 - parameters[player2CharacterID][0] / 2, 100, player2CharacterID != 8); //Draws an appropriate sprite based on character ID in the start menu
+			player1Idle->Draw(550 - characterTemplates[player1CharacterID].width / 2, 100, false); //Draws an appropriate sprite based on character ID in the start menu
+			player2Idle->Draw(1370 - characterTemplates[player2CharacterID].width / 2, 100, player2CharacterID != 8); //Draws an appropriate sprite based on character ID in the start menu
 
 			player1Desc->Draw(345, 250, false); //Draws an appropriate sprite based on character ID in the start menu
 			player2Desc->Draw(1175, 250, false); //Draws an appropriate sprite based on character ID in the start menu
@@ -758,21 +761,21 @@ void Game::ComposeFrame()
 				}
 
 				if (Player1.lives == Player2.lives && Player1.playerPercentage == Player2.playerPercentage) { //If both players are even
-					gfx->DrawRectFill(1920 / 2 - Player1.width - 1, 99, 1920 / 2 + 1, 100 + Player1.height + 1, 255, 199, 0, 1); //Player 1 border
-					player1Idle->Draw(1920 / 2 - Player1.width, 100, false); //Display player 1 at the top of the screen
-					gfx->DrawRectFill(1920 / 2, 99, 1920 / 2 + Player2.width + 1, 100 + Player2.height + 1, 255, 199, 0, 1); //Player 2 border
+					gfx->DrawRectFill(1920 / 2 - Player1.stats.width - 1, 99, 1920 / 2 + 1, 100 + Player1.stats.height + 1, 255, 199, 0, 1); //Player 1 border
+					player1Idle->Draw(1920 / 2 - Player1.stats.width, 100, false); //Display player 1 at the top of the screen
+					gfx->DrawRectFill(1920 / 2, 99, 1920 / 2 + Player2.stats.width + 1, 100 + Player2.stats.height + 1, 255, 199, 0, 1); //Player 2 border
 					player2Idle->Draw(1920 / 2, 100, false); //Display player 2 at the top of the screen
 				}
 				else if (Player1.lives > Player2.lives || (Player1.lives == Player2.lives && Player1.playerPercentage < Player2.playerPercentage)) {
-					gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player1.width + 1, 351 + Player1.height, 255, 199, 0, 1); //Player 1 border
+					gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player1.stats.width + 1, 351 + Player1.stats.height, 255, 199, 0, 1); //Player 1 border
 					player1Idle->Draw(1920 / 4, 350, false); //Display player 1 on the left side
-					gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player2.width + 1, 351 + Player2.height, 255, 199, 0, 1); //Player 2 border
+					gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player2.stats.width + 1, 351 + Player2.stats.height, 255, 199, 0, 1); //Player 2 border
 					player2Hit->Draw(1920 / 4 * 3, 350, false); //Display player 2 on the right side
 				}
 				else {
-					gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player2.width + 1, 351 + Player2.height, 255, 199, 0, 1); //Player 1 border
+					gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player2.stats.width + 1, 351 + Player2.stats.height, 255, 199, 0, 1); //Player 1 border
 					player2Idle->Draw(1920 / 4, 350, false); //Display player 2 on the left side
-					gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player1.width + 1, 351 + Player1.height, 255, 199, 0, 1); //Player 2 border
+					gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player1.stats.width + 1, 351 + Player1.stats.height, 255, 199, 0, 1); //Player 2 border
 					player1Hit->Draw(1920 / 4 * 3, 350, false); //Display player 1 on the right side
 				}
 			}
@@ -819,10 +822,10 @@ void Game::ComposeFrame()
 			}
 
 			if (Player1.invincibility > 0) { //If player 1 has invincibility
-				gfx->DrawRectThin(Player1.x - 1, Player1.y - 1, Player1.x + Player1.width + 1, Player1.y + Player1.height + 1, 0, 237, 255, 1); //Give them a border
+				gfx->DrawRectThin(Player1.x - 1, Player1.y - 1, Player1.x + Player1.stats.width + 1, Player1.y + Player1.stats.height + 1, 0, 237, 255, 1); //Give them a border
 			}
 			if (Player2.invincibility > 0) { //If player 2 has invincibility
-				gfx->DrawRectThin(Player2.x - 1, Player2.y - 1, Player2.x + Player2.width + 1, Player2.y + Player2.height + 1, 0, 237, 255, 1); //Give them a border
+				gfx->DrawRectThin(Player2.x - 1, Player2.y - 1, Player2.x + Player2.stats.width + 1, Player2.y + Player2.stats.height + 1, 0, 237, 255, 1); //Give them a border
 			}
 
 			if (Player1.moveDuration > 0 || Player1.freeFallDuration > 0) { //If Player 1 is using a move

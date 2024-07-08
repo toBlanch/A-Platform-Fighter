@@ -251,9 +251,9 @@ private:
 		Stage(Platforms8, "open \"Battle Theme 8.wav\" type mpegvideo alias BattleTheme", 1920 / 4 + 100, 700)
 	};
 
-	std::vector<std::vector<float>> parameters = {
+	const CharacterTemplate characterTemplates[2] = {
 		//Circle
-		{
+		CharacterTemplate(
 			100, //parameters[0]Width
 			100, //parameters[1]Height
 			10, //parameters[2]WalkSpeed
@@ -267,6 +267,7 @@ private:
 			0.9, //parameters[10]Weight
 			2, //parameters[11]DoubleJumps
 
+			MoveTemplate(
 			100, //parameters[12]Forward Light Additional x
 			0, //parameters[13]Forward Light Additional y
 			50, //parameters[14]Forward Light Width
@@ -286,8 +287,10 @@ private:
 			10, //parameters[28]Forward Light End Lag Duration
 			1, //parameters[29]Forward Light Is Attached To Player
 			0, //parameters[30] Is Player Attached To It
-			0, //parameters[31]Forward Light Disappear On Hit
+			0 //parameters[31]Forward Light Disappear On Hit
+			),
 
+			MoveTemplate(
 			100, //parameters[32]Up Light Additional x
 			0, //parameters[33]Up Light Additional y
 			20, //parameters[34]Up Light Width
@@ -307,8 +310,10 @@ private:
 			10, //parameters[48]Up Light End Lag Duration
 			1, //parameters[49]Up Light Is Attached To Player
 			0, //parameters[50] Is Player Attached To It
-			0, //parameters[51]Up Light Disappear On Hit
+			0 //parameters[51]Up Light Disappear On Hit
+			),
 
+			MoveTemplate(
 			0, //parameters[52]Down Light Additional x
 			90, //parameters[53]Down Light Additional y
 			100, //parameters[54]Down Light Width
@@ -328,8 +333,10 @@ private:
 			30, //parameters[68]Down Light End Lag Duration
 			1, //parameters[69]Down Light Is Attached To Player
 			0, //parameters[70] Is Player Attached To It
-			0, //parameters[71]Down Light Disappear On Hit
+			0 //parameters[71]Down Light Disappear On Hit
+			),
 
+			MoveTemplate(
 			100, //parameters[72]Forward Heavy Additional x
 			0, //parameters[73]Forward Heavy Additional y
 			50, //parameters[74]Forward Heavy Width
@@ -349,8 +356,10 @@ private:
 			20, //parameters[88]Forward Heavy End Lag Duration
 			1, //parameters[89]Forward Heavy Is Attached To Player
 			0, //parameters[90] Is Player Attached To It
-			0, //parameters[91]Forward Heavy Disappear On Hit
+			0 //parameters[91]Forward Heavy Disappear On Hit
+			),
 
+			MoveTemplate(
 			50, //parameters[92]Up Heavy Additional x
 			-10, //parameters[93]Up Heavy Additional y
 			50, //parameters[94]Up Heavy Width
@@ -370,8 +379,10 @@ private:
 			30, //parameters[108]Up Heavy End Lag Duration
 			1, //parameters[109]Up Heavy Is Attached To Player
 			0, //parameters[110] Is Player Attached To It
-			0, //parameters[111]Up Heavy Disappear On Hit
+			0 //parameters[111]Up Heavy Disappear On Hit
+			),
 
+			MoveTemplate(
 			100, //parameters[112]Down Heavy Additional x
 			90, //parameters[113]Down Heavy Additional y
 			50, //parameters[114]Down Heavy Width
@@ -391,8 +402,10 @@ private:
 			10, //parameters[128]Down Heavy End Lag Duration
 			1, //parameters[129]Down Heavy Is Attached To Player
 			0, //parameters[130] Is Player Attached To It
-			0, //parameters[131]Down Heavy Disappear On Hit
+			0 //parameters[131]Down Heavy Disappear On Hit
+			),
 
+			MoveTemplate(
 			100, //parameters[132]Forward Aerial Additional x
 			0, //parameters[133]Forward Aerial Additional y
 			50, //parameters[134]Forward Aerial Width
@@ -412,8 +425,10 @@ private:
 			10, //parameters[148]Forward Aerial End Lag Duration
 			1, //parameters[149]Forward Aerial Is Attached To Player
 			0, //parameters[150] Is Player Attached To It
-			0, //parameters[151]Forward Aerial Disappear On Hit
+			0 //parameters[151]Forward Aerial Disappear On Hit
+			),
 
+			MoveTemplate(
 			-50, //parameters[152]Back Aerial Additional x
 			0, //parameters[153]Back Aerial Additional y
 			50, //parameters[154]Back Aerial Width
@@ -433,8 +448,10 @@ private:
 			10, //parameters[168]Back Aerial End Lag Duration
 			1, //parameters[169]Back Aerial Is Attached To Player
 			0, //parameters[170] Is Player Attached To It
-			0, //parameters[171]Back Aerial Disappear On Hit
+			0 //parameters[171]Back Aerial Disappear On Hit
+			),
 
+			MoveTemplate(
 			50, //parameters[172]Up Aerial Additional x
 			-10, //parameters[173]Up Aerial Additional y
 			50, //parameters[174]Up Aerial Width
@@ -454,8 +471,10 @@ private:
 			25, //parameters[188]Up Aerial End Lag Duration
 			1, //parameters[189]Up Aerial Is Attached To Player
 			0, //parameters[190] Is Player Attached To It
-			0, //parameters[191]Up Aerial Disappear On Hit
+			0 //parameters[191]Up Aerial Disappear On Hit
+			),
 
+			MoveTemplate(
 			50, //parameters[192]Down Aerial Additional x
 			110, //parameters[193]Down Aerial Additional y
 			60, //parameters[194]Down Aerial Width
@@ -475,8 +494,10 @@ private:
 			15, //parameters[208]Down Aerial End Lag Duration
 			1, //parameters[209]Down Aerial Is Attached To Player
 			0, //parameters[210] Is Player Attached To It
-			0, //parameters[211]Down Aerial Disappear On Hit
+			0 //parameters[211]Down Aerial Disappear On Hit
+			),
 
+			MoveTemplate(
 			150, //parameters[212]Forward Special Additional x
 			0, //parameters[213]Forward Special Additional y
 			50, //parameters[214]Forward Special Width
@@ -496,8 +517,10 @@ private:
 			50, //parameters[228]Forward Special End Lag Duration
 			0, //parameters[229]Forward Special Is Attached To Player
 			0, //parameters[230] Is Player Attached To It
-			1, //parameters[231]Forward Special Disappear On Hit
+			1 //parameters[231]Forward Special Disappear On Hit
+			),
 
+			MoveTemplate(
 			100, //parameters[232]Up Special Additional x
 			0, //parameters[233]Up Special Additional y
 			50, //parameters[234]Up Special Width
@@ -517,8 +540,10 @@ private:
 			30, //parameters[248]Up Special End Lag Duration
 			0, //parameters[249]Up Special Is Attached To Player
 			1, //parameters[250] Is Player Attached To It
-			0, //parameters[251]Up Special Disappear On Hit
+			0 //parameters[251]Up Special Disappear On Hit
+			),
 
+			MoveTemplate(
 			100, //parameters[252]Down Special Additional x
 			0, //parameters[253]Down Special Additional y
 			50, //parameters[254]Down Special Width
@@ -538,50 +563,11 @@ private:
 			0, //parameters[268]Down Special End Lag Duration
 			0, //parameters[269]Down Special Is Attached To Player
 			1, //parameters[270] Is Player Attached To It
-			0, //parameters[271]Down Special Disappear On Hit    
-
-			0, //parameters[272]Forward Light R
-			255, //parameters[273]Forward Light G
-			255, //parameters[274]Forward Light B
-			140, //parameters[275]Up Light R
-			140, //parameters[276]Up Light G
-			155, //parameters[277]Up Light B
-			140, //parameters[278]Down Light R
-			140, //parameters[279]Down Light G
-			155, //parameters[280]Down Light B
-			0, //parameters[281]Forward Heavy R
-			0, //parameters[282]Forward Heavy G
-			255, //parameters[283]Forward Heavy B
-			140, //parameters[284]Up Heavy R
-			140, //parameters[285]Up Heavy G
-			155, //parameters[286]Up Heavy B
-			140, //parameters[287]Down Heavy R
-			140, //parameters[288]Down Heavy G
-			155, //parameters[289]Down Heavy B
-			0, //parameters[290]Forward Aerial R
-			255, //parameters[291]Forward Aerial G
-			255, //parameters[292]Forward Aerial B
-			140, //parameters[293]Back Aerial R
-			140, //parameters[294]Back Aerial G
-			155, //parameters[295]Back Aerial B
-			140, //parameters[296]Up Aerial R
-			140, //parameters[297]Up Aerial G
-			155, //parameters[298]Up Aerial B
-			140, //parameters[299]Down Aerial R
-			140, //parameters[300]Down Aerial G
-			155, //parameters[301]Down Aerial B
-			0, //parameters[302]Foward Special R
-			255, //parameters[303]Foward Special G
-			0, //parameters[304]Foward Special B
-			140, //parameters[305]Up Special R
-			140, //parameters[306]Up Special G
-			155, //parameters[307]Up Special B
-			140, //parameters[308]Down Special R
-			140, //parameters[309]Down Special G
-			155 //parameters[310]Down Special B
-		},
+			0 //parameters[271]Down Special Disappear On Hit   
+			)
+		),
 		//a
-		{
+		CharacterTemplate(
 			100, //parameters[0]Width
 			100, //parameters[1]Height
 			7, //parameters[2]WalkSpeed
@@ -595,6 +581,7 @@ private:
 			0.75, //parameters[10]Weight
 			1, //parameters[11]DoubleJumps
 
+			MoveTemplate(
 			100, //parameters[12]Forward Light Additional x
 			60, //parameters[13]Forward Light Additional y
 			35, //parameters[14]Forward Light Width
@@ -614,8 +601,10 @@ private:
 			27, //parameters[28]Forward Light End Lag Duration
 			1, //parameters[29]Forward Light Is Attached To Player
 			0, //parameters[30] Is Player Attached To It
-			0, //parameters[31]Forward Light Disappear On Hit
+			0 //parameters[31]Forward Light Disappear On Hit
+			),
 
+			MoveTemplate(
 			0, //parameters[32]Up Light Additional x
 			-3, //parameters[33]Up Light Additional y
 			100, //parameters[34]Up Light Width
@@ -635,8 +624,10 @@ private:
 			21, //parameters[48]Up Light End Lag Duration
 			1, //parameters[49]Up Light Is Attached To Player
 			0, //parameters[50] Is Player Attached To It
-			0, //parameters[51]Up Light Disappear On Hit
+			0 //parameters[51]Up Light Disappear On Hit
+			),
 
+			MoveTemplate(
 			100, //parameters[52]Down Light Additional x
 			95, //parameters[53]Down Light Additional y
 			70, //parameters[54]Down Light Width
@@ -656,8 +647,10 @@ private:
 			20, //parameters[68]Down Light End Lag Duration
 			1, //parameters[69]Down Light Is Attached To Player
 			0, //parameters[70] Is Player Attached To It
-			0, //parameters[71]Down Light Disappear On Hit
+			0 //parameters[71]Down Light Disappear On Hit
+			),
 
+			MoveTemplate(
 			90, //parameters[72]Forward Heavy Additional x
 			25, //parameters[73]Forward Heavy Additional y
 			40, //parameters[74]Forward Heavy Width
@@ -677,8 +670,10 @@ private:
 			20, //parameters[88]Forward Heavy End Lag Duration
 			1, //parameters[89]Forward Heavy Is Attached To Player
 			0, //parameters[90] Is Player Attached To It
-			0, //parameters[91]Forward Heavy Disappear On Hit
+			0 //parameters[91]Forward Heavy Disappear On Hit
+			),
 
+				MoveTemplate(
 			30, //parameters[92]Up Heavy Additional x
 			-50, //parameters[93]Up Heavy Additional y
 			40, //parameters[94]Up Heavy Width
@@ -698,8 +693,10 @@ private:
 			15, //parameters[108]Up Heavy End Lag Duration
 			1, //parameters[109]Up Heavy Is Attached To Player
 			0, //parameters[110] Is Player Attached To It
-			0, //parameters[111]Up Heavy Disappear On Hit
+			0 //parameters[111]Up Heavy Disappear On Hit
+			),
 
+					MoveTemplate(
 			-20, //parameters[112]Down Heavy Additional x
 			70, //parameters[113]Down Heavy Additional y
 			140, //parameters[114]Down Heavy Width
@@ -719,8 +716,10 @@ private:
 			60, //parameters[128]Down Heavy End Lag Duration
 			1, //parameters[129]Down Heavy Is Attached To Player
 			0, //parameters[130] Is Player Attached To It
-			0, //parameters[131]Down Heavy Disappear On Hit
+			0 //parameters[131]Down Heavy Disappear On Hit
+			),
 
+						MoveTemplate(
 			90, //parameters[132]Forward Aerial Additional x
 			30, //parameters[133]Forward Aerial Additional y
 			35, //parameters[134]Forward Aerial Width
@@ -740,8 +739,10 @@ private:
 			25, //parameters[148]Forward Aerial End Lag Duration
 			1, //parameters[149]Forward Aerial Is Attached To Player
 			0, //parameters[150] Is Player Attached To It
-			0, //parameters[151]Forward Aerial Disappear On Hit
+			0 //parameters[151]Forward Aerial Disappear On Hit
+			),
 
+							MoveTemplate(
 			-50, //parameters[152]Back Aerial Additional x
 			50, //parameters[153]Back Aerial Additional y
 			50, //parameters[154]Back Aerial Width
@@ -761,8 +762,10 @@ private:
 			10, //parameters[168]Back Aerial End Lag Duration
 			1, //parameters[169]Back Aerial Is Attached To Player
 			0, //parameters[170] Is Player Attached To It
-			0, //parameters[171]Back Aerial Disappear On Hit
+			0 //parameters[171]Back Aerial Disappear On Hit
+			),
 
+								MoveTemplate(
 			70, //parameters[172]Up Aerial Additional x
 			0, //parameters[173]Up Aerial Additional y
 			60, //parameters[174]Up Aerial Width
@@ -782,8 +785,10 @@ private:
 			20, //parameters[188]Up Aerial End Lag Duration
 			1, //parameters[189]Up Aerial Is Attached To Player
 			0, //parameters[190] Is Player Attached To It
-			0, //parameters[191]Up Aerial Disappear On Hit
+			0 //parameters[191]Up Aerial Disappear On Hit
+			),
 
+									MoveTemplate(
 			50, //parameters[192]Down Aerial Additional x
 			100, //parameters[193]Down Aerial Additional y
 			10, //parameters[194]Down Aerial Width
@@ -803,8 +808,10 @@ private:
 			40, //parameters[208]Down Aerial End Lag Duration
 			0, //parameters[209]Down Aerial Is Attached To Player
 			0, //parameters[210] Is Player Attached To It
-			0, //parameters[211]Down Aerial Disappear On Hit
+			0 //parameters[211]Down Aerial Disappear On Hit
+			),
 
+										MoveTemplate(
 			100, //parameters[212]Forward Special Additional x
 			0, //parameters[213]Forward Special Additional y
 			40, //parameters[214]Forward Special Width
@@ -824,8 +831,10 @@ private:
 			30, //parameters[228]Forward Special End Lag Duration
 			0, //parameters[229]Forward Special Is Attached To Player
 			1, //parameters[230] Is Player Attached To It
-			0, //parameters[231]Forward Special Disappear On Hit
+			0 //parameters[231]Forward Special Disappear On Hit
+			),
 
+											MoveTemplate(
 			30, //parameters[232]Up Special Additional x
 			-20, //parameters[233]Up Special Additional y
 			40, //parameters[234]Up Special Width
@@ -845,8 +854,10 @@ private:
 			40, //parameters[248]Up Special End Lag Duration
 			0, //parameters[249]Up Special Is Attached To Player
 			1, //parameters[250] Is Player Attached To It
-			0, //parameters[251]Up Special Disappear On Hit
+			0 //parameters[251]Up Special Disappear On Hit
+			),
 
+												MoveTemplate(
 			50, //parameters[252]Down Special Additional x
 			0, //parameters[253]Down Special Additional y
 			70, //parameters[254]Down Special Width
@@ -866,47 +877,9 @@ private:
 			10, //parameters[268]Down Special End Lag Duration
 			0, //parameters[269]Down Special Is Attached To Player
 			1, //parameters[270] Is Player Attached To It
-			0, //parameters[271]Down Special Disappear On Hit     
-			0, //parameters[272]Forward Light R
-			0, //parameters[273]Forward Light G
-			255, //parameters[274]Forward Light B
-			0, //parameters[275]Up Light R
-			0, //parameters[276]Up Light G
-			255, //parameters[277]Up Light B
-			0, //parameters[278]Down Light R
-			0, //parameters[279]Down Light G
-			255, //parameters[280]Down Light B
-			0, //parameters[281]Forward Heavy R
-			0, //parameters[282]Forward Heavy G
-			255, //parameters[283]Forward Heavy B
-			0, //parameters[284]Up Heavy R
-			0, //parameters[285]Up Heavy G
-			255, //parameters[286]Up Heavy B
-			0, //parameters[287]Down Heavy R
-			0, //parameters[288]Down Heavy G
-			255, //parameters[289]Down Heavy B
-			0, //parameters[290]Forward Aerial R
-			0, //parameters[291]Forward Aerial G
-			255, //parameters[292]Forward Aerial B
-			0, //parameters[293]Back Aerial R
-			0, //parameters[294]Back Aerial G
-			255, //parameters[295]Back Aerial B
-			0, //parameters[296]Up Aerial R
-			0, //parameters[297]Up Aerial G
-			255, //parameters[298]Up Aerial B
-			255, //parameters[299]Down Aerial R
-			255, //parameters[300]Down Aerial G
-			255, //parameters[301]Down Aerial B
-			0, //parameters[302]Foward Special R
-			0, //parameters[303]Foward Special G
-			255, //parameters[304]Foward Special B
-			0, //parameters[305]Up Special R
-			0, //parameters[306]Up Special G
-			255, //parameters[307]Up Special B
-			0, //parameters[308]Down Special R
-			0, //parameters[309]Down Special G
-			255 //parameters[310]Down Special B 
-		},
+			0 //parameters[271]Down Special Disappear On Hit     
+			)
+		)/*,
 		//Sigma Monkey Of Doom
 		{
 			63, //parameters[0]Width
@@ -2873,6 +2846,6 @@ private:
 		{
 			36, //Width
 			88 //Height
-		}
+		}*/
 	};
 };

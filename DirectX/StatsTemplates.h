@@ -1,4 +1,5 @@
 #pragma once
+
 struct MoveTemplate {
 	int additionalXRight = 0;
 	int additionalY = 0;
@@ -47,5 +48,63 @@ struct MoveTemplate {
 		r = rR;
 		g = rG;
 		b = rB;
+	}
+};
+
+struct CharacterTemplate {
+	int width = 100;
+	int height = 100;
+	float maxWalkSpeed = 0;
+	float maxAerialSpeed = 0;
+	float walkAcceleration = 0;
+	float aerialAcceleration = 0;
+	float groundJumpHeight = 0;
+	float aerialJumpHeight = 0;
+	float fallAcceleration = 0;
+	float maxFallSpeed = 0;
+	float weight = 0;
+	int maxDoubleJump = 0;
+
+	MoveTemplate forwardLight;
+	MoveTemplate upLight;
+	MoveTemplate downLight;
+	MoveTemplate forwardHeavy;
+	MoveTemplate upHeavy;
+	MoveTemplate downHeavy;
+	MoveTemplate forwardAerial;
+	MoveTemplate backAerial;
+	MoveTemplate upAerial;
+	MoveTemplate downAerial;
+	MoveTemplate forwardSpecial;
+	MoveTemplate upSpecial;
+	MoveTemplate downSpecial;
+
+	CharacterTemplate(int rWidth = 0, int rHeight = 0, float rMaxWalkSpeed = 0, float rMaxAerialSpeed = 0, float rMaxAerialAcceleration = 0, float rMaxWalkAcceleration = 0, float rGroundJumpHeight = 0, float rAerialJumpHeight = 0, float rFallAcceleration = 0, float rMaxFallSpeed = 0, float rWeight = 0, int rMaxDoubleJump = 0, MoveTemplate rForwardLight = 0, MoveTemplate rUpLight = 0, MoveTemplate rDownLight = 0, MoveTemplate rForwardHeavy = 0, MoveTemplate rUpHeavy = 0, MoveTemplate rDownHeavy = 0, MoveTemplate rForwardAerial = 0, MoveTemplate rBackAerial = 0, MoveTemplate rUpAerial = 0, MoveTemplate rDownAerial = 0, MoveTemplate rForwardSpecial = 0, MoveTemplate rUpSpecial = 0, MoveTemplate rDownSpecial = 0) {
+		width = rWidth;
+		height = rHeight;
+		maxWalkSpeed = rMaxWalkSpeed;
+		maxAerialSpeed = rMaxAerialSpeed;
+		walkAcceleration = rMaxWalkAcceleration;
+		aerialAcceleration = rMaxAerialAcceleration;
+		groundJumpHeight = rGroundJumpHeight;
+		aerialJumpHeight = rAerialJumpHeight;
+		fallAcceleration = rFallAcceleration;
+		maxFallSpeed = rMaxFallSpeed;
+		weight = rWeight;
+		maxDoubleJump = rMaxDoubleJump;
+
+		forwardLight = rForwardLight;
+		upLight = rUpLight;
+		downLight = rDownLight;
+		forwardHeavy = rForwardHeavy;
+		upHeavy = rUpHeavy;
+		downHeavy = rDownHeavy;
+		forwardAerial = rForwardAerial;
+		backAerial = rBackAerial;
+		upAerial = rUpAerial;
+		downAerial = rDownAerial;
+		forwardSpecial = rForwardSpecial;
+		upSpecial = rUpSpecial;
+		downSpecial = rDownSpecial;
 	}
 };
