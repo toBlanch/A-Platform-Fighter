@@ -9,11 +9,11 @@ void Move::CheckStatus(float xReferral, float yReferral, Platform Platforms[10])
 			vx += stats.accelerationX;
 			vy += stats.accelerationY;
 
-			x += vx * isFacingRight;
+			x += isFacingRight ? vx : -vx;
 			y += vy;
 
 			if (stats.isPlayerAttachedToIt) {
-				x = xReferral + vx;
+				x = xReferral + (isFacingRight ? vx : -vx);
 				y = yReferral + vy;
 			}
 			else if (!stats.isAttachedToPlayer) {
@@ -26,10 +26,10 @@ void Move::CheckStatus(float xReferral, float yReferral, Platform Platforms[10])
 						bool xOnStage = x + additionalX + stats.width > stageX0 && x + additionalX < stageX1;
 						bool yOnStage = y + stats.additionalY + stats.height >= stageY0 && y + stats.additionalY <= stageY1;
 
-						if (yOnStage && x + additionalX + stats.width > stageX0 && x + additionalX + stats.width <= stageX0 + vx) { //If clipping into stage from the left
+						if (yOnStage && x + additionalX + stats.width > stageX0 && x + additionalX + stats.width <= stageX0 + (isFacingRight ? vx : -vx)) { //If clipping into stage from the left
 							x = float(stageX0) - stats.width - additionalX; //Stop clipping
 						}
-						else if (yOnStage && x + additionalX >= stageX1 + vx && x + additionalX < stageX1) { //If clipping into stage from right
+						else if (yOnStage && x + additionalX >= stageX1 + (isFacingRight ? vx : -vx) && x + additionalX < stageX1) { //If clipping into stage from right
 							x = (float)stageX1 - additionalX; //Stop clipping
 						}
 
@@ -46,7 +46,7 @@ void Move::CheckStatus(float xReferral, float yReferral, Platform Platforms[10])
 
 	}
 
-	if (stats.isAttachedToPlayer || activeDuration != 0) { //If the move is activating or if attached to the player
+	if (stats.isAttachedToPlayer || startUpDuration >= 0) { //If the move is attached to the player or activating 
 		x = xReferral; //Set the X coordinate to the player's
 		y = yReferral; //Set the Y coordinate to the player's
 	}

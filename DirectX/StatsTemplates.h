@@ -25,7 +25,7 @@ struct MoveTemplate {
 	int g = 0;
 	int b = 0;
 
-	MoveTemplate(int rAdditionalXRight = 0,int rAdditionalY = 0,int rWidth = 0,int rHeight = 0,int rStunDuration = 0, float rScalarX = 0,float rScalarY = 0,float rFixedX = 0,float rFixedY = 0,float rInitialVx = 0, float rInitialVy = 0, float rAccelerationX = 0,float rAccelerationY = 0,float rDamage = 0,int rInitialStartUpDuration = 0,int rInitialActiveDuration = 0,int rInitialEndLagDuration = 0,bool rIsAttachedToPlayer = 0,bool rIsPlayerAttachedToIt = 0,bool rDisappearOnHit = 0, int rR = 255, int rG = 255, int rB = 255){
+	MoveTemplate(int rAdditionalXRight = 0, int rAdditionalY = 0, int rWidth = 0, int rHeight = 0, int rStunDuration = 0, float rScalarX = 0, float rScalarY = 0, float rFixedX = 0, float rFixedY = 0, float rInitialVx = 0, float rInitialVy = 0, float rAccelerationX = 0, float rAccelerationY = 0, float rDamage = 0, int rInitialStartUpDuration = 0, int rInitialActiveDuration = 0, int rInitialEndLagDuration = 0, bool rIsAttachedToPlayer = 0, bool rIsPlayerAttachedToIt = 0, bool rDisappearOnHit = 0, int rR = 255, int rG = 255, int rB = 255) {
 		additionalXRight = rAdditionalXRight;
 		additionalY = rAdditionalY;
 		width = rWidth;
@@ -44,6 +44,7 @@ struct MoveTemplate {
 		initialActiveDuration = rInitialActiveDuration;
 		initialEndLagDuration = rInitialEndLagDuration;
 		isAttachedToPlayer = rIsAttachedToPlayer;
+		isPlayerAttachedToIt = rIsPlayerAttachedToIt;
 		disappearOnHit = rDisappearOnHit;
 		r = rR;
 		g = rG;

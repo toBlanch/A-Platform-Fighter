@@ -7,21 +7,15 @@
 using namespace std;
 
 /*
-Potential problems with the move changes:
-	Move knockback changing direction with direction facing
-	AdditionalX changing with direction
-	durations decreasing independantly of stats
-	Colours
-	EndMove change
-Character changes:
-	Aerial and walk acceleration being in the wrong order in game.h
-	Keep an eye on line 405 and 408 (Make the character move up/down)
- 
 Urgent:
 	Fix speed changing after colliding while in stun
 
 General:
+	Move characterID to the character
+	Depricate stats
 	Readd sounds to hit
+	Readd colours to moves
+	Change the order ofn aerial and walk acceleration in game.h and charactertemplate
 	Allow controllers to navigate the start menu and pause
 	Refactor Character.cpp with the new Inputs.h
 	Give AI functionality with multiple stages by making them go towards the nearest platform when desperate and jump between platforms to get to the player
@@ -849,7 +843,7 @@ void Game::ComposeFrame()
 			}
 
 			Move moveToDraw;
-			for (int i = 0; i < Player1.moveArrayLength; i++) { //For every move
+			for (int i = 0; i < MOVE_ARRAY_LENGTH; i++) { //For every move
 				moveToDraw = Player1.GetMove(i);
 				if (moveToDraw.activeDuration >= 0 && moveToDraw.startUpDuration < 0) {
 					gfx->DrawRectFill(moveToDraw.x + moveToDraw.additionalX, moveToDraw.y + moveToDraw.stats.additionalY, moveToDraw.x + moveToDraw.additionalX + moveToDraw.stats.width, moveToDraw.y + moveToDraw.stats.additionalY + moveToDraw.stats.height, moveToDraw.stats.r, moveToDraw.stats.g, moveToDraw.stats.b, 1); //Draw it

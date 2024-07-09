@@ -11,7 +11,7 @@ void Character::ReduceTimer(int& cooldown)
 
 void Character::UpdateCharacterMoves(Platform platforms[10], bool onlyProjectiles)
 {
-	for (int i = 0; i < moveArrayLength; i++) { //For every move
+	for (int i = 0; i < MOVE_ARRAY_LENGTH; i++) { //For every move
 		moveArray[i].CheckStatus(x, y, platforms); //Run the necesarry functions every frame
 		if (moveArray[i].stats.isPlayerAttachedToIt && moveArray[i].startUpDuration < 0 && moveArray[i].activeDuration >= 0) { //If an active move attaches the player to it
 			moveCharacterIsAttachedTo = i;
@@ -22,7 +22,7 @@ void Character::UpdateCharacterMoves(Platform platforms[10], bool onlyProjectile
 void Character::UpdateCharacterPosition(Inputs inputs, Platform Platforms[10])
 {
 	if (moveCharacterIsAttachedTo != -1) { //If the character is attached to a move
-		vx = moveArray[moveCharacterIsAttachedTo].vx;
+		vx = moveArray[moveCharacterIsAttachedTo].isFacingRight ? moveArray[moveCharacterIsAttachedTo].vx : -moveArray[moveCharacterIsAttachedTo].vx;
 		vy = moveArray[moveCharacterIsAttachedTo].vy;
 
 		if (moveArray[moveCharacterIsAttachedTo].vy < 0) {
@@ -141,7 +141,7 @@ void Character::isCollidingWithStage(Platform Platforms[10], float horizontalSpe
 {
 	bool onPlatform = false;
 	for (int i = 0; i < 10; i++) {
-		onPlatform = IsOnStage(Platforms[i],verticalSpeed, down, i) || onPlatform;
+		onPlatform = IsOnStage(Platforms[i], verticalSpeed, down, i) || onPlatform;
 		if (Platforms[i].isSolid) {
 			ClippingIntoStageFromLeft(Platforms[i], horizontalSpeed);
 			ClippingIntoStageFromRight(Platforms[i], horizontalSpeed);
@@ -221,7 +221,7 @@ bool Character::ClippingIntoStageFromBottom(Platform platform, float speed)
 		if (stun > 0 || -vy > speed * 2) {
 			vy = -1 * vy - ((float)platform.y1 - y);
 		}
-		else{
+		else {
 			vy = (float)platform.y1 - y; //Stop clipping
 		}
 		return true;
@@ -233,10 +233,6 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 	bool dodgePressed = inputs.dodge; //Because dodge gets disabled when moveDuration != 0 I need an accurate measure of if dodge is pressed
 	moveCharacterIsAttachedTo = -1;
 	UpdateCharacterMoves(platforms, false);
-
-	if (inputs.down && inputs.left) {
-		int a = 0;
-	}
 
 	if (stun == 0) { //If not in stun
 		//If on stage
@@ -293,9 +289,13 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 
 	UpdateCharacterPosition(inputs, platforms);
 
-	for (int i = 0; i < moveArrayLength; i++) {
+	for (int i = 0; i < MOVE_ARRAY_LENGTH; i++) {
 		if (moveArray[i].activeDuration < 0) {
-			if (inputs.special && (!moveArray[0].stats.isAttachedToPlayer + !moveArray[1].stats.isAttachedToPlayer + !moveArray[2].stats.isAttachedToPlayer + !moveArray[3].stats.isAttachedToPlayer + !moveArray[4].stats.isAttachedToPlayer < 4 || inputs.up)) { //If using a special attack
+			int freeMoveSlots = 0;
+			for (int j = 0; j < MOVE_ARRAY_LENGTH; j++) {
+				freeMoveSlots += moveArray[j].activeDuration < 0; //If a move has no active duration 
+			}
+			if (inputs.special && (freeMoveSlots >= 2 || inputs.up)) { //If using a special attack AND less than 4 of the 5 move slots are taken up or it's a recovery move
 				if (inputs.right) {
 					facingRight = true;
 				}
@@ -438,7 +438,7 @@ bool Character::IsAlive(int screenWidth, int screenHeight, int leniancy)
 		stun = 0;
 		moveDuration = 0;
 		invincibilityCooldown = 0;
-		for (int i = 0; i < moveArrayLength; i++) {
+		for (int i = 0; i < MOVE_ARRAY_LENGTH; i++) {
 			moveArray[i].EndMove();
 		}
 		if (lives > 0) {
@@ -456,16 +456,16 @@ bool Character::IsAlive(int screenWidth, int screenHeight, int leniancy)
 	return true;
 }
 
-void Character::UpdateMoveCollision(Character &opposingPlayer)
+void Character::UpdateMoveCollision(Character& opposingPlayer)
 {
-	for (int i = 0; i < moveArrayLength; i++) {
+	for (int i = 0; i < MOVE_ARRAY_LENGTH; i++) {
 		if (!moveArray[i].hasHit && moveArray[i].activeDuration > 0 && moveArray[i].startUpDuration < 0) { //If the move has an active hitbox
 			for (int j = 0; j <= 4; j++) {
 				for (int k = 0; k <= 4; k++) {
-					if (moveArray[i].x + moveArray[i].additionalX + moveArray[i].stats.width/4*j >= opposingPlayer.x && //If the X coordinate is greater than the player's
-						moveArray[i].x + moveArray[i].additionalX + moveArray[i].stats.width/4*j <= opposingPlayer.x + opposingPlayer.stats.width && //If the x coordinate is less than the player's plus their stats.width
-						moveArray[i].y + moveArray[i].stats.additionalY + moveArray[i].stats.height/4*k >= opposingPlayer.y && //If the Y coordniate is greater than the player's
-						moveArray[i].y + moveArray[i].stats.additionalY + moveArray[i].stats.height/4*k <= opposingPlayer.y + opposingPlayer.stats.height //If the y coordinate is les than the player's plus their stats.height
+					if (moveArray[i].x + moveArray[i].additionalX + moveArray[i].stats.width / 4 * j >= opposingPlayer.x && //If the X coordinate is greater than the player's
+						moveArray[i].x + moveArray[i].additionalX + moveArray[i].stats.width / 4 * j <= opposingPlayer.x + opposingPlayer.stats.width && //If the x coordinate is less than the player's plus their stats.width
+						moveArray[i].y + moveArray[i].stats.additionalY + moveArray[i].stats.height / 4 * k >= opposingPlayer.y && //If the Y coordniate is greater than the player's
+						moveArray[i].y + moveArray[i].stats.additionalY + moveArray[i].stats.height / 4 * k <= opposingPlayer.y + opposingPlayer.stats.height //If the y coordinate is les than the player's plus their stats.height
 						) { //If inside the player's coordinates
 						if (moveArray[i].stats.disappearOnHit) {
 							moveArray[i].activeDuration = 0; //Disable
@@ -484,7 +484,6 @@ void Character::UpdateMoveCollision(Character &opposingPlayer)
 
 void Character::Initialise(CharacterTemplate rStats) {
 	stats = rStats;
-	moveArrayLength = sizeof(moveArray) / sizeof(*moveArray);
 	Restart();
 }
 
@@ -498,11 +497,14 @@ void Character::IsHit(Move moveHitWith) {
 		if (playerPercentage >= 100) {
 			playerPercentage = 99.9;
 		}
-		vx = (moveHitWith.stats.fixedX + moveHitWith.stats.scalarX * playerPercentage / 100 * moveHitWith.isFacingRight) / stats.weight * (1 + easyMode); //Doubled in easy mode
+		vx = (moveHitWith.stats.fixedX + moveHitWith.stats.scalarX * playerPercentage / 100) / stats.weight * (1 + easyMode); //Doubled in easy mode
+		if (!moveHitWith.isFacingRight) {
+			vx = -vx;
+		}
 		vy = (moveHitWith.stats.fixedY + moveHitWith.stats.scalarY * playerPercentage / 100) / stats.weight * (1 + easyMode); //Doubled in easy mode
 		moveDuration = 0;
 		freeFallDuration = 0;
-		for (int i = 0; i < moveArrayLength; i++) {
+		for (int i = 0; i < MOVE_ARRAY_LENGTH; i++) {
 			moveArray[i].PlayerIsHit();
 		}
 		inputsHeld.jump = false;
@@ -518,7 +520,7 @@ void Character::IsHit(Move moveHitWith) {
 void Character::Restart()
 {
 	lives = 3;
-	for (int i = 0; i < moveArrayLength; i++) {
+	for (int i = 0; i < MOVE_ARRAY_LENGTH; i++) {
 		moveArray[i].EndMove();
 	}
 	vx = 0;

@@ -4,6 +4,7 @@
 #include "Platform.h"
 #include "Inputs.h"
 #include "StatsTemplates.h"
+#define MOVE_ARRAY_LENGTH 5
 
 class Character {
 	void ReduceTimer(int& cooldown);
@@ -38,7 +39,6 @@ public:
 	float speed = 0;
 	float acceleration = 0;
 	int doubleJump = 0;
-	int moveArrayLength = 0;
 	bool easyMode = false;
 	bool aiSelected = false;
 	CharacterTemplate stats;
@@ -52,5 +52,5 @@ private:
 	Inputs inputsHeld = Inputs(false, false, false, false, false, false, false, false, false);
 
 	int platformOn = -1;
-	Move moveArray[5];
+	Move moveArray[MOVE_ARRAY_LENGTH];
 };
