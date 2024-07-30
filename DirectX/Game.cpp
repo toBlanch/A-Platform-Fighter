@@ -13,6 +13,10 @@ Urgent:
 General:
 	Move characterID to the character
 	Depricate stats
+	Add other easy things
+	Use an enum for easy stuff like CharacterID
+	Tidy private and public variables
+	Adapt AI to the changes
 	Readd sounds to hit
 	Readd colours to moves
 	Change the order ofn aerial and walk acceleration in game.h and charactertemplate
@@ -133,12 +137,12 @@ Game::Game(Graphics* gfx)
 	mciSendStringA("play MainMenu repeat", NULL, 0, NULL);
 
 	//Initialise menu idle sprites
-	player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
-	player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
+	player1Idle = new SpriteSheet(idleParameters[Player1.characterID], gfx); //Set player 1s idle animation
+	player2Idle = new SpriteSheet(idleParameters[Player2.characterID], gfx); //Set player 1s idle animation
 
 	//Initialise menu description sprites
-	player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s idle animation
-	player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s idle animation
+	player1Desc = new SpriteSheet(descParameters[Player1.characterID], gfx); //Set player 1s idle animation
+	player2Desc = new SpriteSheet(descParameters[Player2.characterID], gfx); //Set player 1s idle animation
 }
 
 void Game::Go()
@@ -279,12 +283,12 @@ void Game::StartMenu()
 		spaceHeld = false;
 		if ((gfx->ifFocus() && GetKeyState(0x45) & 0x8000) ||
 			(clickPosition.x >= 655 && clickPosition.x <= 745 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 1 wants to increase their character ID
-			if (player1CharacterID < 8 && !eHeld) {
-				player1CharacterID++; //Increase it
+			if (Player1.characterID < 8 && !eHeld) {
+				Player1.characterID++; //Increase it
 				player1Idle -> ~SpriteSheet();
-				player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
+				player1Idle = new SpriteSheet(idleParameters[Player1.characterID], gfx); //Set player 1s idle animation
 				player1Desc -> ~SpriteSheet();
-				player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s description
+				player1Desc = new SpriteSheet(descParameters[Player1.characterID], gfx); //Set player 1s description
 				eHeld = true;
 			}
 		}
@@ -294,12 +298,12 @@ void Game::StartMenu()
 
 		if ((gfx->ifFocus() && GetKeyState(0x51) & 0x8000) ||
 			(clickPosition.x >= 350 && clickPosition.x <= 440 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 1 wants to decrease their character ID
-			if (player1CharacterID > 0 && !qHeld) {
-				player1CharacterID--; //Decrease it
+			if (Player1.characterID > 0 && !qHeld) {
+				Player1.characterID--; //Decrease it
 				player1Idle -> ~SpriteSheet();
-				player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
+				player1Idle = new SpriteSheet(idleParameters[Player1.characterID], gfx); //Set player 1s idle animation
 				player1Desc -> ~SpriteSheet();
-				player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s description
+				player1Desc = new SpriteSheet(descParameters[Player1.characterID], gfx); //Set player 1s description
 				qHeld = true;
 			}
 		}
@@ -309,12 +313,12 @@ void Game::StartMenu()
 
 		if ((gfx->ifFocus() && GetKeyState(0x50) & 0x8000) ||
 			(clickPosition.x >= 1485 && clickPosition.x <= 1570 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 2 wants to increase their character ID
-			if (player2CharacterID < 8 && !pHeld) {
-				player2CharacterID++; //Incerase it
+			if (Player2.characterID < 8 && !pHeld) {
+				Player2.characterID++; //Incerase it
 				player2Idle -> ~SpriteSheet();
-				player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
+				player2Idle = new SpriteSheet(idleParameters[Player2.characterID], gfx); //Set player 1s idle animation
 				player2Desc -> ~SpriteSheet();
-				player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
+				player2Desc = new SpriteSheet(descParameters[Player2.characterID], gfx); //Set player 1s description
 				pHeld = true;
 			}
 		}
@@ -324,12 +328,12 @@ void Game::StartMenu()
 
 		if ((gfx->ifFocus() && GetKeyState(0x49) & 0x8000) ||
 			(clickPosition.x >= 1175 && clickPosition.x <= 1265 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 2 wants to decrease their character ID
-			if (player2CharacterID > 0 && !iHeld) {
-				player2CharacterID--; //Decrease it
+			if (Player2.characterID > 0 && !iHeld) {
+				Player2.characterID--; //Decrease it
 				player2Idle -> ~SpriteSheet();
-				player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
+				player2Idle = new SpriteSheet(idleParameters[Player2.characterID], gfx); //Set player 1s idle animation
 				player2Desc -> ~SpriteSheet();
-				player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
+				player2Desc = new SpriteSheet(descParameters[Player2.characterID], gfx); //Set player 1s description
 				iHeld = true;
 			}
 		}
@@ -388,27 +392,27 @@ void Game::StartMenu()
 		if (((gfx->ifFocus() && GetKeyState(0x0D) & 0x8000 || gfx->ifFocus() && GetKeyState(0x1B) & 0x8000) && !enterOrEscapeHeld) ||
 			(clickPosition.x >= 760 && clickPosition.x <= 1160 && clickPosition.y >= 490 && clickPosition.y <= 660)) { //If the game is starting
 			menuState = stageSelect;
-			if (player1CharacterID == 8) {
-				player1CharacterID = 1 + (float)randomDist(rng) * 6.9f / 39;
-				player1Idle = new SpriteSheet(idleParameters[player1CharacterID], gfx); //Set player 1s idle animation
+			if (Player1.characterID == 8) {
+				Player1.characterID = 1 + (float)randomDist(rng) * 6.9f / 39;
+				player1Idle = new SpriteSheet(idleParameters[Player1.characterID], gfx); //Set player 1s idle animation
 				player1Desc -> ~SpriteSheet();
-				player1Desc = new SpriteSheet(descParameters[player1CharacterID], gfx); //Set player 1s description
+				player1Desc = new SpriteSheet(descParameters[Player1.characterID], gfx); //Set player 1s description
 			}
-			player1Move = new SpriteSheet(moveParameters[player1CharacterID], gfx); //Set player 1s move animation
-			player1Hit = new SpriteSheet(hitParameters[player1CharacterID], gfx); //Set player 1s hit animation
-			player1LivesIcon = new SpriteSheet(livesIconParameters[player1CharacterID], gfx); //Set player 2s lives icon
-			Player1.Initialise(characterTemplates[player1CharacterID]); //Set player 1s variables
+			player1Move = new SpriteSheet(moveParameters[Player1.characterID], gfx); //Set player 1s move animation
+			player1Hit = new SpriteSheet(hitParameters[Player1.characterID], gfx); //Set player 1s hit animation
+			player1LivesIcon = new SpriteSheet(livesIconParameters[Player1.characterID], gfx); //Set player 2s lives icon
+			Player1.Restart();
 
-			if (player2CharacterID == 8) {
-				player2CharacterID = 1 + (float)randomDist(rng) * 6.9f / 39;
-				player2Idle = new SpriteSheet(idleParameters[player2CharacterID], gfx); //Set player 1s idle animation
+			if (Player2.characterID == 8) {
+				Player2.characterID = 1 + (float)randomDist(rng) * 6.9f / 39;
+				player2Idle = new SpriteSheet(idleParameters[Player2.characterID], gfx); //Set player 1s idle animation
 				player2Desc -> ~SpriteSheet();
-				player2Desc = new SpriteSheet(descParameters[player2CharacterID], gfx); //Set player 1s description
+				player2Desc = new SpriteSheet(descParameters[Player2.characterID], gfx); //Set player 1s description
 			}
-			player2Move = new SpriteSheet(moveParameters[player2CharacterID], gfx); //Set player 1s move animation
-			player2Hit = new SpriteSheet(hitParameters[player2CharacterID], gfx); //Set player 1s hit animation
-			player2LivesIcon = new SpriteSheet(livesIconParameters[player2CharacterID], gfx); //Set player 2s lives icon
-			Player2.Initialise(characterTemplates[player2CharacterID]); //Set player 1s variables
+			player2Move = new SpriteSheet(moveParameters[Player2.characterID], gfx); //Set player 1s move animation
+			player2Hit = new SpriteSheet(hitParameters[Player2.characterID], gfx); //Set player 1s hit animation
+			player2LivesIcon = new SpriteSheet(livesIconParameters[Player2.characterID], gfx); //Set player 2s lives icon
+			Player2.Restart();
 		}
 	}
 }
@@ -497,7 +501,7 @@ void Game::GameLoop()
 
 		//Update models
 		if (Player1.aiSelected) {
-			ArtifialFriend.Update(Player2.x, Player2.y, Player2.stats.width, Player2.stats.height, Player1.x, Player1.y, Player1.vx, Player1.vy, Player1.stats.width, Player1.stats.height, Player1.invincibilityCooldown == 0, Player1.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player2.playerPercentage);
+			ArtifialFriend.Update(Player2.x, Player2.y, characterTemplates[Player2.characterID].width, characterTemplates[Player2.characterID].height, Player1.x, Player1.y, Player1.vx, Player1.vy, characterTemplates[Player1.characterID].width, characterTemplates[Player1.characterID].height, Player1.invincibilityCooldown == 0, Player1.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player2.playerPercentage);
 			p1Inputs = new Inputs(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
@@ -532,7 +536,7 @@ void Game::GameLoop()
 		}
 		
 		if (Player2.aiSelected) {
-			ArtifialFriend.Update(Player1.x, Player1.y, Player1.stats.width, Player1.stats.height, Player2.x, Player2.y, Player2.vx, Player2.vy, Player2.stats.width, Player2.stats.height, Player2.invincibilityCooldown == 0, Player2.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player1.playerPercentage);
+			ArtifialFriend.Update(Player1.x, Player1.y, characterTemplates[Player1.characterID].width, characterTemplates[Player1.characterID].height, Player2.x, Player2.y, Player2.vx, Player2.vy, characterTemplates[Player2.characterID].width, characterTemplates[Player2.characterID].height, Player2.invincibilityCooldown == 0, Player2.doubleJump, Stages[stageSelected].Platforms, randomDist(rng), Player1.playerPercentage);
 			p2Inputs = new Inputs(
 				ArtifialFriend.left, //Left
 				ArtifialFriend.right, //Right
@@ -588,12 +592,12 @@ void Game::GameStart()
 	StartBattleTheme();
 	Player1.easyMode = easyMode;
 	Player1.x = Stages[stageSelected].spawnx; //Set player 1s starting position
-	Player1.y = Stages[stageSelected].spawny - Player1.stats.height; //Set player 1s starting position
+	Player1.y = Stages[stageSelected].spawny - characterTemplates[Player1.characterID].height; //Set player 1s starting position
 	Player1.facingRight = true;
 	Player1.Restart();
 	Player2.easyMode = easyMode;
-	Player2.x = 1920 - Stages[stageSelected].spawnx - Player2.stats.width; //Set player 2s starting position
-	Player2.y = Stages[stageSelected].spawny - Player2.stats.height; //Set player 2s starting position
+	Player2.x = 1920 - Stages[stageSelected].spawnx - characterTemplates[Player2.characterID].width; //Set player 2s starting position
+	Player2.y = Stages[stageSelected].spawny - characterTemplates[Player2.characterID].height; //Set player 2s starting position
 	Player2.facingRight = false;
 	Player2.Restart();
 	timeUntilStart = 180;
@@ -713,8 +717,8 @@ void Game::ComposeFrame()
 				player2Win->Draw(1920 / 2 - 250, 100, false); //Dislpay a sprite that shows this
 			}
 
-			player1Idle->Draw(550 - characterTemplates[player1CharacterID].width / 2, 100, false); //Draws an appropriate sprite based on character ID in the start menu
-			player2Idle->Draw(1370 - characterTemplates[player2CharacterID].width / 2, 100, player2CharacterID != 8); //Draws an appropriate sprite based on character ID in the start menu
+			player1Idle->Draw(550 - characterTemplates[Player1.characterID].width / 2, 100, false); //Draws an appropriate sprite based on character ID in the start menu
+			player2Idle->Draw(1370 - characterTemplates[Player2.characterID].width / 2, 100, Player2.characterID != 8); //Draws an appropriate sprite based on character ID in the start menu
 
 			player1Desc->Draw(345, 250, false); //Draws an appropriate sprite based on character ID in the start menu
 			player2Desc->Draw(1175, 250, false); //Draws an appropriate sprite based on character ID in the start menu
@@ -755,21 +759,21 @@ void Game::ComposeFrame()
 				}
 
 				if (Player1.lives == Player2.lives && Player1.playerPercentage == Player2.playerPercentage) { //If both players are even
-					gfx->DrawRectFill(1920 / 2 - Player1.stats.width - 1, 99, 1920 / 2 + 1, 100 + Player1.stats.height + 1, 255, 199, 0, 1); //Player 1 border
-					player1Idle->Draw(1920 / 2 - Player1.stats.width, 100, false); //Display player 1 at the top of the screen
-					gfx->DrawRectFill(1920 / 2, 99, 1920 / 2 + Player2.stats.width + 1, 100 + Player2.stats.height + 1, 255, 199, 0, 1); //Player 2 border
+					gfx->DrawRectFill(1920 / 2 - characterTemplates[Player1.characterID].width - 1, 99, 1920 / 2 + 1, 100 + characterTemplates[Player1.characterID].height + 1, 255, 199, 0, 1); //Player 1 border
+					player1Idle->Draw(1920 / 2 - characterTemplates[Player1.characterID].width, 100, false); //Display player 1 at the top of the screen
+					gfx->DrawRectFill(1920 / 2, 99, 1920 / 2 + characterTemplates[Player2.characterID].width + 1, 100 + characterTemplates[Player2.characterID].height + 1, 255, 199, 0, 1); //Player 2 border
 					player2Idle->Draw(1920 / 2, 100, false); //Display player 2 at the top of the screen
 				}
 				else if (Player1.lives > Player2.lives || (Player1.lives == Player2.lives && Player1.playerPercentage < Player2.playerPercentage)) {
-					gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player1.stats.width + 1, 351 + Player1.stats.height, 255, 199, 0, 1); //Player 1 border
+					gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + characterTemplates[Player1.characterID].width + 1, 351 + characterTemplates[Player1.characterID].height, 255, 199, 0, 1); //Player 1 border
 					player1Idle->Draw(1920 / 4, 350, false); //Display player 1 on the left side
-					gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player2.stats.width + 1, 351 + Player2.stats.height, 255, 199, 0, 1); //Player 2 border
+					gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + characterTemplates[Player2.characterID].width + 1, 351 + characterTemplates[Player2.characterID].height, 255, 199, 0, 1); //Player 2 border
 					player2Hit->Draw(1920 / 4 * 3, 350, false); //Display player 2 on the right side
 				}
 				else {
-					gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + Player2.stats.width + 1, 351 + Player2.stats.height, 255, 199, 0, 1); //Player 1 border
+					gfx->DrawRectFill(1920 / 4 - 1, 349, 1920 / 4 + characterTemplates[Player2.characterID].width + 1, 351 + characterTemplates[Player2.characterID].height, 255, 199, 0, 1); //Player 1 border
 					player2Idle->Draw(1920 / 4, 350, false); //Display player 2 on the left side
-					gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + Player1.stats.width + 1, 351 + Player1.stats.height, 255, 199, 0, 1); //Player 2 border
+					gfx->DrawRectFill(1920 / 4 * 3 - 1, 349, 1920 / 4 * 3 + characterTemplates[Player1.characterID].width + 1, 351 + characterTemplates[Player1.characterID].height, 255, 199, 0, 1); //Player 2 border
 					player1Hit->Draw(1920 / 4 * 3, 350, false); //Display player 1 on the right side
 				}
 			}
@@ -816,10 +820,10 @@ void Game::ComposeFrame()
 			}
 
 			if (Player1.invincibility > 0) { //If player 1 has invincibility
-				gfx->DrawRectThin(Player1.x - 1, Player1.y - 1, Player1.x + Player1.stats.width + 1, Player1.y + Player1.stats.height + 1, 0, 237, 255, 1); //Give them a border
+				gfx->DrawRectThin(Player1.x - 1, Player1.y - 1, Player1.x + characterTemplates[Player1.characterID].width + 1, Player1.y + characterTemplates[Player1.characterID].height + 1, 0, 237, 255, 1); //Give them a border
 			}
 			if (Player2.invincibility > 0) { //If player 2 has invincibility
-				gfx->DrawRectThin(Player2.x - 1, Player2.y - 1, Player2.x + Player2.stats.width + 1, Player2.y + Player2.stats.height + 1, 0, 237, 255, 1); //Give them a border
+				gfx->DrawRectThin(Player2.x - 1, Player2.y - 1, Player2.x + characterTemplates[Player2.characterID].width + 1, Player2.y + characterTemplates[Player2.characterID].height + 1, 0, 237, 255, 1); //Give them a border
 			}
 
 			if (Player1.moveDuration > 0 || Player1.freeFallDuration > 0) { //If Player 1 is using a move

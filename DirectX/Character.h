@@ -16,33 +16,39 @@ class Character {
 	bool ClippingIntoStageFromRight(Platform platform, float speed);
 	bool ClippingIntoStageFromBottom(Platform platform, float speed);
 public:
+	Character(CharacterTemplate rCharacterTemplates[9]);
+	void ChangeCharacterID(bool isIncreasing, CharacterTemplate characterTemplates);
 	void UpdateCharacter(Inputs inputs, Platform platforms[10]);
 	bool IsAlive(int screenWidth, int screenHeight, int leniancy);
 	void UpdateMoveCollision(Character &opposingPlayer);
-	void Initialise(CharacterTemplate rStats);
 	void IsHit(Move moveHitWith);
 	void Restart();
 	Move GetMove(int moveID);
 
-	int lives = 3;
+	int characterID = 0;
+
 	float x = 0;
 	float y = 0;
 	float vx = 0;
 	float vy = 0;
-	int moveDuration = 0;
-	float playerPercentage = 0;
-	int stun = 0;
+	int doubleJump = 0;
 	bool facingRight = true;
-	int invincibility = 0;
-	int freeFallDuration = 0;
-	int invincibilityCooldown = 0;
 	float speed = 0;
 	float acceleration = 0;
-	int doubleJump = 0;
+
+	int lives = 3;
+	float playerPercentage = 0;
+	int moveDuration = 0;
+	int stun = 0;
+	int freeFallDuration = 0;
+	int invincibility = 0;
+	int invincibilityCooldown = 0;
+
 	bool easyMode = false;
 	bool aiSelected = false;
-	CharacterTemplate stats;
 private:
+	CharacterTemplate(&characterStats)[9];
+
 	bool onStage = false;
 	bool fastFalling = false;
 	bool groundTouchedAfterDodging = false;

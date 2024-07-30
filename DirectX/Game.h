@@ -47,8 +47,6 @@ private:
 
 	int stageSelected = -1;
 	int leniancy = 0;
-	int player1CharacterID = 0;
-	int player2CharacterID = 1;
 	int previousWinner = 0;
 	int timeUntilStart = 0;
 	int timeGoIsDisplayed = 0;
@@ -127,8 +125,6 @@ private:
 	LPCWSTR livesIconParameters[8];
 	LPCWSTR descParameters[9];
 
-	Character Player1;
-	Character Player2;
 	AI ArtifialFriend;
 
 	Platform Platforms0[10] = {
@@ -251,7 +247,7 @@ private:
 		Stage(Platforms8, "open \"Battle Theme 8.wav\" type mpegvideo alias BattleTheme", 1920 / 4 + 100, 700)
 	};
 
-	const CharacterTemplate characterTemplates[9] = {
+	CharacterTemplate characterTemplates[9] = {
 			//Circle
 			CharacterTemplate(
 			100, 100, 10, 10, 1, 1, 20, 25, 1, 10, 0.9, 2,
@@ -394,4 +390,7 @@ private:
 				88 //Height
 				)
 	};
+
+	Character Player1;
+	Character Player2;
 };
