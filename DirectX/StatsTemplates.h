@@ -1,4 +1,5 @@
 #pragma once
+#include <Windows.h>
 
 struct MoveTemplate {
 	int additionalXRight = 0;
@@ -53,6 +54,12 @@ struct MoveTemplate {
 };
 
 struct CharacterTemplate {
+	LPCWSTR idleSpriteFileLocation = L"";
+	LPCWSTR moveSpriteFileLocation = L"";
+	LPCWSTR hitSpriteFileLocation = L"";
+	LPCWSTR livesSpriteFileLocation = L"";
+	LPCWSTR descSpriteFileLocation = L"";
+
 	int width = 100;
 	int height = 100;
 	float maxWalkSpeed = 0;
@@ -80,7 +87,13 @@ struct CharacterTemplate {
 	MoveTemplate upSpecial;
 	MoveTemplate downSpecial;
 
-	CharacterTemplate(int rWidth = 0, int rHeight = 0, float rMaxWalkSpeed = 0, float rMaxAerialSpeed = 0, float rMaxAerialAcceleration = 0, float rMaxWalkAcceleration = 0, float rGroundJumpHeight = 0, float rAerialJumpHeight = 0, float rFallAcceleration = 0, float rMaxFallSpeed = 0, float rWeight = 0, int rMaxDoubleJump = 0, MoveTemplate rForwardLight = 0, MoveTemplate rUpLight = 0, MoveTemplate rDownLight = 0, MoveTemplate rForwardHeavy = 0, MoveTemplate rUpHeavy = 0, MoveTemplate rDownHeavy = 0, MoveTemplate rForwardAerial = 0, MoveTemplate rBackAerial = 0, MoveTemplate rUpAerial = 0, MoveTemplate rDownAerial = 0, MoveTemplate rForwardSpecial = 0, MoveTemplate rUpSpecial = 0, MoveTemplate rDownSpecial = 0) {
+	CharacterTemplate(LPCWSTR rIdleSpriteFileLocation = L"", LPCWSTR rMoveSpriteFileLocation = L"", LPCWSTR rHitSpriteFileLocation = L"", LPCWSTR rLivesSpriteFileLocation = L"", LPCWSTR rDescSpriteFileLocation = L"", int rWidth = 0, int rHeight = 0, float rMaxWalkSpeed = 0, float rMaxAerialSpeed = 0, float rMaxAerialAcceleration = 0, float rMaxWalkAcceleration = 0, float rGroundJumpHeight = 0, float rAerialJumpHeight = 0, float rFallAcceleration = 0, float rMaxFallSpeed = 0, float rWeight = 0, int rMaxDoubleJump = 0, MoveTemplate rForwardLight = 0, MoveTemplate rUpLight = 0, MoveTemplate rDownLight = 0, MoveTemplate rForwardHeavy = 0, MoveTemplate rUpHeavy = 0, MoveTemplate rDownHeavy = 0, MoveTemplate rForwardAerial = 0, MoveTemplate rBackAerial = 0, MoveTemplate rUpAerial = 0, MoveTemplate rDownAerial = 0, MoveTemplate rForwardSpecial = 0, MoveTemplate rUpSpecial = 0, MoveTemplate rDownSpecial = 0) {
+		idleSpriteFileLocation = rIdleSpriteFileLocation;
+		moveSpriteFileLocation = rMoveSpriteFileLocation;
+		hitSpriteFileLocation = rHitSpriteFileLocation;
+		livesSpriteFileLocation = rLivesSpriteFileLocation;
+		descSpriteFileLocation = rDescSpriteFileLocation;
+
 		width = rWidth;
 		height = rHeight;
 		maxWalkSpeed = rMaxWalkSpeed;

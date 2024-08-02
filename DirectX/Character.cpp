@@ -83,7 +83,7 @@ void Character::UpdateCharacterPosition(Inputs inputs, Platform Platforms[10])
 		if (inputs.jump) { //If you're not holding jump
 			if (onStage) { //If on stage and jump key is held
 				if (vy >= 0) { //If not already rising
-					vy = -characterStats[characterID].groundJumpHeight; //Start jumping
+					vy = -characterTemplates[characterID].groundJumpHeight; //Start jumping
 					inputsHeld.jump = true; //Jump key is held
 				}
 			}
@@ -92,10 +92,10 @@ void Character::UpdateCharacterPosition(Inputs inputs, Platform Platforms[10])
 				fastFalling = false; //Stop fast falling
 				doubleJump -= 1; //Remove one double jump
 				if (easyMode) {
-					vy = -characterStats[characterID].groundJumpHeight; //Start jumping (easy mode)
+					vy = -characterTemplates[characterID].groundJumpHeight; //Start jumping (easy mode)
 				}
 				else {
-					vy = -characterStats[characterID].aerialJumpHeight; //Start jumping (Hard Mode)
+					vy = -characterTemplates[characterID].aerialJumpHeight; //Start jumping (Hard Mode)
 				}
 			}
 		}
@@ -105,18 +105,18 @@ void Character::UpdateCharacterPosition(Inputs inputs, Platform Platforms[10])
 				fastFalling = true; //Start fast falling
 			}
 			if (fastFalling) {
-				if (vy < characterStats[characterID].maxFallSpeed * 2) { //If not at terminal velocity
-					vy += characterStats[characterID].fallAcceleration * 2; //Increase falling speed
-					if (vy > characterStats[characterID].maxFallSpeed * 2) { //If over terminal velocity
-						vy = characterStats[characterID].maxFallSpeed * 2; //Set to terminal velocity
+				if (vy < characterTemplates[characterID].maxFallSpeed * 2) { //If not at terminal velocity
+					vy += characterTemplates[characterID].fallAcceleration * 2; //Increase falling speed
+					if (vy > characterTemplates[characterID].maxFallSpeed * 2) { //If over terminal velocity
+						vy = characterTemplates[characterID].maxFallSpeed * 2; //Set to terminal velocity
 					}
 				}
 			}
 			else {
-				if (vy < characterStats[characterID].maxFallSpeed) {//If not at terminal velocity
-					vy += characterStats[characterID].fallAcceleration; //Increase falling speed
-					if (vy > characterStats[characterID].maxFallSpeed) { //If over terminal velocity
-						vy = characterStats[characterID].maxFallSpeed; //Set to terminal velocity
+				if (vy < characterTemplates[characterID].maxFallSpeed) {//If not at terminal velocity
+					vy += characterTemplates[characterID].fallAcceleration; //Increase falling speed
+					if (vy > characterTemplates[characterID].maxFallSpeed) { //If over terminal velocity
+						vy = characterTemplates[characterID].maxFallSpeed; //Set to terminal velocity
 					}
 				}
 			}
@@ -124,14 +124,14 @@ void Character::UpdateCharacterPosition(Inputs inputs, Platform Platforms[10])
 	}
 
 	if (moveDuration > 0 && onStage) { //If using a grounded move
-		if (x + vx < Platforms[platformOn].x0 - characterStats[characterID].width) { //If falling out the left side
-			vx = Platforms[platformOn].x0 - characterStats[characterID].width - x; //Put back on the stage
+		if (x + vx < Platforms[platformOn].x0 - characterTemplates[characterID].width) { //If falling out the left side
+			vx = Platforms[platformOn].x0 - characterTemplates[characterID].width - x; //Put back on the stage
 		}
 		if (x > Platforms[platformOn].x1) { //If falling off the right side
 			vx = Platforms[platformOn].x1 - x; //Put back on the stage
 		}
 	}
-	isCollidingWithStage(Platforms, speed, characterStats[characterID].maxFallSpeed, inputs.down);
+	isCollidingWithStage(Platforms, speed, characterTemplates[characterID].maxFallSpeed, inputs.down);
 
 	x += vx; //Increase X by speed
 	y += vy; //Increase Y by speed
@@ -156,16 +156,16 @@ bool Character::IsOnStage(Platform platform, float speed, bool down, int i)
 	float predictedx = x + vx;
 	float predictedy = y + vy;
 
-	if (predictedx + characterStats[characterID].width >= platform.x0 && predictedx <= platform.x1 && //If X coordinate is over the stage
-		predictedy + characterStats[characterID].height >= platform.y0 && predictedy + characterStats[characterID].height <= platform.y0 + vy * 2 //If Y coordinate is level with the stage
+	if (predictedx + characterTemplates[characterID].width >= platform.x0 && predictedx <= platform.x1 && //If X coordinate is over the stage
+		predictedy + characterTemplates[characterID].height >= platform.y0 && predictedy + characterTemplates[characterID].height <= platform.y0 + vy * 2 //If Y coordinate is level with the stage
 		&& vy >= 0
 		&& !(!platform.isSolid && down)) {
 
-		if (stun > 0 || vy > characterStats[characterID].maxFallSpeed * 2) {
-			vy = -1 * vy - ((float)platform.y0 - characterStats[characterID].height - y); //Stop clipping
+		if (stun > 0 || vy > characterTemplates[characterID].maxFallSpeed * 2) {
+			vy = -1 * vy - ((float)platform.y0 - characterTemplates[characterID].height - y); //Stop clipping
 		}
 		else {
-			vy = (float)platform.y0 - characterStats[characterID].height - y; //Stop clipping
+			vy = (float)platform.y0 - characterTemplates[characterID].height - y; //Stop clipping
 		}
 		if (invincibility != 0 && moveDuration != 0 && !onStage && !hitDuringDodge) { //If dashing into the ground
 			invincibilityCooldown = 0;
@@ -183,12 +183,12 @@ bool Character::ClippingIntoStageFromLeft(Platform platform, float speed)
 	float predictedx = x + vx;
 	float predictedy = y + vy;
 
-	if (predictedy + characterStats[characterID].height > platform.y0 && predictedy <= platform.y1 && predictedx + characterStats[characterID].width > platform.x0 && predictedx + characterStats[characterID].width <= platform.x0 + vx) {
+	if (predictedy + characterTemplates[characterID].height > platform.y0 && predictedy <= platform.y1 && predictedx + characterTemplates[characterID].width > platform.x0 && predictedx + characterTemplates[characterID].width <= platform.x0 + vx) {
 		if (stun > 0 || vx > speed * 2) {
-			vx = -1 * vx - (vx = float(platform.x0 - characterStats[characterID].width) - x);
+			vx = -1 * vx - (vx = float(platform.x0 - characterTemplates[characterID].width) - x);
 		}
 		else {
-			vx = float(platform.x0 - characterStats[characterID].width) - x; //Stop clipping
+			vx = float(platform.x0 - characterTemplates[characterID].width) - x; //Stop clipping
 		}
 		return true;
 	}
@@ -200,7 +200,7 @@ bool Character::ClippingIntoStageFromRight(Platform platform, float speed)
 	float predictedx = x + vx;
 	float predictedy = y + vy;
 
-	if (predictedy + characterStats[characterID].height > platform.y0 && predictedy <= platform.y1 && predictedx >= platform.x1 + vx && predictedx < platform.x1) {
+	if (predictedy + characterTemplates[characterID].height > platform.y0 && predictedy <= platform.y1 && predictedx >= platform.x1 + vx && predictedx < platform.x1) {
 		if (stun > 0 || -vx > speed * 2) {
 			vx = -1 * vx - (float)platform.x1 - x;
 		}
@@ -217,7 +217,7 @@ bool Character::ClippingIntoStageFromBottom(Platform platform, float speed)
 	float predictedx = x + vx;
 	float predictedy = y + vy;
 
-	if (predictedx + characterStats[characterID].width > platform.x0 && predictedx < platform.x1 && predictedy >= platform.y1 + vy && predictedy <= platform.y1) {
+	if (predictedx + characterTemplates[characterID].width > platform.x0 && predictedx < platform.x1 && predictedy >= platform.y1 + vy && predictedy <= platform.y1) {
 		if (stun > 0 || -vy > speed * 2) {
 			vy = -1 * vy - ((float)platform.y1 - y);
 		}
@@ -236,10 +236,10 @@ Character::Character()
 
 Character::Character(const CharacterTemplate rCharacterTemplates[9])
 {
-	characterStats = rCharacterTemplates;
+	characterTemplates = rCharacterTemplates;
 }
 
-void Character::ChangeCharacterID(bool isIncreasing, CharacterTemplate characterTemplates)
+void Character::ChangeCharacterID(bool isIncreasing)
 {
 	if (isIncreasing) {
 		if (characterID < 8) {
@@ -262,23 +262,23 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 	if (stun == 0) { //If not in stun
 		//If on stage
 		for (int i = 0; i < 10; i++) {
-			if (IsOnStage(platforms[i], characterStats[characterID].maxFallSpeed, inputs.down, i)) {
-				doubleJump = characterStats[characterID].maxDoubleJump + easyMode; //Refresh double jumps
+			if (IsOnStage(platforms[i], characterTemplates[characterID].maxFallSpeed, inputs.down, i)) {
+				doubleJump = characterTemplates[characterID].maxDoubleJump + easyMode; //Refresh double jumps
 				fastFalling = false; //Stop fast falling
-				acceleration = characterStats[characterID].walkAcceleration; //Sets acceleration to grounded acceleration
-				speed = characterStats[characterID].maxWalkSpeed; //Sets speed to grounded speed
+				acceleration = characterTemplates[characterID].walkAcceleration; //Sets acceleration to grounded acceleration
+				speed = characterTemplates[characterID].maxWalkSpeed; //Sets speed to grounded speed
 				onStage = true; //Confirm that you're on stage
 				groundTouchedAfterDodging = true;
 				break;
 			}
 			else { //If you're not on stage
 				if (easyMode) {
-					acceleration = characterStats[characterID].walkAcceleration; //Sets acceleration to aerial acceleration
-					speed = characterStats[characterID].maxWalkSpeed; //Sets speed to aerial speed
+					acceleration = characterTemplates[characterID].walkAcceleration; //Sets acceleration to aerial acceleration
+					speed = characterTemplates[characterID].maxWalkSpeed; //Sets speed to aerial speed
 				}
 				else {
-					acceleration = characterStats[characterID].aerialAcceleration; //Sets acceleration to aerial acceleration
-					speed = characterStats[characterID].maxAerialSpeed; //Sets speed to aerial speed
+					acceleration = characterTemplates[characterID].aerialAcceleration; //Sets acceleration to aerial acceleration
+					speed = characterTemplates[characterID].maxAerialSpeed; //Sets speed to aerial speed
 				}
 				onStage = false; //Confirm you're not on stage
 
@@ -328,15 +328,15 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 					facingRight = false;
 				}
 				if (inputs.up && !easyMode) { //If doing a move upwards (only in Hard Mode)
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].upSpecial);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].upSpecial);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 				else if (inputs.down && !easyMode) { //If doing a move downwards (only in Hard Mode)
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].downSpecial);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].downSpecial);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 				else { //If doing a move forwards
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].forwardSpecial);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].forwardSpecial);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 			}
@@ -348,15 +348,15 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 					facingRight = false;
 				}
 				if (inputs.up && !easyMode) { //If doing a move upwards (only in Hard Mode)
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].upLight);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].upLight);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 				else if (inputs.down && !easyMode) { //If doing a move downwards (only in Hard Mode)
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].downLight);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].downLight);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lagdownHeavy
 				}
 				else { //If doing a move forwards
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].forwardLight);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].forwardLight);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 			}
@@ -368,15 +368,15 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 					facingRight = false;
 				}
 				if (inputs.up && !easyMode) { //If doing a move upwards (only in Hard Mode)
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].upHeavy);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].upHeavy);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 				else if (inputs.down && !easyMode) { //If doing a move downwards (only in Hard Mode)
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].downHeavy);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].downHeavy);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 				else { //If doing a move forwards
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].forwardHeavy);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].forwardHeavy);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 			}
@@ -388,7 +388,7 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 					else if (inputs.left) {
 						facingRight = false;
 					}
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].upAerial);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].upAerial);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 				else if (inputs.down && !easyMode) { //If doing a move downwards (only in Hard Mode)
@@ -398,15 +398,15 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 					else if (inputs.left) {
 						facingRight = false;
 					}
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].downAerial);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].downAerial);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 				else if ((facingRight && inputs.left) || (!facingRight && inputs.right)) { //If doing a move backwards
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].backAerial);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].backAerial);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 				else { //If doing a move forwards
-					moveArray[i].Activate(characterStats[characterID].width, facingRight, characterStats[characterID].forwardAerial);  //Initialise the move
+					moveArray[i].Activate(characterTemplates[characterID].width, facingRight, characterTemplates[characterID].forwardAerial);  //Initialise the move
 					moveDuration = moveArray[i].startUpDuration + moveArray[i].IsActiveDuration() + moveArray[i].endLagDuration; //Set the player lag
 				}
 			}
@@ -427,10 +427,10 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 		}
 		if (!onStage) {
 			if (inputs.up) { //If holding up
-				vy = -characterStats[characterID].maxFallSpeed / characterStats[characterID].weight / characterStats[characterID].weight; //Make the character move u
+				vy = -characterTemplates[characterID].maxFallSpeed / characterTemplates[characterID].weight / characterTemplates[characterID].weight; //Make the character move u
 			}
 			else if (inputs.down) { //If holding down
-				vy = characterStats[characterID].maxFallSpeed / characterStats[characterID].weight / characterStats[characterID].weight; //Make the character move down
+				vy = characterTemplates[characterID].maxFallSpeed / characterTemplates[characterID].weight / characterTemplates[characterID].weight; //Make the character move down
 			}
 			else { //If not holding up or down
 				vy = 0; //Reset your vertical momentum
@@ -439,8 +439,8 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 
 		hitDuringDodge = false;
 		invincibility = 20;
-		moveDuration = 30 * characterStats[characterID].weight; //The heavier you are, the more lag you have
-		invincibilityCooldown = 120 * characterStats[characterID].weight + invincibility; //The heavier you are, the longer you have to wait before dodging again
+		moveDuration = 30 * characterTemplates[characterID].weight; //The heavier you are, the more lag you have
+		invincibilityCooldown = 120 * characterTemplates[characterID].weight + invincibility; //The heavier you are, the longer you have to wait before dodging again
 		groundTouchedAfterDodging = false; //You have to touch the ground before dodging again
 	}
 	ReduceTimer(stun);
@@ -451,9 +451,9 @@ void Character::UpdateCharacter(Inputs inputs, Platform platforms[10]) {
 
 bool Character::IsAlive(int screenWidth, int screenHeight, int leniancy)
 {
-	if (x + characterStats[characterID].width < 0 - leniancy ||
+	if (x + characterTemplates[characterID].width < 0 - leniancy ||
 		x > screenWidth + leniancy ||
-		(y + characterStats[characterID].height < 0 - leniancy && stun > 0) ||
+		(y + characterTemplates[characterID].height < 0 - leniancy && stun > 0) ||
 		y > screenHeight + leniancy
 		) {
 		lives--;
@@ -467,7 +467,7 @@ bool Character::IsAlive(int screenWidth, int screenHeight, int leniancy)
 			moveArray[i].EndMove();
 		}
 		if (lives > 0) {
-			y = 500 - characterStats[characterID].height;
+			y = 500 - characterTemplates[characterID].height;
 			x = screenWidth / 2;
 			if (!easyMode) {
 				invincibility = 300;
@@ -488,9 +488,9 @@ void Character::UpdateMoveCollision(Character& opposingPlayer)
 			for (int j = 0; j <= 4; j++) {
 				for (int k = 0; k <= 4; k++) {
 					if (moveArray[i].x + moveArray[i].additionalX + moveArray[i].stats.width / 4 * j >= opposingPlayer.x && //If the X coordinate is greater than the player's
-						moveArray[i].x + moveArray[i].additionalX + moveArray[i].stats.width / 4 * j <= opposingPlayer.x + opposingPlayer.characterStats[characterID].width && //If the x coordinate is less than the player's plus their characterStats[characterID].width
+						moveArray[i].x + moveArray[i].additionalX + moveArray[i].stats.width / 4 * j <= opposingPlayer.x + opposingPlayer.characterTemplates[characterID].width && //If the x coordinate is less than the player's plus their characterTemplates[characterID].width
 						moveArray[i].y + moveArray[i].stats.additionalY + moveArray[i].stats.height / 4 * k >= opposingPlayer.y && //If the Y coordniate is greater than the player's
-						moveArray[i].y + moveArray[i].stats.additionalY + moveArray[i].stats.height / 4 * k <= opposingPlayer.y + opposingPlayer.characterStats[characterID].height //If the y coordinate is les than the player's plus their characterStats[characterID].height
+						moveArray[i].y + moveArray[i].stats.additionalY + moveArray[i].stats.height / 4 * k <= opposingPlayer.y + opposingPlayer.characterTemplates[characterID].height //If the y coordinate is les than the player's plus their characterTemplates[characterID].height
 						) { //If inside the player's coordinates
 						if (moveArray[i].stats.disappearOnHit) {
 							moveArray[i].activeDuration = 0; //Disable
@@ -517,11 +517,11 @@ void Character::IsHit(Move moveHitWith) {
 		if (playerPercentage >= 100) {
 			playerPercentage = 99.9;
 		}
-		vx = (moveHitWith.stats.fixedX + moveHitWith.stats.scalarX * playerPercentage / 100) / characterStats[characterID].weight * (1 + easyMode); //Doubled in easy mode
+		vx = (moveHitWith.stats.fixedX + moveHitWith.stats.scalarX * playerPercentage / 100) / characterTemplates[characterID].weight * (1 + easyMode); //Doubled in easy mode
 		if (!moveHitWith.isFacingRight) {
 			vx = -vx;
 		}
-		vy = (moveHitWith.stats.fixedY + moveHitWith.stats.scalarY * playerPercentage / 100) / characterStats[characterID].weight * (1 + easyMode); //Doubled in easy mode
+		vy = (moveHitWith.stats.fixedY + moveHitWith.stats.scalarY * playerPercentage / 100) / characterTemplates[characterID].weight * (1 + easyMode); //Doubled in easy mode
 		moveDuration = 0;
 		freeFallDuration = 0;
 		for (int i = 0; i < MOVE_ARRAY_LENGTH; i++) {

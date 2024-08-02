@@ -4,6 +4,7 @@
 #include "Platform.h"
 #include "Inputs.h"
 #include "StatsTemplates.h"
+#include "SpriteSheet.h"
 #define MOVE_ARRAY_LENGTH 5
 
 class Character {
@@ -18,7 +19,7 @@ class Character {
 public:
 	Character();
 	Character(const CharacterTemplate rCharacterTemplates[9]);
-	void ChangeCharacterID(bool isIncreasing, CharacterTemplate characterTemplates);
+	void ChangeCharacterID(bool isIncreasing);
 	void UpdateCharacter(Inputs inputs, Platform platforms[10]);
 	bool IsAlive(int screenWidth, int screenHeight, int leniancy);
 	void UpdateMoveCollision(Character &opposingPlayer);
@@ -27,6 +28,12 @@ public:
 	Move GetMove(int moveID);
 
 	int characterID = 0;
+
+	SpriteSheet* idleSprite = nullptr;
+	SpriteSheet* moveSprite = nullptr;
+	SpriteSheet* hitSprite = nullptr;
+	SpriteSheet* livesSprite = nullptr;
+	SpriteSheet* descSprite = nullptr;
 
 	float x = 0;
 	float y = 0;
@@ -49,7 +56,7 @@ public:
 	bool aiSelected = false;
 private:
 	//CharacterTemplate(&characterStats)[9];
-	const CharacterTemplate* characterStats;
+	const CharacterTemplate* characterTemplates;
 
 	bool onStage = false;
 	bool fastFalling = false;
