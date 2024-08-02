@@ -242,12 +242,12 @@ Character::Character(const CharacterTemplate rCharacterTemplates[9])
 void Character::ChangeCharacterID(bool isIncreasing)
 {
 	if (isIncreasing) {
-		if (characterID < 8) {
+		if (characterID < 8 && !increaseCharacterIDKeyHeld) {
 			characterID++;
 		}
 	}
 	else {
-		if (characterID > 0) {
+		if (characterID > 0 && !decreaseCharacterIDKeyHeld) {
 			characterID--;
 		}
 	}

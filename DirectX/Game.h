@@ -58,10 +58,6 @@ private:
 	bool paused = false;
 
 	bool enterOrEscapeHeld = false;
-	bool qHeld = false;
-	bool eHeld = false;
-	bool iHeld = false;
-	bool pHeld = false;
 	bool spaceHeld = false;
 	bool tabHeld = false;
 	bool backspaceHeld = false;

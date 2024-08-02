@@ -28,6 +28,8 @@ public:
 	Move GetMove(int moveID);
 
 	int characterID = 0;
+	bool increaseCharacterIDKeyHeld = false;
+	bool decreaseCharacterIDKeyHeld = false;
 
 	SpriteSheet* idleSprite = nullptr;
 	SpriteSheet* moveSprite = nullptr;

@@ -194,10 +194,6 @@ void Game::GameState()
 void Game::menuTransition()
 {
 	enterOrEscapeHeld = true;
-	qHeld = true;
-	eHeld = true;
-	iHeld = true;
-	pHeld = true;
 	spaceHeld = true;
 	tabHeld = true;
 	backspaceHeld = true;
@@ -228,40 +224,40 @@ void Game::StartMenu()
 			(clickPosition.x >= 655 && clickPosition.x <= 745 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 1 wants to increase their character ID
 			Player1.ChangeCharacterID(true);
 			UpdateCharacterSprites(Player1);
-			eHeld = true;
+			Player1.increaseCharacterIDKeyHeld = true;
 		}
 		else {
-			eHeld = false;
+			Player1.increaseCharacterIDKeyHeld = false;
 		}
 
 		if ((gfx->ifFocus() && GetKeyState(0x51) & 0x8000) ||
 			(clickPosition.x >= 350 && clickPosition.x <= 440 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 1 wants to decrease their character ID
 			Player1.ChangeCharacterID(false);
 			UpdateCharacterSprites(Player1);
-			qHeld = true;
+			Player1.decreaseCharacterIDKeyHeld = true;
 		}
 		else {
-			qHeld = false;
+			Player1.decreaseCharacterIDKeyHeld = false;
 		}
 
 		if ((gfx->ifFocus() && GetKeyState(0x50) & 0x8000) ||
 			(clickPosition.x >= 1485 && clickPosition.x <= 1570 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 2 wants to increase their character ID
 			Player2.ChangeCharacterID(true);
 			UpdateCharacterSprites(Player2);
-			pHeld = true;
+			Player2.increaseCharacterIDKeyHeld = true;
 		}
 		else {
-			pHeld = false;
+			Player2.increaseCharacterIDKeyHeld = false;
 		}
 
 		if ((gfx->ifFocus() && GetKeyState(0x49) & 0x8000) ||
 			(clickPosition.x >= 1175 && clickPosition.x <= 1265 && clickPosition.y >= 115 && clickPosition.y <= 210)) { //If Player 2 wants to decrease their character ID
 			Player2.ChangeCharacterID(false);
 			UpdateCharacterSprites(Player2);
-			iHeld = true;
+			Player2.decreaseCharacterIDKeyHeld = true;
 		}
 		else {
-			iHeld = false;
+			Player2.decreaseCharacterIDKeyHeld = false;
 		}
 
 		if ((gfx->ifFocus() && GetKeyState(0x09) & 0x8000) || //Tab
