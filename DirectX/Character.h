@@ -6,6 +6,7 @@
 #include "StatsTemplates.h"
 #include "SpriteSheet.h"
 #define MOVE_ARRAY_LENGTH 5
+#define CONTROLLER_STICK_MAX_INPUT 32767.0f
 
 class Character {
 	void ReduceTimer(int& cooldown);
@@ -26,6 +27,8 @@ public:
 	void IsHit(Move moveHitWith);
 	void Restart();
 	Move GetMove(int moveID);
+	void UpdateController(int opposingPlayerController);
+	Inputs* ObtainControllerInputs(bool iffocus);
 
 	int characterID = 0;
 	bool increaseCharacterIDKeyHeld = false;
@@ -56,6 +59,11 @@ public:
 
 	bool easyMode = false;
 	bool aiSelected = false;
+
+	int controller = -1;
+	XINPUT_STATE controllerState;
+	bool rightStickPressed = false;
+	bool stopOtherInputs = false;
 private:
 	//CharacterTemplate(&characterStats)[9];
 	const CharacterTemplate* characterTemplates;

@@ -9,6 +9,7 @@ using namespace std;
 /*
 Urgent:
 	Fix speed changing after colliding while in stun
+	test controller inputs
 
 General:
 	Move characterID to the character
@@ -96,60 +97,9 @@ void Game::Go()
 
 void Game::GameState()
 {
-	//Controller initialisation code
-	ZeroMemory(&p1ControllerState, sizeof(XINPUT_STATE));
-	if (p1Controller == -1) {
-		DWORD dwResult;
-		for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
-		{
-			// Simply get the state of the controller from XInput.
-			dwResult = XInputGetState(i, &p1ControllerState);
+	Player1.UpdateController(Player2.controller);
+	Player2.UpdateController(Player1.controller);
 
-			if (dwResult == ERROR_SUCCESS && i != p2Controller)
-			{
-				p1Controller = i;
-			}
-			else{
-				ZeroMemory(&p2ControllerState, sizeof(XINPUT_STATE));
-			}
-		}
-	}
-	else {
-		DWORD dwResult;
-		dwResult = XInputGetState(p1Controller, &p1ControllerState);
-
-		if (dwResult != ERROR_SUCCESS)
-		{
-			p1Controller = -1;
-		}
-	}
-
-	ZeroMemory(&p2ControllerState, sizeof(XINPUT_STATE));
-	if (p2Controller == -1) {
-		DWORD dwResult;
-		for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
-		{
-			// Simply get the state of the controller from XInput.
-			dwResult = XInputGetState(i, &p2ControllerState);
-
-			if (dwResult == ERROR_SUCCESS && i != p1Controller)
-			{
-				p2Controller = i;
-			}
-			else {
-				ZeroMemory(&p2ControllerState, sizeof(XINPUT_STATE));
-			}
-		}
-	}
-	else {
-		DWORD dwResult;
-		dwResult = XInputGetState(p2Controller, &p2ControllerState);
-
-		if (dwResult != ERROR_SUCCESS)
-		{
-			p2Controller = -1;
-		}
-	}
 
 	clickPosition.x = -1;
 	if (gfx->ifFocus() && GetKeyState(0x01) != clickHeld && 0x800) {
@@ -424,24 +374,7 @@ void Game::GameLoop()
 			);
 		}
 		else {
-			p1StopOtherInputs = false;
-			float RX = p1ControllerState.Gamepad.sThumbRX / controllerStickMaxInput;
-			float RY = p1ControllerState.Gamepad.sThumbRY / controllerStickMaxInput;
-			if (!p1RightStickPressed && (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && Player1.stun == 0 && Player1.moveDuration == 0) {
-				p1StopOtherInputs = true;
-			}
-			p1RightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player1.stun == 0 && Player1.moveDuration == 0) || p1RightStickPressed);
-			p1Inputs = new Inputs(
-				gfx->ifFocus() && (GetKeyState(0x41) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) || (p1ControllerState.Gamepad.sThumbLX / controllerStickMaxInput < -0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX < -0.2)), //Left
-				gfx->ifFocus() && (GetKeyState(0x44) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) || (p1ControllerState.Gamepad.sThumbLX / controllerStickMaxInput > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX > 0.2)), //Right
-				gfx->ifFocus() && (GetKeyState(0x57) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) || (p1ControllerState.Gamepad.sThumbLY / controllerStickMaxInput > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RY > 0.2)), //Up
-				gfx->ifFocus() && (GetKeyState(0x53) & 0x8000) || ((((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) || (p1ControllerState.Gamepad.sThumbLY / controllerStickMaxInput < -0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RY < -0.2)), //Down
-				gfx->ifFocus() && (GetKeyState(0x47) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_A) && !p1StopOtherInputs), //Jump
-				gfx->ifFocus() && (GetKeyState(0x46) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X) || p1StopOtherInputs), //Light
-				gfx->ifFocus() && (GetKeyState(0x54) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p1StopOtherInputs), //Heavy
-				gfx->ifFocus() && (GetKeyState(0x48) & 0x8000) || ((p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p1ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p1StopOtherInputs), //Special
-				gfx->ifFocus() && (GetKeyState(0xA0) & 0x8000) || ((p1ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p1ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p1StopOtherInputs) //Dodge
-			);
+			p1Inputs = Player1.ObtainControllerInputs(gfx->ifFocus());
 		}
 		
 		if (Player2.aiSelected) {
@@ -459,25 +392,7 @@ void Game::GameLoop()
 			);
 		}
 		else {
-			p2StopOtherInputs = false;
-			float RX = p2ControllerState.Gamepad.sThumbRX / controllerStickMaxInput;
-			float RY = p2ControllerState.Gamepad.sThumbRY / controllerStickMaxInput;
-			if (!p2RightStickPressed && (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && Player2.stun == 0 && Player2.moveDuration == 0) {
-				p2StopOtherInputs = true;
-			}
-			p2RightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player2.stun == 0 && Player2.moveDuration == 0) || p2RightStickPressed);
-			
-			p2Inputs = new Inputs(
-				gfx->ifFocus() && (GetKeyState(0x25) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) || (p2ControllerState.Gamepad.sThumbLX / controllerStickMaxInput < -0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RX < -0.2)), //Left
-				gfx->ifFocus() && (GetKeyState(0x27) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) || (p2ControllerState.Gamepad.sThumbLX / controllerStickMaxInput > 0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RX > 0.2)), //Right
-				gfx->ifFocus() && (GetKeyState(0x26) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) || (p2ControllerState.Gamepad.sThumbLY / controllerStickMaxInput > 0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RY > 0.2)), //Up
-				gfx->ifFocus() && (GetKeyState(0x28) & 0x8000) || ((((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) || (p2ControllerState.Gamepad.sThumbLY / controllerStickMaxInput < -0.2)) && !p2StopOtherInputs) || (p2StopOtherInputs && RY < -0.2)), //Down
-				gfx->ifFocus() && (GetKeyState(0x4C) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_A) && !p2StopOtherInputs), //Jump
-				gfx->ifFocus() && (GetKeyState(0x4B) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X) || p2StopOtherInputs), //Light
-				gfx->ifFocus() && (GetKeyState(0x4F) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p2StopOtherInputs), //Heavy
-				gfx->ifFocus() && (GetKeyState(0xBA) & 0x8000) || ((p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || p2ControllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p2StopOtherInputs), //Special
-				gfx->ifFocus() && (GetKeyState(0x4E) & 0x8000) || ((p2ControllerState.Gamepad.bLeftTrigger / 255 > 0.1 || p2ControllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p2StopOtherInputs) //Dodge
-			);
+			p2Inputs = Player2.ObtainControllerInputs(gfx->ifFocus());
 		}
 
 		Player1.UpdateCharacter(*p1Inputs, Stages[stageSelected].Platforms);

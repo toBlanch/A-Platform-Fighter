@@ -558,3 +558,56 @@ Move Character::GetMove(int moveID)
 {
 	return moveArray[moveID];
 }
+
+void Character::UpdateController(int opposingPlayerController)
+{
+
+	ZeroMemory(&controllerState, sizeof(XINPUT_STATE));
+	if (controller == -1) {
+		DWORD dwResult;
+		for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
+		{
+			// Simply get the state of the controller from XInput.
+			dwResult = XInputGetState(i, &controllerState);
+
+			if (dwResult == ERROR_SUCCESS && i != opposingPlayerController)
+			{
+				controller = i;
+			}
+			else {
+				ZeroMemory(&controllerState, sizeof(XINPUT_STATE));
+			}
+		}
+	}
+	else {
+		DWORD dwResult;
+		dwResult = XInputGetState(controller, &controllerState);
+
+		if (dwResult != ERROR_SUCCESS)
+		{
+			controller = -1;
+		}
+	}
+}
+
+Inputs* Character::ObtainControllerInputs(bool ifFocus)
+{
+	stopOtherInputs = false;
+	float RX = controllerState.Gamepad.sThumbRX / CONTROLLER_STICK_MAX_INPUT;
+	float RY = controllerState.Gamepad.sThumbRY / CONTROLLER_STICK_MAX_INPUT;
+	if (!rightStickPressed && (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && Player1.stun == 0 && Player1.moveDuration == 0) {
+		stopOtherInputs = true;
+	}
+	rightStickPressed = (RX > 0.2 || RX < -0.2 || RY > 0.2 || RY < -0.2) && ((Player1.stun == 0 && Player1.moveDuration == 0) || rightStickPressed);
+	return new Inputs(
+		ifFocus && (GetKeyState(0x41) & 0x8000) || ((((controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) || (controllerState.Gamepad.sThumbLX / CONTROLLER_STICK_MAX_INPUT < -0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX < -0.2)), //Left
+		ifFocus && (GetKeyState(0x44) & 0x8000) || ((((controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) || (controllerState.Gamepad.sThumbLX / CONTROLLER_STICK_MAX_INPUT > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RX > 0.2)), //Right
+		ifFocus && (GetKeyState(0x57) & 0x8000) || ((((controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) || (controllerState.Gamepad.sThumbLY / CONTROLLER_STICK_MAX_INPUT > 0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RY > 0.2)), //Up
+		ifFocus && (GetKeyState(0x53) & 0x8000) || ((((controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) || (controllerState.Gamepad.sThumbLY / CONTROLLER_STICK_MAX_INPUT < -0.2)) && !p1StopOtherInputs) || (p1StopOtherInputs && RY < -0.2)), //Down
+		ifFocus && (GetKeyState(0x47) & 0x8000) || ((controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_A) && !p1StopOtherInputs), //Jump
+		ifFocus && (GetKeyState(0x46) & 0x8000) || ((controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X) || p1StopOtherInputs), //Light
+		ifFocus && (GetKeyState(0x54) & 0x8000) || ((controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B || controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) && !p1StopOtherInputs), //Heavy
+		ifFocus && (GetKeyState(0x48) & 0x8000) || ((controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y || controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) && !p1StopOtherInputs), //Special
+		ifFocus && (GetKeyState(0xA0) & 0x8000) || ((controllerState.Gamepad.bLeftTrigger / 255 > 0.1 || controllerState.Gamepad.bRightTrigger / 255 > 0.1) && !p1StopOtherInputs) //Dodge
+	);
+}
