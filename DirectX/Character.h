@@ -16,7 +16,8 @@ class Character {
 	bool ClippingIntoStageFromRight(Platform platform, float speed);
 	bool ClippingIntoStageFromBottom(Platform platform, float speed);
 public:
-	Character(CharacterTemplate rCharacterTemplates[9]);
+	Character();
+	Character(const CharacterTemplate rCharacterTemplates[9]);
 	void ChangeCharacterID(bool isIncreasing, CharacterTemplate characterTemplates);
 	void UpdateCharacter(Inputs inputs, Platform platforms[10]);
 	bool IsAlive(int screenWidth, int screenHeight, int leniancy);
@@ -47,7 +48,8 @@ public:
 	bool easyMode = false;
 	bool aiSelected = false;
 private:
-	CharacterTemplate(&characterStats)[9];
+	//CharacterTemplate(&characterStats)[9];
+	const CharacterTemplate* characterStats;
 
 	bool onStage = false;
 	bool fastFalling = false;

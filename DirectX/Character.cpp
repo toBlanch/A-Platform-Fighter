@@ -229,7 +229,12 @@ bool Character::ClippingIntoStageFromBottom(Platform platform, float speed)
 	return false;
 }
 
-Character::Character(CharacterTemplate rCharacterTemplates[9])
+Character::Character()
+{
+	// Default constructor implementation goes here
+}
+
+Character::Character(const CharacterTemplate rCharacterTemplates[9])
 {
 	characterStats = rCharacterTemplates;
 }

@@ -57,6 +57,9 @@ Game::Game(Graphics* gfx)
 
 	menuText = gfx->CreateTextFormat(L"Gabriola", 32.0f);
 
+	Player1 = Character(characterTemplates);
+	Player2 = Character(characterTemplates);
+
 	//Load inputs
 	p1Inputs = new Inputs(false, false, false, false, false, false, false, false, false);
 	p2Inputs = new Inputs(false, false, false, false, false, false, false, false, false);
